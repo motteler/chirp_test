@@ -1,0 +1,24 @@
+
+Here's what I proposed for a chirp SDR format back on 27 Nov 2018
+over in slack/data-formats:
+
+CrIS native format, in column order
+  nchan x 9 x 30 x 45  = nchan x 12150 obs, flattened for CHIRP
+
+AIRS native format, in column order
+  nchan x 90 x 135 = nchan x 12150 obs, flattened for CHIRP
+
+The native formats are in time order for AIRS, and time and FOV
+order for CrIS.  Note that netCDF and many languages will represent
+this data in row order, for example 135 x 90 x nchan for AIRS.  Row
+vs column order doesn't matter if you flatten the arrays to vectors
+and keep them in time order.
+
+We also need flattened FOV and FOR indices for CrIS CHIRP:
+   9 x 30 x 45 = 12150 FOV values
+   9 x 30 x 45 = 12150 FOR values
+
+That's the main story.  Of course you have to similarly flatten all
+the supporting data--time, lat, lon, sol zen, sat zen, etc.
+
+

@@ -1,0 +1,26 @@
+For AIRS/CrIS equivalents we sometimes use an attribute called
+"AIRS_name" in the CrIS files to make it simpler:
+
+         string instrument_state:AIRS_name="state";
+         string obs_time_tai93:AIRS_name="Time";
+         string lat:AIRS_name="Longitude";
+         string lon:AIRS_name="Longitude";
+         string land_frac:AIRS_name="landFrac";
+         string surf_alt:AIRS_name="topog";
+         string surf_alt_sdev:AIRS_name="topog_err";
+         string sun_glint_lat:AIRS_name="glintlat";
+         string sun_glint_lon:AIRS_name="glintlon";
+         string sol_zen:AIRS_name="solzen";
+         string sol_azi:AIRS_name="solazi";
+         string sun_glint_dist:AIRS_name="sun_glint_distance";
+         string view_ang:AIRS_name="scanang";
+         string sat_zen:AIRS_name="satzen";
+         string sat_azi:AIRS_name="satazi";
+         string asc_flag:AIRS_name="scan_node_type";
+         string subsat_lat:AIRS_name="sat_lat";
+         string subsat_lon:AIRS_name="sat_lon";
+         string scan_mid_time:AIRS_name="nadirTAI";
+         string sat_alt:AIRS_name="satheight";
+         string asc_node_lon:AIRS_name="eq_x_longitude";
+         string asc_node_tai93:AIRS_name="eq_x_tai";
+

@@ -1,0 +1,43 @@
+
+production loop
+----------------
+  airs2chirp    - AIRS granule to CHIRP granule
+  read_airs_h4  - read an AIRS HDF4 granule
+
+support and test
+-----------------
+  a2cris_lin      - airs2cris linearization test
+  a2cris_srfs     - airs2cris linearization with SRF plots
+  airs_num_synth  - multi-granule count of L1cNumSynth values
+  check_synth     - counts for synthetic and fixed channels
+
+relevant functions from other repos
+------------------------------------
+  L1c_fields
+  airs_obs_list
+  airs_obs_batch
+
+netCDF format
+--------------
+  chirp_init.cdl  - CHIRP SDR netCDF CDL template
+  chirp_init.nc   - CHIRP SDR netCDF initial file
+
+notes
+------
+
+to do
+ - CrIS to CHIRP prototype (should be relatively simple)
+ - derived numsynth, basic QC, Larrabee's QC stats
+ - NEdN (from paper)
+
+Starting from an existing netCDF file (a UW CrIS granule) I've been
+able to dump the CDL format spec, edit it extensively, removing some
+variables and add new ones, write an empty netCDF file from the CDL
+spec, and write data to the netCDF file.  The UW file (and I think
+all the new NASA netCDF products) are bloated and groaning with
+attributes, and my new netCDF file is, too.  Creating something like
+that from scratch would be a major hassle, but copying and modifying
+it is not as bad.
+
+../chirp_test > ncdump -h uw_sdr_test.nc > uw_sdr_test.cdl
+../chirp_test > ncgen -o ncgen_test.nc uw_sdr_test.cdl
