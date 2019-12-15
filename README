@@ -22,13 +22,16 @@ netCDF format
   chirp_init.cdl  - CHIRP SDR netCDF CDL template
   chirp_init.nc   - CHIRP SDR netCDF initial file
 
+  ncgen -o chirp_init.nc chirp_init.cdl
+
 notes
 ------
 
 to do
- - CrIS to CHIRP prototype (should be relatively simple)
- - derived numsynth, basic QC, Larrabee's QC stats
- - NEdN (from paper)
+ - clean up code
+ - clean up CDL format specs
+ - move prototype to production loop
+ - CrIS to CHIRP
 
 Starting from an existing netCDF file (a UW CrIS granule) I've been
 able to dump the CDL format spec, edit it extensively, removing some

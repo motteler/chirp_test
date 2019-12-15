@@ -7,16 +7,48 @@ variables:
 	float rad(nobs, wnum) ;
 		string rad:units = "mW/(m2 sr cm-1)" ;
 		string rad:ancillary_variables = "rad_lw_qc" ;
-		string rad:long_name = "longwave real spectral radiance" ;
+		string rad:long_name = "real spectral radiance" ;
 		string rad:standard_name = "toa_outgoing_radiance_per_unit_wavenumber" ;
 		string rad:coordinates = "lon lat" ;
-		string rad:description = "longwave real spectral radiance" ;
+		string rad:description = "real spectral radiance" ;
 		rad:_FillValue = 9.96921e+36f ;
 		string rad:coverage_content_type = "physicalMeasurement" ;
-	float nedn(nobs, wnum) ;
+
+        byte rad_qc(nobs) ;
+                string rad_qc:units = "1" ;
+                rad_qc:valid_range = 0b, 2b ;
+                string rad_qc:long_name = "rad QC summary flag" ;
+                string rad_qc:standard_name = "toa_outgoing_radiance_per_unit_wavenumber status_flag" ;
+                string rad_qc:coordinates = "lon lat" ;
+                string rad_qc:description = "rad QC summary flag" ;
+                rad_qc:_FillValue = -1b ;
+                string rad_qc:coverage_content_type = "qualityInformation" ;
+                string rad_qc:flag_meanings = "Best Good Do_Not_Use" ;
+                rad_qc:flag_values = 0b, 1b, 2b ;
+
+        byte syn_qc(nobs) ;
+                string syn_qc:units = "1" ;
+                syn_qc:valid_range = 0b, 2b ;
+                string syn_qc:long_name = "rad synthetic fraction flag" ;
+                string syn_qc:standard_name = "radiance synthetic fraction flag" ;
+                string syn_qc:coordinates = "lon lat" ;
+                string syn_qc:description = "rad synthetic fraction flag" ;
+                syn_qc:_FillValue = -1b ;
+                string syn_qc:coverage_content_type = "qualityInformation" ;
+                string syn_qc:flag_meanings = "Best Good Do_Not_Use" ;
+                syn_qc:flag_values = 0b, 1b, 2b ;
+
+	float synfrac(wnum) ;
+		string synfrac:units = "synthetic fraction (ratio)" ;
+		string synfrac:long_name = "synthetic channel fraction" ;
+		string synfrac:description = "synthetic channel fraction" ;
+		synfrac:_FillValue = 9.96921e+36f ;
+		string synfrac:coverage_content_type = "qualityInformation" ;
+
+	float nedn(wnum) ;
 		string nedn:units = "mW/(m2 sr cm-1)" ;
-		string nedn:long_name = "longwave noise equivalent differential radiance" ;
-		string nedn:description = "longwave noise equivalent differential radiance" ;
+		string nedn:long_name = "noise equivalent differential radiance" ;
+		string nedn:description = "noise equivalent differential radiance" ;
 		nedn:_FillValue = 9.96921e+36f ;
 		string nedn:coverage_content_type = "qualityInformation" ;
 
@@ -203,18 +235,20 @@ variables:
 
 	ubyte xtrack_ind(nobs) ;
 		string xtrack_ind:units = "1" ;
-		xtrack_ind:valid_range = 1UB, 30UB ;
+		xtrack_ind:valid_range = 1UB, 90UB ;
 		string xtrack_ind:long_name = "field of regard number" ;
 		string xtrack_ind:description = "field of regard number" ;
 		xtrack_ind:_FillValue = 255UB ;
 		string xtrack_ind:coverage_content_type = "auxiliaryInformation" ;
+
 	ubyte atrack_ind(nobs) ;
 		string atrack_ind:units = "1" ;
-		atrack_ind:valid_range = 1UB, 9UB ;
+		atrack_ind:valid_range = 1UB, 135UB ;
 		string atrack_ind:long_name = "field of view number" ;
 		string atrack_ind:description = "field of view number" ;
 		atrack_ind:_FillValue = 255UB ;
 		string atrack_ind:coverage_content_type = "auxiliaryInformation" ;
+
 //	ubyte for_num(nobs) ;
 //		string for_num:units = "1" ;
 //		for_num:valid_range = 1UB, 30UB ;

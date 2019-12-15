@@ -41,6 +41,12 @@ for di = dlist
 %   tlat = tlat(iOK); 
 %   tlon = tlon(iOK);
 
+%   xx = 0 < L1cNumSynth & L1cNumSynth < 12150;
+%   if sum(xx) > 0
+%     fprintf(1, '%d intermediate NumSynth values\n', sum(xx))
+%     afile
+%   end
+
     ChanID_list = [ChanID_list, ChanID'];
     ChanMapL1b_list = [ChanMapL1b_list, ChanMapL1b'];
     L1cNumSynth_list = [L1cNumSynth_list, L1cNumSynth'];
@@ -55,10 +61,11 @@ s2 = sum(L1cNumSynth_list');
 figure(1)
 semilogy(sort(s2), 'linewidth', 2)
 axis([500, 2500, 1, 1e8])
-title('synthetic obs for 5000 AIRS granules')
+title('synthetic obs for 5036 AIRS granules')
 xlabel('sorted channels')
 ylabel('number of synthetic values')
 grid on
+% saveas(gcf, 'synthetic_obs_counts', 'png')
 
 sum(s2 == 0)
 sum(s2 == 1)
@@ -69,10 +76,11 @@ figure(2)
 freq = hdfread(afile, 'nominal_freq'); freq = freq{1};
 semilogy(freq, s2, '+')
 axis([650, 2800, 0, 1e8])
-title('synthetic obs for 5000 AIRS granules')
+title('synthetic obs for 5036 AIRS granules')
 xlabel('channel frequency (cm-1)')
 ylabel('number of synthetic values')
 grid on
+% saveas(gcf, 'synth_obs_freq_order', 'png')
 
 % spot check for changing arrays
 % isequal(ChanID_list(:, 2), ChanID_list(:, 2002))

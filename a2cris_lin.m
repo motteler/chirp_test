@@ -80,12 +80,12 @@ ylabel('weight')
 grid on; zoom on
 % saveas(gcf, 'sample_ILS_with_AIRS_parents', 'png')
 
-return
+% return
 
 % plot a small span of AIRS transform parents
-v0 = 850;
+% v0 = 850;
 % v0 = 1400;
-% v0 =  2350
+  v0 =  2350
 ix = interp1(cfrq, 1:length(cfrq), v0, 'nearest');
 ix = ix + (-2 : 2);
 
@@ -101,4 +101,7 @@ grid on; zoom on
 legend('2347.50 cm-1', '2348.75 cm-1', '2350.00 cm-1', ...
        '2351.25 cm-1', '2352.50 cm-1')
 
+cfrq(ix)
+
+save Tac Tac afrq cfrq
 
