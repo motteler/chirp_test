@@ -1,8 +1,13 @@
 
 production loop
 ----------------
-  airs2chirp    - AIRS granule to CHIRP granule
+  airs2chirp    - translate AIRS to CHIRP granules
+  cris2chirp    - interpolate CrIS to CHIRP granules
   read_airs_h4  - read an AIRS HDF4 granule
+  read_cris_h5  - read a CrIS H5/netCDF granule
+  airs_loop     - run airs2chirp on a list of days
+  cris_loop     - run cris2chirp on a list of days
+  chirp_batch   - run chirp translation on doy = job array ID
 
 support and test
 -----------------
@@ -10,28 +15,22 @@ support and test
   a2cris_srfs     - airs2cris linearization with SRF plots
   airs_num_synth  - multi-granule count of L1cNumSynth values
   check_synth     - counts for synthetic and fixed channels
-
-relevant functions from other repos
-------------------------------------
-  L1c_fields
-  airs_obs_list
-  airs_obs_batch
+  nedn_est        - NEdN estimate for the AIRS-to-CrIS translation
+  nedn_interp     - NEdN interpolation demo
+  pen_lift        - add NaNs for pen lift at frequency gaps
+  L1c_fields      - dump all L1c fields and attributes
 
 netCDF format
 --------------
-  chirp_init.cdl  - CHIRP SDR netCDF CDL template
-  chirp_init.nc   - CHIRP SDR netCDF initial file
+  airs2chirp.cdl  - AIRS CHIRP SDR netCDF CDL template
+  cris2chirp.cdl  - CrIS CHIRP SDR netCDF CDL template
+  airs2chirp.nc   - AIRS CHIRP SDR netCDF initial file
+  cris2chirp.nc   - CrIS CHIRP SDR netCDF initial file
 
-  ncgen -o chirp_init.nc chirp_init.cdl
+  ncgen -o airs2chirp.nc airs2chirp.cdl
 
 notes
 ------
-
-to do
- - clean up code
- - clean up CDL format specs
- - move prototype to production loop
- - CrIS to CHIRP
 
 Starting from an existing netCDF file (a UW CrIS granule) I've been
 able to dump the CDL format spec, edit it extensively, removing some
