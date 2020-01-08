@@ -1,9 +1,9 @@
 %
 % NAME
-%   airs_loop - run airs2chirp on a list of days
+%   cris_loop - run cris2chirp on a list of days
 %
 % SYNOPSIS
-%   airs_loop(year, dlist)
+%   cris_loop(year, dlist)
 %
 % INPUTS
 %   year   - year, as an integer
@@ -17,7 +17,7 @@
 %  H. Motteler, 12 Dec 2019
 %
 
-function airs_loop(year, dlist)
+function cris_loop(year, dlist)
 
 % test params
 % year = 2019;
@@ -25,23 +25,22 @@ function airs_loop(year, dlist)
 
 % set up source paths
 addpath /home/motteler/cris/ccast/source
-addpath /home/motteler/shome/airs_decon/source
 addpath /home/motteler/cris/ccast/motmsc/time
 
-% AIRS and CHIRP local homes
-ahome = '/asl/xfs3/airs/L1C';  % AIRS source home
-chome = '/asl/hpcnfs1/chirp/airs_L1c';  % CHIRP output home
+% CrIS and CHIRP local data homes
+% ahome = '/asl/cris/ccast/sdr45_j01_HR';
+ahome = '/home/motteler/shome/daac_test/SNPPCrISL1B.2';  % CrIS source home
+chome = '/asl/hpcnfs1/chirp/cris_npp';                   % CHIRP output home
 
-% AIRS and CHIRP annual data (home/yyyy)
+% CrIS and CHIRP annual data (home/yyyy)
 ayear = fullfile(ahome, sprintf('%d', year));
 cyear = fullfile(chome, sprintf('%d', year));
 
-% airs2chirp options
+% cris2chirp options
 opt1 = struct;
-opt1.sdr_src = 'AIRS-L1C';  % sounder source intrument
+opt1.sdr_src = 'CRIS-NPP';  % CRIS-NPP, CRIS-J01, CRIS-J02, etc.
 opt1.vtag = '01a';          % translation version for output files
 opt1.verbose = 0;           % 0 = quiet, 1 = talky, 2 = plots
-opt1.tchunk = 400;
 
 fstr = mfilename;  % this function name
 
@@ -63,11 +62,11 @@ for di = dlist
   % create the output path, if needed
   if exist(cpath) ~= 7, mkdir(cpath), end
 
-  % loop on AIRS granules
-  flist = dir(fullfile(apath, 'AIRS*L1C*.hdf'));
-  for fi = 1 : length(flist);
+  % loop on CrIS granules
+  flist = dir(fullfile(apath, 'SNDR*CRIS*.nc'));
+  for fi = 1 : length(flist)
     agran = fullfile(apath, flist(fi).name);
-    airs2chirp(agran, cpath, opt1);
+    cris2chirp(agran, cpath, opt1);
   end % loop on granules
 end % loop on days
 

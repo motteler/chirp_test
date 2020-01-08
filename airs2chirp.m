@@ -1,74 +1,110 @@
 %
 % NAME
-%   airs2chirp - translate an AIRS granule to CHIRP
+%   airs2chirp - translate AIRS to CHIRP granules
 %
 % SYNOPSIS
-%   airs2chirp(agran, cdir, opt1)
+%   airs2chirp(airs_gran, chirp_dir, opt1)
 %
 % INPUTS
-%   agran - AIRS input granule file
-%   cdir  - CHIRP output granule dir
-%   opt1  - processing options
+%   airs_gran  - AIRS input granule file
+%   chirp_dir  - CHIRP output granule dir
+%   opt1       - processing options
+%
+% any processing options set in opt1 are mainly intended for
+% testing.  For most cases we want to use the defaults below.
+% One exception might be vtag, the translation version, though
+% maybe that should also be set below, if it is used to track
+% major code versions.
 %
 % AUTHOR
 %  H. Motteler, 8 July 2019
 %
-% NOTES
-%   need to check that cdir exists 
-%
 
-function airs2chirp(agran, cdir, opt1)
+function airs2chirp(airs_gran, chirp_dir, opt1)
 
-verbose = 0;
+%--------------------------
+% setup and default options
+%---------------------------
 
-% test values
-% addpath /home/motteler/cris/ccast/source
-% addpath /home/motteler/shome/airs_decon/source
-% addpath /home/motteler/cris/ccast/motmsc/time
-% s1 = '/asl/data/airs/L1C/2019/120';
-% s2 = 'AIRS.2019.04.30.036.L1C.AIRS_Rad.v6.1.2.0.G19120112646.hdf';
-% s1 = '/asl/data/airs/L1C/2017/183';
-% s2 = 'AIRS.2017.07.02.047.L1C.AIRS_Rad.v6.1.2.0.G17183112059.hdf';
-% agran = fullfile(s1, s2);
+% general options
+sdr_src = 'AIRS-L1C';  % sounder source intrument
+vtag = '01a';          % translation version for output files
+verbose = 0;           % 0 = quiet, 1 = talky, 2 = plots
+
+% translation options
+opt2 = struct;
+opt2.user_res = 'midres';        % target resolution
+opt2.hapod = 1;                  % Hamming apodization
+opt2.scorr = 1;                  % statistical correction
+opt2.cfile = 'corr_midres.mat';  % correction weights
+tchunk = 400;                    % translation chunk size
 
 % AIRS SRF tabulation file
 sfile = './airs_demo_srf.hdf';
 
-%-------------------
-% setup and options
-%-------------------
-
-% translation options
-opt1 = struct;
-opt1.user_res = 'midres';        % target resolution
-opt1.hapod = 1;                  % Hamming apodization
-opt1.scorr = 1;                  % statistical correction
-opt1.cfile = 'corr_midres.mat';  % correction weights
-tchunk = 400;                    % translation chunk size
-
+% AIRS parameters
 nchan = 2645;     % L1c channels
 nobs = 90 * 135;  % xtrack x atrack obs
 L1c_err = 999;    % L1c error flag
 
+% option to override defaults 
+if nargin == 3
+  if isfield(opt1, 'vtag'), vtag = opt1.vtag; end
+  if isfield(opt1, 'sdr_src'), sdr_src = opt1.sdr_src; end
+  if isfield(opt1, 'verbose'), verbose = opt1.verbose; end
+  if isfield(opt1, 'user_res'), opt2.user_res = opt1.user_res; end
+  if isfield(opt1, 'hapod'), opt2.hapod = opt1.hapod; end
+  if isfield(opt1, 'scorr'), opt2.scorr = opt1.scorr; end
+  if isfield(opt1, 'cfile'), opt2.cfile = opt1.cfile; end
+  if isfield(opt1, 'tchunk'), tchunk = opt1.tchunk; end
+end
+
 fstr = mfilename;  % this function name
+
+% optional parameter summary
+if verbose
+  fprintf(1, '------------------------------------------------\n')
+  fprintf(1, '%s: sdr_src=%s vtag=%s user_res=%s hapod=%d\n', ...
+    fstr, sdr_src, vtag, opt2.user_res, opt2.hapod)
+  fprintf(1, '%s: scorr=%d tchunk=%d cfile=%s\n', ...
+    fstr, opt2.scorr, tchunk, opt2.cfile);
+  fprintf(1, '%s: sfile=%s\n', sfile);
+end
+
+% check source file 
+if exist(airs_gran) ~= 2
+  fprintf(1, '%s: missing source file %s\n', fstr, airs_gran)
+  return
+end
+
+% check output directory
+if exist(chirp_dir) ~= 7, 
+  fprintf(1, '%s: bad output path %s\n', fstr, chirp_dir)
+  return
+end
 
 %---------------------
 % read the AIRS data
 %---------------------
 try
-  d1 = read_airs_h4(agran);
+  d1 = read_airs_h4(airs_gran);
 catch
-  fprintf(1, '%s: could not read %s\n', fstr, agran)
+  fprintf(1, '%s: could not read %s\n', fstr, airs_gran)
   return
 end
 
 % get the AIRS granule ID
-[~, gstr, ~] = fileparts(agran);
+[~, gstr, ~] = fileparts(airs_gran);
 gran_id = str2double(gstr(17:19));
 
 %----------------------------------
 % reshape and rename the AIRS data
 %----------------------------------
+
+% per-granule values
+freq_airs  = d1.nominal_freq;
+nsynth_airs = double(d1.L1cNumSynth);
+
 % nchan x xtrack x atrack to nchan x nobs
 rad_airs   = reshape(d1.radiances, [nchan, nobs]);
 nedn_airs  = reshape(d1.NeN,       [nchan, nobs]);
@@ -100,10 +136,6 @@ asc_flag       = reshape(repmat(d1.scan_node_type', 90, 1), nobs, 1);
 atrack_ind = reshape(repmat(1:135, 90, 1), nobs, 1);
 xtrack_ind = reshape(repmat((1:90)', 1, 135), nobs, 1);
 
-% AIRS per-granule values
-freq_airs  = d1.nominal_freq;
-nsynth_airs = double(d1.L1cNumSynth);
-
 % whos rad_airs nedn_airs
 % whos obs_time_tai93 lat lon view_ang sat_zen sat_azi ...
 %   sol_zen sol_azi land_frac surf_alt surf_alt_sdev instrument_state
@@ -114,11 +146,6 @@ nsynth_airs = double(d1.L1cNumSynth);
 % clear d1
 
 % build the output filename
-% set sounder source and code version here, for now
-  sdr_src = 'AIRS-L1C';   % SDR sounder source
-% sdr_src = 'CRIS-NPP';
-% sdr_src = 'CRIS-J01';
-vtag = '01a';            % translation version
 dvec = datevec(airs2dnum(obs_time_tai93(1)));
 dvec(6) = round(dvec(6) * 10);
 cfmt = 'CHIRP_%s_d%04d%02d%02d_t%02d%02d%03d_g%03d_v%s.nc';
@@ -128,18 +155,38 @@ chirp_name = sprintf(cfmt, sdr_src, dvec, gran_id, vtag);
 sfmt = '%s: processing d%04d%02d%02d_t%02d%02d%03d_g%03d\n';
 fprintf(1, sfmt, fstr, dvec, gran_id);
 
-%------------------------
-% linearized translation
-%------------------------
+%--------------------------
+% AIRS to CrIS translation
+%--------------------------
 
-% A linearized version of the AIRS to CrIS transform is used for
-% translation QC and NEdN estimates.  It is simply the translation
-% of the identity matrix.
+% loop on chunks
+for j = 1 : tchunk : nobs
+  
+  % indices for current chunk
+  ix = j : min(j+tchunk-1, nobs);
 
-opt2 = opt1;     % use options as set above
-opt2.scorr = 0;  % turn off statistical correction
-[Tac, freq_cris] = airs2cris(eye(nchan), freq_airs, sfile, opt2);
-Tac = real(Tac);
+  % call airs2cris on the chunk
+  [rtmp, freq_cris] = airs2cris(rad_airs(:, ix), freq_airs, sfile, opt2);
+
+  % initialize output after first obs
+  if j == 1
+    [m, ~] = size(rtmp);
+    rad_cris = zeros(m, nobs);
+  end
+
+  % save the current chunk
+  rad_cris(:, ix) = rtmp;
+
+% fprintf(1, '.');
+end
+% fprintf(1, '\n');
+
+%-------------------
+% AIRS to CrIS NEdN
+%-------------------
+
+nedn_cris = ...
+  nedn_est(nedn_airs, freq_airs, sfile, opt2);
 
 %-----------------
 % AIRS-to-CrIS QC
@@ -151,6 +198,15 @@ Tac = real(Tac);
 % rad_qc will always be 0 or 2, while synth_qc will always be 0 or
 % 1.
 
+% A linearized version of the AIRS to CrIS transform is used for
+% translation QC.  It is simply the translation of the identity
+% matrix.
+
+opt3 = opt2;     % use options as set above
+opt3.scorr = 0;  % turn off statistical correction
+[Tac, freq_cris] = airs2cris(eye(nchan), freq_airs, sfile, opt3);
+Tac = real(Tac);
+
 nsynth_cris = Tac * nsynth_airs;
 synfrac = nsynth_cris / max(nsynth_cris);
 
@@ -160,10 +216,14 @@ sOK = synfrac < 0.15;  % for now, us a nominal or test value
 % translate sOK to NASA-style 3-value flags, 0=OK, 1=warn, 2=bad
 syn_qc = ~sOK;
 
-fprintf(1, '%s: flagging %d out of %d synthetic channels\n', ...
-        fstr, sum(syn_qc), nchan);
+nchan_cris = length(nsynth_cris);
 
 if verbose
+  fprintf(1, '%s: %d / %d synthetic channels\n', ...
+          fstr, sum(syn_qc), nchan_cris)
+end
+
+if verbose == 2;
   % plot AIRS and CrIS synthetic values
   figure(1)
   y1 = nsynth_airs / max(nsynth_airs);
@@ -181,7 +241,7 @@ if verbose
   xlabel('wavenumber (cm-1)')
   ylabel('synthetic fraction')
   grid on; zoom on
-end % if verbose
+end
 
 % true if geo, radiance, and instrument_state are all OK
 iOK = -90 <= lat & lat <= 90 & -180 <= lon & lon <= 180 ...
@@ -190,52 +250,28 @@ iOK = -90 <= lat & lat <= 90 & -180 <= lon & lon <= 180 ...
 % translate iOK to NASA-style flags, 0=OK, 1=warn, 2=bad
 rad_qc = ~iOK * 2;
 
-%-------------------
-% AIRS to CrIS NEdN
-%-------------------
-
-nedn_tran = ...
-  nedn_chirp(nedn_airs, freq_airs, nsynth_airs, Tac, sfile, opt1);
-
-%--------------------------
-% AIRS to CrIS translation
-%--------------------------
-
-% loop on chunks
-for j = 1 : tchunk : nobs
-  
-  % indices for current chunk
-  ix = j : min(j+tchunk-1, nobs);
-
-  % call airs2cris on the chunk
-  [rtmp, freq_cris] = airs2cris(rad_airs(:, ix), freq_airs, sfile, opt1);
-
-  % initialize output after first obs
-  if j == 1
-    [m, ~] = size(rtmp);
-    crad = zeros(m, nobs);
-  end
-
-  % save the current chunk
-  crad(:, ix) = rtmp;
-
-% fprintf(1, '.');
+% QC summary
+nOK = sum(rad_qc == 0);
+if nOK == 0
+  fprintf(1, '%s: no valid AIRS data, skipping this granule...\n', fstr)
+  return
+elseif nOK < nobs
+  fprintf(1, '%s: %d / %d valid AIRS obs\n', fstr, nOK, nobs)
 end
-% fprintf(1, '\n');
 
 %----------------------------
 % save translation as netCDF
 %----------------------------
 
-nc_init = 'chirp_init.nc';
-nc_data = fullfile(cdir, chirp_name);
+nc_init = 'airs2chirp.nc';
+nc_data = fullfile(chirp_dir, chirp_name);
 copyfile(nc_init, nc_data);
 
-ncwrite(nc_data, 'rad', single(crad));
+ncwrite(nc_data, 'rad', single(rad_cris));
 ncwrite(nc_data, 'rad_qc', uint8(rad_qc));
 ncwrite(nc_data, 'syn_qc', uint8(syn_qc));
 ncwrite(nc_data, 'synfrac', single(synfrac));
-ncwrite(nc_data, 'nedn', single(nedn_tran));
+ncwrite(nc_data, 'nedn', single(nedn_cris));
 ncwrite(nc_data, 'wnum', freq_cris);
 
 ncwrite(nc_data, 'obs_time_tai93', obs_time_tai93);
@@ -269,5 +305,5 @@ ncwrite(nc_data, 'xtrack_ind', uint8(xtrack_ind));
 % rad2 = ncread(nc_data, 'rad');
 
 % isequal(freq_cris, wnum2)
-% isequal(single(crad), rad2)
+% isequal(single(rad_cris), rad2)
 

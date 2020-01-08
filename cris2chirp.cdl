@@ -1,10 +1,11 @@
 netcdf chirp_init {
 dimensions:
-        wnum = 1483;
+        nfov = 9;
+        nchan = 1679;
         nobs = 12150;
 	utc_tuple = 8 ;
 variables:
-	float rad(nobs, wnum) ;
+	float rad(nobs, nchan) ;
 		string rad:units = "mW/(m2 sr cm-1)" ;
 		string rad:ancillary_variables = "rad_lw_qc" ;
 		string rad:long_name = "real spectral radiance" ;
@@ -26,7 +27,7 @@ variables:
                 string rad_qc:flag_meanings = "Best Good Do_Not_Use" ;
                 rad_qc:flag_values = 0b, 1b, 2b ;
 
-        byte syn_qc(nobs) ;
+        byte syn_qc(nchan) ;
                 string syn_qc:units = "1" ;
                 syn_qc:valid_range = 0b, 2b ;
                 string syn_qc:long_name = "rad synthetic fraction flag" ;
@@ -38,14 +39,14 @@ variables:
                 string syn_qc:flag_meanings = "Best Good Do_Not_Use" ;
                 syn_qc:flag_values = 0b, 1b, 2b ;
 
-	float synfrac(wnum) ;
+	float synfrac(nchan) ;
 		string synfrac:units = "synthetic fraction (ratio)" ;
 		string synfrac:long_name = "synthetic channel fraction" ;
 		string synfrac:description = "synthetic channel fraction" ;
 		synfrac:_FillValue = 9.96921e+36f ;
 		string synfrac:coverage_content_type = "qualityInformation" ;
 
-	float nedn(wnum) ;
+	float nedn(nfov, nchan) ;
 		string nedn:units = "mW/(m2 sr cm-1)" ;
 		string nedn:long_name = "noise equivalent differential radiance" ;
 		string nedn:description = "noise equivalent differential radiance" ;
@@ -249,22 +250,23 @@ variables:
 		atrack_ind:_FillValue = 255UB ;
 		string atrack_ind:coverage_content_type = "auxiliaryInformation" ;
 
-//	ubyte for_num(nobs) ;
-//		string for_num:units = "1" ;
-//		for_num:valid_range = 1UB, 30UB ;
-//		string for_num:long_name = "field of regard number" ;
-//		string for_num:description = "field of regard number" ;
-//		for_num:_FillValue = 255UB ;
-//		string for_num:coverage_content_type = "auxiliaryInformation" ;
-//	ubyte fov_num(nobs) ;
-//		string fov_num:units = "1" ;
-//		fov_num:valid_range = 1UB, 9UB ;
-//		string fov_num:long_name = "field of view number" ;
-//		string fov_num:description = "field of view number" ;
-//		fov_num:_FillValue = 255UB ;
-//		string fov_num:coverage_content_type = "auxiliaryInformation" ;
+	ubyte for_ind(nobs) ;
+		string for_ind:units = "1" ;
+		for_ind:valid_range = 1UB, 30UB ;
+		string for_ind:long_name = "field of regard number" ;
+		string for_ind:description = "field of regard number" ;
+		for_ind:_FillValue = 255UB ;
+		string for_ind:coverage_content_type = "auxiliaryInformation" ;
 
-	double wnum(wnum) ;
+	ubyte fov_ind(nobs) ;
+		string fov_ind:units = "1" ;
+		fov_ind:valid_range = 1UB, 9UB ;
+		string fov_ind:long_name = "field of view number" ;
+		string fov_ind:description = "field of view number" ;
+		fov_ind:_FillValue = 255UB ;
+		string fov_ind:coverage_content_type = "auxiliaryInformation" ;
+
+	double wnum(nchan) ;
 		string wnum:units = "cm-1" ;
 		wnum:valid_range = 648.75, 1096.25 ;
 		string wnum:long_name = "longwave wavenumber" ;
@@ -275,86 +277,14 @@ variables:
 
 // global attributes:
 		string :keywords = "EARTH SCIENCE > SPECTRAL/ENGINEERING > INFRARED WAVELENGTHS > INFRARED RADIANCE" ;
-		string :Conventions = "CF-1.6, ACDD-1.3" ;
-		string :source = "CrIS instrument telemetry" ;
 		string :processing_level = "1C" ;
 		string :comment = "" ;
 		string :acknowledgment = "Support for this research was provided by NASA." ;
-		string :standard_name_vocabulary = "CF Standard Name Table v28" ;
-		string :product_name_project = "SNDR" ;
-		string :geospatial_bounds_crs = "EPSG:4326" ;
-		string :product_name_duration = "m06" ;
-		string :keywords_vocabulary = "GCMD:GCMD Keywords" ;
-		string :platform = "SUOMI-NPP > Suomi National Polar-orbiting Partnership" ;
-		string :platform_vocabulary = "GCMD:GCMD Keywords" ;
-		string :product_name_platform = "SNPP" ;
-		string :instrument = "CrIS > Cross-track Infrared Sounder" ;
-		string :instrument_vocabulary = "GCMD:GCMD Keywords" ;
-		string :product_name_instr = "CRIS" ;
-		string :product_name_extension = "nc" ;
-		string :featureType = "point" ;
-		string :data_structure = "swath" ;
-		string :cdm_data_type = "Swath" ;
-		string :format_version = "v02.00.11" ;
-		:qa_pct_data_missing = 0.f ;
-		:qa_pct_data_geo = 100.f ;
-		:qa_pct_data_sci_mode = 100.f ;
-		string :title = "SNPP CrIS Level-1B FSR" ;
-		string :summary = "The Level-1B CrIS product includes normal spectral resolution data from the CrIS instrument for one six-minute interval.  Data is geolocated and calibrated." ;
-		string :shortname = "SNPPCrISL1B" ;
-		string :product_group = "l1b_cris" ;
 		string :references = "" ;
 		string :contributor_name = "UMBC Atmospheric Spectroscopy Laboratory: Larrabee Strow" ;
 		string :contributor_role = "CrIS L1B Scientist" ;
-		:naming_authority = "http://dx.doi.org/" ;
 		:license = "Freely Distributed" ;
-		:creator_name = "Sounder SIPS: GES DISC" ;
-		:creator_email = "gsfc-help-disc@lists.nasa.gov" ;
-		:creator_url = "http://disc.sci.gsfc.nasa.gov/" ;
-		:institution = "Goddard Space Flight Center - National Aeronautics and Space Administration" ;
-		:project = "Sounder SIPS" ;
-		:publisher_name = "Goddard Earth Science Data and Information Services Center" ;
-		:publisher_email = "gsfc-help-disc@lists.nasa.gov" ;
-		:publisher_url = "http://disc.sci.gsfc.nasa.gov/" ;
-		:creator_type = "group" ;
-		:creator_institution = "Goddard Space Flight Center - National Aeronautics and Space Administration" ;
-		:product_version = "" ;
-		:product_name_variant = "std" ;
-		:product_name_producer = "G" ;
-		:identifier_product_doi_authority = "http://dx.doi.org/" ;
-		:algorithm_version = "v2.0.15" ;
-		:id = "" ;
-		:identifier_product_doi = "" ;
-		:metadata_link = "http://disc.sci.gsfc.nasa.gov/" ;
-		:gran_id = "" ;
-		:product_name_granule_number = "" ;
-		:date_created = "" ;
-		:input_file_names = "" ;
-		:input_file_dates = "" ;
-		:input_file_types = "" ;
-		:history = "";
-		:production_host = "";
-		:product_name_type_id = "L1B" ;
-		:AutomaticQualityFlag = "Passed" ;
-		:qa_no_data = "FALSE" ;
-		:geospatial_lat_min = 25.32663f ;
-		:geospatial_lat_max = 50.05463f ;
-		:geospatial_lon_min = -131.3285f ;
-		:geospatial_lon_max = -99.75849f ;
-		:time_coverage_duration = "P0000-00-00T00:06:00" ;
-		:granule_number = 206US ;
-		:geospatial_lat_mid = 38.06906f ;
-		:geospatial_lon_mid = -113.8975f ;
-		:time_coverage_start = "2019-03-03T20:30:00Z" ;
-		:time_of_first_valid_obs = "2019-03-03T20:30:00.167113Z" ;
-		:time_coverage_mid = "2019-03-03T20:33:00Z" ;
-		:time_coverage_end = "2019-03-03T20:36:00Z" ;
-		:time_of_last_valid_obs = "2019-03-03T20:36:00.167113Z" ;
-		:geospatial_bounds = "POLYGON ((25.42 -121.32, 29.04 -100.10, 49.92 -103.17, 45.28 -130.95, 25.42 -121.32))" ;
-		:orbitDirection = "Ascending" ;
-		:day_night_flag = "Day" ;
-		:product_name = "" ;
-		:product_name_timestamp = "" ;
-		:product_name_version = "" ;
+		:product_name = "CHIRP" ;
+		:product_name_version = "01a" ;
 }
 

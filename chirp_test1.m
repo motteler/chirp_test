@@ -4,12 +4,12 @@
 
 addpath /home/motteler/cris/ccast/source
 
-ahome = '/asl/data/airs/L1C';   % AIRS source home
-chome = './test_run';   % CHIRP output home
+ahome = '/asl/data/airs/L1C';  % AIRS source home
+chome = '/asl/hpcnfs1/chirp/airs_L1c'; % CHIRP output home
 
 year = 2018;
-dstr = '091';
-gi = 4;  % granule index
+dstr = '093';  % doy as a string
+gi = 166;      % granule index
 
 % paths to AIRS and CHIRP data (home/yyyy)
 apath = fullfile(ahome, sprintf('%d', year), dstr);
