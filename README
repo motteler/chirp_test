@@ -29,6 +29,8 @@ netCDF format
 
   ncgen -o airs2chirp.nc airs2chirp.cdl
   ncgen -o cris2chirp.nc cris2chirp.cdl
+  ncgen -o chirp_master.nc chirp_master.cdl
+
 
 notes
 ------

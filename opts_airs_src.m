@@ -44,7 +44,7 @@ prod_name.instr     = 'CHIRP';
 prod_name.duration  = 'm06';
 prod_name.type_id   = 'L1C';
 prod_name.variant   = 'std';
-prod_name.version   = 'v01c';
+prod_name.version   = 'v01d';
 prod_name.producer  = 'U';
 prod_name.extension = 'nc';
 

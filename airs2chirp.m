@@ -3,72 +3,71 @@
 %   airs2chirp - translate AIRS to CHIRP granules
 %
 % SYNOPSIS
-%   airs2chirp(airs_gran, chirp_dir, opt1)
+%   airs2chirp(airs_gran, chirp_dir, prod_name, proc_opts)
 %
 % INPUTS
 %   airs_gran  - AIRS input granule file
 %   chirp_dir  - CHIRP output granule dir
-%   opt1       - processing options
+%   prod_name  - product attributes
+%   proc_opts  - processing options
 %
-% any processing options set in opt1 are mainly intended for
-% testing.  For most cases we want to use the defaults below.
-% One exception might be vtag, the translation version, though
-% maybe that should also be set below, if it is used to track
-% major code versions.
+% proc_opts are mainly for testing; the default values should be
+% used for production.
 %
 % AUTHOR
 %  H. Motteler, 8 July 2019
 %
 
-function airs2chirp(airs_gran, chirp_dir, opt1)
+function airs2chirp(airs_gran, chirp_dir, prod_name, proc_opts)
 
 %--------------------------
 % setup and default options
 %---------------------------
 
 % general options
-sdr_src = 'AIRS-L1C';  % sounder source intrument
-vtag = '01a';          % translation version for output files
-verbose = 0;           % 0 = quiet, 1 = talky, 2 = plots
+verbose = 0;  % 0 = quiet, 1 = talky, 2 = plots
 
 % translation options
-opt2 = struct;
-opt2.user_res = 'midres';        % target resolution
-opt2.hapod = 1;                  % Hamming apodization
-opt2.scorr = 1;                  % statistical correction
-opt2.cfile = 'corr_midres.mat';  % correction weights
-tchunk = 400;                    % translation chunk size
+hapod = 1;                  % apply Hamming apodization
+scorr = 1;                  % do a statistical correction
+user_res = 'midres';        % translation user resolution
+cfile = 'corr_midres.mat';  % statistical correction weights
+tchunk = 400;               % translation chunk size
 
 % AIRS SRF tabulation file
 sfile = './airs_demo_srf.hdf';
+
+% option to override defaults 
+if nargin == 4
+  if isfield(proc_opts, 'verbose'),  verbose  = proc_opts.verbose; end
+  if isfield(proc_opts, 'hapod'),    hapod    = proc_opts.hapod; end
+  if isfield(proc_opts, 'scorr'),    scorr    = proc_opts.scorr; end
+  if isfield(proc_opts, 'user_res'), user_res = proc_opts.user_res; end
+  if isfield(proc_opts, 'cfile'),    cfile    = proc_opts.cfile; end
+  if isfield(proc_opts, 'tchunk'),   tchunk   = proc_opts.tchunk; end
+  if isfield(proc_opts, 'sfile'),    sfile    = proc_opts.sfile; end
+end
+
+% options for airs2cris.m
+opt2 = struct;
+opt2.hapod = hapod;
+opt2.scorr = scorr;
+opt2.user_res = user_res;
+opt2.cfile = cfile;
 
 % AIRS parameters
 nchan = 2645;     % L1c channels
 nobs = 90 * 135;  % xtrack x atrack obs
 L1c_err = 999;    % L1c error flag
 
-% option to override defaults 
-if nargin == 3
-  if isfield(opt1, 'vtag'), vtag = opt1.vtag; end
-  if isfield(opt1, 'sdr_src'), sdr_src = opt1.sdr_src; end
-  if isfield(opt1, 'verbose'), verbose = opt1.verbose; end
-  if isfield(opt1, 'user_res'), opt2.user_res = opt1.user_res; end
-  if isfield(opt1, 'hapod'), opt2.hapod = opt1.hapod; end
-  if isfield(opt1, 'scorr'), opt2.scorr = opt1.scorr; end
-  if isfield(opt1, 'cfile'), opt2.cfile = opt1.cfile; end
-  if isfield(opt1, 'tchunk'), tchunk = opt1.tchunk; end
-end
-
-fstr = mfilename;  % this function name
+% this function name
+fstr = mfilename;  
 
 % optional parameter summary
 if verbose
   fprintf(1, '------------------------------------------------\n')
-  fprintf(1, '%s: sdr_src=%s vtag=%s user_res=%s hapod=%d\n', ...
-    fstr, sdr_src, vtag, opt2.user_res, opt2.hapod)
-  fprintf(1, '%s: scorr=%d tchunk=%d cfile=%s\n', ...
-    fstr, opt2.scorr, tchunk, opt2.cfile);
-  fprintf(1, '%s: sfile=%s\n', sfile);
+  fprintf(1, '%s: hapod=%d scorr=%d user_res=%s\n', fstr, hapod, scorr, user_res);
+  fprintf(1, '%s: cfile=%s tchunk=%d sfile=%s\n', fstr, cfile, tchunk, sfile);
 end
 
 % check source file 
@@ -95,7 +94,7 @@ end
 
 % get the AIRS granule ID
 [~, gstr, ~] = fileparts(airs_gran);
-gran_id = str2double(gstr(17:19));
+gran_num = str2double(gstr(17:19));
 
 %----------------------------------
 % reshape and rename the AIRS data
@@ -132,28 +131,33 @@ sun_glint_lat  = reshape(repmat(d1.glintlat',  90, 1), nobs, 1);
 sun_glint_lon  = reshape(repmat(d1.glintlon',  90, 1), nobs, 1);
 asc_flag       = reshape(repmat(d1.scan_node_type', 90, 1), nobs, 1);
 
-% add nobs atrack and xtrack indices
-atrack_ind = reshape(repmat(1:135, 90, 1), nobs, 1);
-xtrack_ind = reshape(repmat((1:90)', 1, 135), nobs, 1);
+clear d1
+
+% basic AIRS atrack and xtrack indices
+airs_atrack = reshape(repmat(1:135, 90, 1), nobs, 1);
+airs_xtrack = reshape(repmat((1:90)', 1, 135), nobs, 1);
+
+% CrIS-style 3 x 3 tiling (from Evan Manning)
+atrack = floor((airs_atrack - 1) / 3) + 1;
+xtrack = floor((airs_xtrack - 1) / 3) + 1;
+fov = mod(airs_xtrack-1, 3) + 3 * mod(airs_atrack-1, 3) + 1;
 
 % whos rad_airs nedn_airs
 % whos obs_time_tai93 lat lon view_ang sat_zen sat_azi ...
 %   sol_zen sol_azi land_frac surf_alt surf_alt_sdev instrument_state
 % whos subsat_lat subsat_lon scan_mid_time sat_alt ...
-%   sun_glint_lat sun_glint_lon asc_flag xtrack_ind atrack_ind ...
+%   sun_glint_lat sun_glint_lon asc_flag airs_xtrack airs_atrack ...
 %   freq_airs nsynth_airs
 
-% clear d1
-
 % build the output filename
-dvec = datevec(airs2dnum(obs_time_tai93(1)));
-dvec(6) = round(dvec(6) * 10);
-cfmt = 'CHIRP_%s_d%04d%02d%02d_t%02d%02d%03d_g%03d_v%s.nc';
-chirp_name = sprintf(cfmt, sdr_src, dvec, gran_id, vtag);
+run_time = now;
+obs_time = airs2dnum(obs_time_tai93(1));
+chirp_name = nasa_fname(gran_num, obs_time, run_time, prod_name);
 
 % print a status message
-sfmt = '%s: processing d%04d%02d%02d_t%02d%02d%03d_g%03d\n';
-fprintf(1, sfmt, fstr, dvec, gran_id);
+dstr = datestr(airs2dnum(obs_time_tai93(1)));
+sfmt = '%s: processing granule %03d, %s\n';
+fprintf(1, sfmt, fstr, gran_num, dstr);
 
 %--------------------------
 % AIRS to CrIS translation
@@ -263,7 +267,7 @@ end
 % save translation as netCDF
 %----------------------------
 
-nc_init = 'airs2chirp.nc';
+nc_init = 'chirp_master.nc';
 nc_data = fullfile(chirp_dir, chirp_name);
 copyfile(nc_init, nc_data);
 
@@ -295,8 +299,11 @@ ncwrite(nc_data, 'sun_glint_lat', sun_glint_lat);
 ncwrite(nc_data, 'sun_glint_lon', sun_glint_lon);
 ncwrite(nc_data, 'asc_flag', asc_flag);
 
-ncwrite(nc_data, 'atrack_ind', uint8(atrack_ind));
-ncwrite(nc_data, 'xtrack_ind', uint8(xtrack_ind));
+ncwrite(nc_data, 'airs_atrack', uint8(airs_atrack));
+ncwrite(nc_data, 'airs_xtrack', uint8(airs_xtrack));
+ncwrite(nc_data, 'atrack', uint8(atrack));
+ncwrite(nc_data, 'xtrack', uint8(xtrack));
+ncwrite(nc_data, 'fov', uint8(fov));
 
 % return
 

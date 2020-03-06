@@ -25,7 +25,7 @@ function cris2chirp(cris_gran, chirp_dir, prod_name, proc_opts)
 %---------------------------
 
 % general options
-verbose = 0;           % 0 = quiet, 1 = talky, 2 = plots
+verbose = 0;  % 0 = quiet, 1 = talky, 2 = plots
 
 % interpolation options
 hapod = 1;             % apply Hamming apodization
@@ -262,7 +262,7 @@ rad_qc = max(rad_lw_qc, max(rad_lw_qc, rad_lw_qc));
 % save translation as netCDF
 %----------------------------
 
-nc_init = 'cris2chirp.nc';
+nc_init = 'chirp_master.nc';
 nc_data = fullfile(chirp_dir, chirp_name);
 copyfile(nc_init, nc_data);
 
@@ -294,12 +294,14 @@ ncwrite(nc_data, 'sun_glint_lat', sun_glint_lat);
 ncwrite(nc_data, 'sun_glint_lon', sun_glint_lon);
 ncwrite(nc_data, 'asc_flag', asc_flag);
 
-ncwrite(nc_data, 'for_ind', uint8(for_ind));
-ncwrite(nc_data, 'fov_ind', uint8(fov_ind));
-ncwrite(nc_data, 'scan_ind', uint8(scan_ind));
+% renamings from CrIS to CHIRP indices
+ncwrite(nc_data, 'fov', uint8(fov_ind));
+ncwrite(nc_data, 'xtrack', uint8(for_ind));
+ncwrite(nc_data, 'atrack', uint8(scan_ind));
 
-% ncwrite(nc_data, 'atrack_ind', uint8(atrack_ind));
-% ncwrite(nc_data, 'xtrack_ind', uint8(xtrack_ind));
+% the following aren't defined for CrIS-parent
+% ncwrite(nc_data, 'airs_atrack', uint8(atrack_ind));
+% ncwrite(nc_data, 'airs_xtrack', uint8(xtrack_ind));
 
 % quick sanity checks
 % wnum2 = ncread(nc_data, 'wnum');
