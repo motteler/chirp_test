@@ -266,7 +266,7 @@ variables:
 
 	double wnum(nchan) ;
 		string wnum:units = "cm-1" ;
-		wnum:valid_range = 648.75, 1096.25 ;
+		wnum:valid_range = 648.75, 2555.0 ;
 		string wnum:long_name = "longwave wavenumber" ;
 		string wnum:standard_name = "sensor_band_central_radiation_wavenumber" ;
 		string wnum:description = "longwave wavenumber" ;

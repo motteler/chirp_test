@@ -3,40 +3,35 @@
 %   cris2chirp - interpolate CrIS to CHIRP granules
 %
 % SYNOPSIS
-%   cris2chirp(cris_gran, chirp_dir, opt1)
+%   cris2chirp(cris_gran, chirp_dir, prod_name, proc_opts)
 %
 % INPUTS
 %   cris_gran  - CrIS input granule file
 %   chirp_dir  - CHIRP output granule dir
-%   opt1       - processing options
+%   prod_name  - product attributes
+%   proc_opts  - processing options
 %
-% any processing options set in opt1 are mainly intended for
-% testing.  For most cases we want to use the defaults below.
-% One exception might be vtag, the translation version, though
-% maybe that should also be set below, if it is used to track
-% major code versions.
+% proc_opts are mainly for testing; the default values should be
+% used for production.
 %
 % AUTHOR
 %  H. Motteler, 18 Dec 2019
 %
 
-function cris2chirp(cris_gran, chirp_dir, opt1)
+function cris2chirp(cris_gran, chirp_dir, prod_name, proc_opts)
 
 %---------------------------
 % setup and default options
 %---------------------------
 
 % general options
-sdr_src = 'CRIS-NPP';  % CRIS-NPP, CRIS-J01, CRIS-J02, etc.
-vtag = '01a';          % translation version for output files
 verbose = 0;           % 0 = quiet, 1 = talky, 2 = plots
 
 % interpolation options
-opt2 = struct;
-opt2.user_res = 'midres';    % target resolution
-opt2.hapod = 1;              % Hamming apodization
-opt2.inst_res = 'hires3';    % nominal value for inst res
-wlaser = 773.1301;           % nominal falue for wlaser
+hapod = 1;             % apply Hamming apodization
+user_res = 'midres';   % target user resolution
+inst_res = 'hires3';   % nominal value for inst res
+wlaser = 773.1301;     % nominal value for wlaser
 
 % mid-res apodized scale factors for high res CrIS NEdN
 nedn_lw_sf = 0.6325;   % Hamming apodization only
@@ -44,24 +39,27 @@ nedn_mw_sf = 0.5455;   % interpolation and Hamming
 nedn_sw_sf = 0.4446;   % interpolation and Hamming
 
 % option to override defaults 
-if nargin == 3
-  if isfield(opt1, 'vtag'), vtag = opt1.vtag; end
-  if isfield(opt1, 'sdr_src'), sdr_src = opt1.sdr_src; end
-  if isfield(opt1, 'verbose'), verbose = opt1.verbose; end
-  if isfield(opt1, 'nedn_lw_sf'), nedn_lw_sf = opt1.nedn_lw_sf; end
-  if isfield(opt1, 'nedn_mw_sf'), nedn_mw_sf = opt1.nedn_mw_sf; end
-  if isfield(opt1, 'nedn_sw_sf'), nedn_sw_sf = opt1.nedn_sw_sf; end
-  if isfield(opt1, 'user_res'), opt2.user_res = opt1.user_res; end
-  if isfield(opt1, 'hapod'), opt2.hapod = opt1.hapod; end
+if nargin == 4
+  if isfield(proc_opts, 'verbose'),    verbose    = proc_opts.verbose; end
+  if isfield(proc_opts, 'hapod'),      hapod      = proc_opts.hapod; end
+  if isfield(proc_opts, 'user_res'),   user_res   = proc_opts.user_res; end
+  if isfield(proc_opts, 'nedn_lw_sf'), nedn_lw_sf = proc_opts.nedn_lw_sf; end
+  if isfield(proc_opts, 'nedn_mw_sf'), nedn_mw_sf = proc_opts.nedn_mw_sf; end
+  if isfield(proc_opts, 'nedn_sw_sf'), nedn_sw_sf = proc_opts.nedn_sw_sf; end
 end
 
-fstr = mfilename;  % this function name
+% options for inst_params.m
+opt2 = struct;
+opt2.user_res = user_res;
+opt2.inst_res = inst_res;
+
+% this function name
+fstr = mfilename;  
 
 % optional parameter summary
 if verbose
  fprintf(1, '------------------------------------------------\n')
- fprintf(1, '%s: sdr_src=%s vtag=%s user_res=%s hapod=%d\n', ...
-    fstr, sdr_src, vtag, opt2.user_res, opt2.hapod)
+ fprintf(1, '%s: hapod=%d user_res=%s \n', fstr, hapod, user_res)
  fprintf(1, '%s: NEdN scale factors %.4f %.4f %.4f\n', ...
     fstr, nedn_lw_sf, nedn_mw_sf, nedn_sw_sf)
 end
@@ -90,8 +88,8 @@ end
 
 % get the CrIS granule ID from filenames
 [~, gstr, ~] = fileparts(cris_gran);
-% gran_id = str2double(gstr(38:40));  % UMBC CCAST SDR filenames
-  gran_id = str2double(gstr(35:37));  % UW SDR filenames
+% gran_num = str2double(gstr(38:40));  % UMBC CCAST SDR filenames
+  gran_num = str2double(gstr(35:37));  % UW SDR filenames
 
 % get data sizes
 [~, nscan] = size(d1.obs_time_tai93);
@@ -168,21 +166,26 @@ fov_ind = reshape(iFOV' * ones(1,nFOR*nscan), nobs, 1);
 ftmp = reshape(iFOR' * ones(1,nscan), nFOR, nscan);
 for_ind = reshape(ones(nFOV,1)*ftmp(:)', nobs, 1);
 
+% add a scan index
+scan_ind = reshape(ones(nFOV*nFOR,1) * (1:nscan), nobs, 1);
+
 % build the output filename
-dvec = datevec(airs2dnum(obs_time_tai93(1)));
-dvec(6) = round(dvec(6) * 10);
-cfmt = 'CHIRP_%s_d%04d%02d%02d_t%02d%02d%03d_g%03d_v%s.nc';
-chirp_name = sprintf(cfmt, sdr_src, dvec, gran_id, vtag);
+run_time = now;
+obs_time = airs2dnum(obs_time_tai93(1));
+chirp_name = nasa_fname(gran_num, obs_time, run_time, prod_name);
 
 % print a status message
-sfmt = '%s: processing d%04d%02d%02d_t%02d%02d%03d_g%03d\n';
-fprintf(1, sfmt, fstr, dvec, gran_id);
+dstr = datestr(airs2dnum(obs_time_tai93(1)));
+sfmt = '%s: processing granule %03d, %s\n';
+fprintf(1, sfmt, fstr, gran_num, dstr);
 
 %-----------------------------
 % CrIS to CHIRP interpolation
 %-----------------------------
 % trim the LW user grid
 [~, user_lw] = inst_params('LW', wlaser, opt2);
+rad_lw = double(rad_lw);
+if hapod, rad_lw = hamm_app(rad_lw); end
 ix_lw = find(user_lw.v1 <= wnum_lw & wnum_lw <= user_lw.v2);
 vtmp_lw = wnum_lw(ix_lw);
 rtmp_lw = rad_lw(ix_lw, :); 
@@ -191,6 +194,8 @@ clear rad_lw
 % interpolate and trim the MW user grid
 [~, user_mw] = inst_params('MW', wlaser, opt2);
 [rtmp_mw, vtmp_mw] = finterp(rad_mw, wnum_mw, user_mw.dv);
+rtmp_mw = double(real(rtmp_mw));
+if hapod, rtmp_mw = hamm_app(rtmp_mw); end
 ix_mw = find(user_mw.v1 <= vtmp_mw & vtmp_mw <= user_mw.v2);
 vtmp_mw = vtmp_mw(ix_mw);
 rtmp_mw = rtmp_mw(ix_mw, :); 
@@ -199,6 +204,8 @@ clear rad_mw
 % interpolate and trim the SW user grid
 [~, user_sw] = inst_params('SW', wlaser, opt2);
 [rtmp_sw, vtmp_sw] = finterp(rad_sw, wnum_sw, user_sw.dv);
+rtmp_sw = double(real(rtmp_sw));
+if hapod, rtmp_sw = hamm_app(rtmp_sw); end
 ix_sw = find(user_sw.v1 <= vtmp_sw & vtmp_sw <= user_sw.v2);
 vtmp_sw = vtmp_sw(ix_sw);
 rtmp_sw = rtmp_sw(ix_sw, :); 
@@ -207,7 +214,6 @@ clear rad_sw
 % concatenate the bands
 rad = [rtmp_lw; rtmp_mw; rtmp_sw];
 wnum = [vtmp_lw; vtmp_mw; vtmp_sw];
-
 clear rtmp_lw rtmp_mw rtmp_sw
 
 %--------------------
@@ -290,6 +296,7 @@ ncwrite(nc_data, 'asc_flag', asc_flag);
 
 ncwrite(nc_data, 'for_ind', uint8(for_ind));
 ncwrite(nc_data, 'fov_ind', uint8(fov_ind));
+ncwrite(nc_data, 'scan_ind', uint8(scan_ind));
 
 % ncwrite(nc_data, 'atrack_ind', uint8(atrack_ind));
 % ncwrite(nc_data, 'xtrack_ind', uint8(xtrack_ind));
@@ -298,6 +305,6 @@ ncwrite(nc_data, 'fov_ind', uint8(fov_ind));
 % wnum2 = ncread(nc_data, 'wnum');
 % rad2 = ncread(nc_data, 'rad');
 
-% isequal(freq_cris, wnum2)
-% isequal(single(rad_cris), rad2)
+% isequal(wnum, wnum2)
+% isequal(rad, single(rad2))
 

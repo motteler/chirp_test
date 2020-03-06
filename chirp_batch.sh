@@ -24,7 +24,7 @@
 # #SBATCH --exclusive
 
 # exclude list
-#SBATCH --exclude=cnode[007,009]
+#SBATCH --exclude=cnode[106]
 
 # matlab options
 MATLAB=/usr/ebuild/software/MATLAB/2018b/bin/matlab

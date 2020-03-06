@@ -28,6 +28,7 @@ netCDF format
   cris2chirp.nc   - CrIS CHIRP SDR netCDF initial file
 
   ncgen -o airs2chirp.nc airs2chirp.cdl
+  ncgen -o cris2chirp.nc cris2chirp.cdl
 
 notes
 ------

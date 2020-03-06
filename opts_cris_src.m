@@ -1,23 +1,23 @@
 %
 % NAME
-%   cris_loop - run cris2chirp on a list of days
+%   opts_cris_src - cris2chirp options and loop on days
 %
 % SYNOPSIS
-%   cris_loop(year, dlist)
+%   opts_cris_src(year, dlist)
 %
 % INPUTS
-%   year   - year, as an integer
-%   dlist  - list of days-of-the-year
+%   year   - integer year
+%   dlist  - integer vector of days-of-the-year
 %
 % DISCUSSION
-%   this is where run parameters and paths should be set
-%   assumes data is organized as home/yyyy/doy/granules
+%   This is where run parameters and paths should be set.
+%   Assumes data is organized as home/yyyy/doy/granules.
 %
 % AUTHOR
 %  H. Motteler, 12 Dec 2019
 %
 
-function cris_loop(year, dlist)
+function opts_cris_src(year, dlist)
 
 % test params
 % year = 2019;
@@ -26,6 +26,7 @@ function cris_loop(year, dlist)
 % set up source paths
 addpath /home/motteler/cris/ccast/source
 addpath /home/motteler/cris/ccast/motmsc/time
+addpath /home/motteler/shome/airs_decon/source
 
 % CrIS and CHIRP local data homes
 % ahome = '/asl/cris/ccast/sdr45_j01_HR';
@@ -36,13 +37,24 @@ chome = '/asl/hpcnfs1/chirp/cris_npp';                   % CHIRP output home
 ayear = fullfile(ahome, sprintf('%d', year));
 cyear = fullfile(chome, sprintf('%d', year));
 
-% cris2chirp options
-opt1 = struct;
-opt1.sdr_src = 'CRIS-NPP';  % CRIS-NPP, CRIS-J01, CRIS-J02, etc.
-opt1.vtag = '01a';          % translation version for output files
-opt1.verbose = 0;           % 0 = quiet, 1 = talky, 2 = plots
+% CHIRP product attributes
+prod_name = struct;
+prod_name.project   = 'SNDR';
+prod_name.platform  = 'SNPP';
+prod_name.instr     = 'CHIRP';
+prod_name.duration  = 'm06';
+prod_name.type_id   = 'L1C';
+prod_name.variant   = 'std';
+prod_name.version   = 'v01c';
+prod_name.producer  = 'U';
+prod_name.extension = 'nc';
 
-fstr = mfilename;  % this function name
+% cris2chirp options
+proc_opts = struct;
+proc_opts.verbose = 0;   % 0 = quiet, 1 = talky, 2 = plots
+
+% this function name
+fstr = mfilename;  
 
 % loop on days of the year
 for di = dlist
@@ -66,7 +78,7 @@ for di = dlist
   flist = dir(fullfile(apath, 'SNDR*CRIS*.nc'));
   for fi = 1 : length(flist)
     agran = fullfile(apath, flist(fi).name);
-    cris2chirp(agran, cpath, opt1);
+    cris2chirp(agran, cpath, prod_name, proc_opts);
   end % loop on granules
 end % loop on days
 
