@@ -1,6 +1,6 @@
 %
 % NAME
-%   opts_cris_src - cris2chirp options and loop on days
+%   opts_cris_src - set cris2chirp options and loop on days
 %
 % SYNOPSIS
 %   opts_cris_src(year, dlist)
@@ -31,27 +31,27 @@ addpath /home/motteler/shome/airs_decon/source
 % CrIS and CHIRP local data homes
 % ahome = '/asl/cris/ccast/sdr45_j01_HR';
 ahome = '/home/motteler/shome/daac_test/SNPPCrISL1B.2';  % CrIS source home
-chome = '/asl/hpcnfs1/chirp/cris_npp';                   % CHIRP output home
+chome = '/asl/hpcnfs1/chirp/cris_npp_src';               % CHIRP output home
 
 % CrIS and CHIRP annual data (home/yyyy)
 ayear = fullfile(ahome, sprintf('%d', year));
 cyear = fullfile(chome, sprintf('%d', year));
 
-% CHIRP product attributes
-prod_name = struct;
-prod_name.project   = 'SNDR';
-prod_name.platform  = 'SNPP';
-prod_name.instr     = 'CHIRP';
-prod_name.duration  = 'm06';
-prod_name.type_id   = 'L1C';
-prod_name.variant   = 'std';
-prod_name.version   = 'v01d';
-prod_name.producer  = 'U';
-prod_name.extension = 'nc';
+% run-specific CHIRP product attributes
+prod_attr = init_prod_attr;
+prod_attr.product_name_project    = 'SNDR';
+prod_attr.product_name_platform   = 'SS1330';
+prod_attr.product_name_instr      = 'CHIRP';
+prod_attr.product_name_duration   = 'm06';
+prod_attr.product_name_type_id    = 'L1_CNP';
+prod_attr.product_name_variant    = 'std';
+prod_attr.product_name_version    = 'v01_07';
+prod_attr.product_name_producer   = 'U';
+prod_attr.product_name_extension  = 'nc';
 
 % cris2chirp options
 proc_opts = struct;
-proc_opts.verbose = 0;   % 0 = quiet, 1 = talky, 2 = plots
+proc_opts.verbose = 1;   % 0=quiet, 1=talky, 2=plots
 
 % this function name
 fstr = mfilename;  
@@ -78,7 +78,7 @@ for di = dlist
   flist = dir(fullfile(apath, 'SNDR*CRIS*.nc'));
   for fi = 1 : length(flist)
     agran = fullfile(apath, flist(fi).name);
-    cris2chirp(agran, cpath, prod_name, proc_opts);
+    cris2chirp(agran, cpath, prod_attr, proc_opts);
   end % loop on granules
 end % loop on days
 

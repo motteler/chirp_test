@@ -1,6 +1,6 @@
 %
 % NAME
-%   opts_airs_src - run airs2chirp on a list of days
+%   opts_airs_src - set airs2chirp options and loop on days
 %
 % SYNOPSIS
 %   opts_airs_src(year, dlist)
@@ -19,38 +19,34 @@
 
 function opts_airs_src(year, dlist)
 
-% test params
-% year = 2019;
-% dlist = 61 : 63;
-
 % set up source paths
 addpath /home/motteler/cris/ccast/source
 addpath /home/motteler/cris/ccast/motmsc/time
 addpath /home/motteler/shome/airs_decon/source
 
 % AIRS and CHIRP local homes
-ahome = '/asl/hpcnfs1/airs/L1C';        % AIRS source home
-chome = '/asl/hpcnfs1/chirp/airs_L1c';  % CHIRP output home
+ahome = '/asl/hpcnfs1/airs/L1C';            % AIRS source home
+chome = '/asl/hpcnfs1/chirp/airs_L1c_src';  % CHIRP output home
 
 % AIRS and CHIRP annual data (home/yyyy)
 ayear = fullfile(ahome, sprintf('%d', year));
 cyear = fullfile(chome, sprintf('%d', year));
 
-% CHIRP product attributes
-prod_name = struct;
-prod_name.project   = 'SNDR';
-prod_name.platform  = 'AIRS';
-prod_name.instr     = 'CHIRP';
-prod_name.duration  = 'm06';
-prod_name.type_id   = 'L1C';
-prod_name.variant   = 'std';
-prod_name.version   = 'v01d';
-prod_name.producer  = 'U';
-prod_name.extension = 'nc';
+% run-specific CHIRP product attributes
+prod_attr = init_prod_attr;
+prod_attr.product_name_project    = 'SNDR';
+prod_attr.product_name_platform   = 'SS1330';
+prod_attr.product_name_instr      = 'CHIRP';
+prod_attr.product_name_duration   = 'm06';
+prod_attr.product_name_type_id    = 'L1_AIR';
+prod_attr.product_name_variant    = 'std';
+prod_attr.product_name_version    = 'v01_07';
+prod_attr.product_name_producer   = 'U';
+prod_attr.product_name_extension  = 'nc';
 
 % airs2chirp options
 proc_opts = struct;
-proc_opts.verbose = 0;   % 0 = quiet, 1 = talky, 2 = plots
+proc_opts.verbose = 1;   % 0=quiet, 1=talky, 2=plots
 proc_opts.tchunk = 400;  % translation chunk size
 
 % this function name
@@ -78,7 +74,7 @@ for di = dlist
   flist = dir(fullfile(apath, 'AIRS*L1C*.hdf'));
   for fi = 1 : length(flist);
     agran = fullfile(apath, flist(fi).name);
-    airs2chirp(agran, cpath, prod_name, proc_opts);
+    airs2chirp(agran, cpath, prod_attr, proc_opts);
   end % loop on granules
 end % loop on days
 

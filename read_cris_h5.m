@@ -37,8 +37,16 @@ d1.wnum_lw = h5read(cgran, '/wnum_lw');
 d1.wnum_mw = h5read(cgran, '/wnum_mw');
 d1.wnum_sw = h5read(cgran, '/wnum_sw');
 
-% time, nFOR x nscan array
+% TAI time, nFOR x nscan array
 d1.obs_time_tai93   = h5read(cgran, '/obs_time_tai93');
+
+% *** TEST ***  added fields
+d1.obs_time_utc = h5read(cgran, '/obs_time_utc');
+d1.obs_id       = h5read(cgran, '/obs_id');
+d1.fov_obs_id   = h5read(cgran, '/fov_obs_id');
+d1.sat_range    = h5read(cgran, '/sat_range');
+d1.lat_bnds     = h5read(cgran, '/lat_bnds');
+d1.lon_bnds     = h5read(cgran, '/lon_bnds');
 
 % full swath data, nFOV x nFOR x nscan arrays
 d1.lat              = h5read(cgran, '/lat');

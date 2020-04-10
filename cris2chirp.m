@@ -3,35 +3,31 @@
 %   cris2chirp - interpolate CrIS to CHIRP granules
 %
 % SYNOPSIS
-%   cris2chirp(cris_gran, chirp_dir, prod_name, proc_opts)
+%   cris2chirp(cris_gran, chirp_dir, prod_attr, proc_opts)
 %
 % INPUTS
 %   cris_gran  - CrIS input granule file
 %   chirp_dir  - CHIRP output granule dir
-%   prod_name  - product attributes
+%   prod_attr  - global product attributes
 %   proc_opts  - processing options
 %
-% proc_opts are mainly for testing; the default values should be
-% used for production.
+% proc_opts are mainly for testing; the default values should
+% generally be used for production.
 %
 % AUTHOR
 %  H. Motteler, 18 Dec 2019
 %
 
-function cris2chirp(cris_gran, chirp_dir, prod_name, proc_opts)
+function cris2chirp(cris_gran, chirp_dir, prod_attr, proc_opts)
 
 %---------------------------
 % setup and default options
 %---------------------------
 
-% general options
-verbose = 0;  % 0 = quiet, 1 = talky, 2 = plots
-
-% interpolation options
-hapod = 1;             % apply Hamming apodization
-user_res = 'midres';   % target user resolution
-inst_res = 'hires3';   % nominal value for inst res
-wlaser = 773.1301;     % nominal value for wlaser
+% default parameters
+verbose = 0;                % 0=quiet, 1=talky, 2=plots
+hapod = 1;                  % apply Hamming apodization
+nc_init = 'chirp_1330.nc';  % initial empty netcdf file
 
 % mid-res apodized scale factors for high res CrIS NEdN
 nedn_lw_sf = 0.6325;   % Hamming apodization only
@@ -42,26 +38,30 @@ nedn_sw_sf = 0.4446;   % interpolation and Hamming
 if nargin == 4
   if isfield(proc_opts, 'verbose'),    verbose    = proc_opts.verbose; end
   if isfield(proc_opts, 'hapod'),      hapod      = proc_opts.hapod; end
-  if isfield(proc_opts, 'user_res'),   user_res   = proc_opts.user_res; end
+  if isfield(proc_opts, 'nc_init'),    nc_init    = proc_opts.nc_init; end
   if isfield(proc_opts, 'nedn_lw_sf'), nedn_lw_sf = proc_opts.nedn_lw_sf; end
   if isfield(proc_opts, 'nedn_mw_sf'), nedn_mw_sf = proc_opts.nedn_mw_sf; end
   if isfield(proc_opts, 'nedn_sw_sf'), nedn_sw_sf = proc_opts.nedn_sw_sf; end
 end
 
-% options for inst_params.m
-opt2 = struct;
-opt2.user_res = user_res;
-opt2.inst_res = inst_res;
+% fixed CHIRP parameters
+user_res = 'midres';   % translation user resolution
+nchan_chirp = 1679;    % should match the chirp cdl spec
+
+% arguments for inst_params
+opt2 = struct;             % inst_params opts
+opt2.user_res = user_res;  % pass along user_res
+wlaser = 773.1301;         % nominal wlaser value
 
 % this function name
 fstr = mfilename;  
 
 % optional parameter summary
 if verbose
- fprintf(1, '------------------------------------------------\n')
- fprintf(1, '%s: hapod=%d user_res=%s \n', fstr, hapod, user_res)
- fprintf(1, '%s: NEdN scale factors %.4f %.4f %.4f\n', ...
-    fstr, nedn_lw_sf, nedn_mw_sf, nedn_sw_sf)
+  fprintf(1, '%s: hapod=%d\n', fstr, hapod)
+  fprintf(1, '%s: nc_init=%s\n', fstr, nc_init);
+  fprintf(1, '%s: NEdN scale factors %.4f %.4f %.4f\n', ...
+             fstr, nedn_lw_sf, nedn_mw_sf, nedn_sw_sf)
 end
 
 % check source file 
@@ -80,7 +80,7 @@ end
 % read CrIS data
 %----------------
 try
-  d1 = read_cris_h5(cris_gran);
+  [d1, a1] = read_netcdf_h5(cris_gran);
 catch
   fprintf(1, '%s: could not read %s\n', fstr, cris_gran)
   return
@@ -122,9 +122,19 @@ rad_lw = reshape(d1.rad_lw, nchan_lw, nobs);
 rad_mw = reshape(d1.rad_mw, nchan_mw, nobs);
 rad_sw = reshape(d1.rad_sw, nchan_sw, nobs);
 
+% sdummy values (0 = OK) for chan_qc
+
+% set AIRS-specific QC to zero
+chan_qc = zeros(nchan_chirp, 1);  % AIRS parent channel QC
+synfrac = zeros(nchan_chirp, 1);  % AIRS parent synthetic fraction
+
 % copy time across FOVs and reshape as an nobs vector
 obs_time_tai93 = ...
   reshape(ones(nFOV,1)*d1.obs_time_tai93(:)', nobs, 1);
+obs_time_utc = tai93_to_tuple(obs_time_tai93);
+
+% reshape fov_obs_id and copy to obs_id
+% obs_id = reshape(d1.fov_obs_id, nobs, 1);
 
 % reshape nFOV x nFOR x nscan arrays to nobs vectors
 lat              = reshape(d1.lat,            nobs, 1);
@@ -137,10 +147,13 @@ sol_azi          = reshape(d1.sol_azi,        nobs, 1);
 land_frac        = reshape(d1.land_frac,      nobs, 1);
 surf_alt         = reshape(d1.surf_alt,       nobs, 1);
 surf_alt_sdev    = reshape(d1.surf_alt_sdev,  nobs, 1);
-instrument_state = reshape(d1.instrument_state, nobs, 1);
 rad_lw_qc        = reshape(d1.rad_lw_qc,      nobs, 1);
 rad_mw_qc        = reshape(d1.rad_mw_qc,      nobs, 1);
 rad_sw_qc        = reshape(d1.rad_sw_qc,      nobs, 1);
+
+sat_range        = reshape(d1.sat_range,      nobs, 1);
+lat_bnds         = reshape(d1.lat_bnds,       8, nobs);
+lon_bnds         = reshape(d1.lon_bnds,       8, nobs);
 
 % reshape nscan arrays to nobs (copy values across scans)
 subsat_lat     = reshape(repmat(d1.subsat_lat',    nxtr, 1), nobs, 1);
@@ -151,9 +164,8 @@ sun_glint_lat  = reshape(repmat(d1.sun_glint_lat', nxtr, 1), nobs, 1);
 sun_glint_lon  = reshape(repmat(d1.sun_glint_lon', nxtr, 1), nobs, 1);
 asc_flag       = reshape(repmat(d1.asc_flag',      nxtr, 1), nobs, 1);
 
-% clear d1
+clear d1
 
-% TEST
 % extend asc from nscan to nFOV x nFOR x nscan
 % atmp = d1.sat_alt(:);
 % sat_alt2 = reshape(ones(nFOV*nFOR,1)*atmp', nobs, 1);
@@ -169,10 +181,20 @@ for_ind = reshape(ones(nFOV,1)*ftmp(:)', nobs, 1);
 % add a scan index
 scan_ind = reshape(ones(nFOV*nFOR,1) * (1:nscan), nobs, 1);
 
-% build the output filename
+% add fake airs_xtrack and airs_atrack arrays
+xi = mod(fov_ind - 1, 3) + 1;           % FOR xtrack ind
+ai = 3 - floor((fov_ind - 1) / 3);      % FOR atrack ind
+airs_xtrack = 3 * (for_ind - 1) + xi;
+airs_atrack = 3 * (scan_ind - 1) + ai;
+
+% update per-granule global attributes
 run_time = now;
 obs_time = airs2dnum(obs_time_tai93(1));
-chirp_name = nasa_fname(gran_num, obs_time, run_time, prod_name);
+prod_attr = gran_prod_attr(gran_num, obs_time, run_time, prod_attr);
+prod_attr = copy_prod_attr(a1, prod_attr, {});
+
+% build the output filename
+chirp_name = nasa_fname(prod_attr);
 
 % print a status message
 dstr = datestr(airs2dnum(obs_time_tai93(1)));
@@ -182,6 +204,7 @@ fprintf(1, sfmt, fstr, gran_num, dstr);
 %-----------------------------
 % CrIS to CHIRP interpolation
 %-----------------------------
+
 % trim the LW user grid
 [~, user_lw] = inst_params('LW', wlaser, opt2);
 rad_lw = double(rad_lw);
@@ -262,18 +285,19 @@ rad_qc = max(rad_lw_qc, max(rad_lw_qc, rad_lw_qc));
 % save translation as netCDF
 %----------------------------
 
-nc_init = 'chirp_master.nc';
 nc_data = fullfile(chirp_dir, chirp_name);
 copyfile(nc_init, nc_data);
 
 ncwrite(nc_data, 'rad', single(rad));
 ncwrite(nc_data, 'rad_qc', uint8(rad_qc));
-% ncwrite(nc_data, 'syn_qc', uint8(syn_qc));
-% ncwrite(nc_data, 'synfrac', single(synfrac));
+ncwrite(nc_data, 'chan_qc', uint8(chan_qc));
+ncwrite(nc_data, 'synth_frac', single(synfrac));
 ncwrite(nc_data, 'nedn', single(nedn));
 ncwrite(nc_data, 'wnum', wnum);
 
 ncwrite(nc_data, 'obs_time_tai93', obs_time_tai93);
+ncwrite(nc_data, 'obs_time_utc', obs_time_utc);
+% ncwrite(nc_data, 'obs_id', obs_id);
 ncwrite(nc_data, 'lat', lat);
 ncwrite(nc_data, 'lon', lon);
 ncwrite(nc_data, 'view_ang', view_ang);
@@ -284,7 +308,10 @@ ncwrite(nc_data, 'sol_azi', sol_azi);
 ncwrite(nc_data, 'land_frac', land_frac);
 ncwrite(nc_data, 'surf_alt', surf_alt);
 ncwrite(nc_data, 'surf_alt_sdev', surf_alt_sdev);
-ncwrite(nc_data, 'instrument_state', instrument_state);
+
+ncwrite(nc_data, 'sat_range', sat_range);
+ncwrite(nc_data, 'lat_bnds', lat_bnds);
+ncwrite(nc_data, 'lon_bnds', lon_bnds);
 
 ncwrite(nc_data, 'subsat_lat', subsat_lat);
 ncwrite(nc_data, 'subsat_lon', subsat_lon);
@@ -294,14 +321,17 @@ ncwrite(nc_data, 'sun_glint_lat', sun_glint_lat);
 ncwrite(nc_data, 'sun_glint_lon', sun_glint_lon);
 ncwrite(nc_data, 'asc_flag', asc_flag);
 
-% renamings from CrIS to CHIRP indices
-ncwrite(nc_data, 'fov', uint8(fov_ind));
+% replace CrIS with CHIRP names
+ncwrite(nc_data, 'fov_num', uint8(fov_ind));
 ncwrite(nc_data, 'xtrack', uint8(for_ind));
 ncwrite(nc_data, 'atrack', uint8(scan_ind));
 
-% the following aren't defined for CrIS-parent
-% ncwrite(nc_data, 'airs_atrack', uint8(atrack_ind));
-% ncwrite(nc_data, 'airs_xtrack', uint8(xtrack_ind));
+% add fake AIRS xtrack and atrack
+ncwrite(nc_data, 'airs_xtrack', uint8(airs_xtrack));
+ncwrite(nc_data, 'airs_atrack', uint8(airs_atrack));
+
+% write the global attributes
+write_prod_attr(nc_data, prod_attr);
 
 % quick sanity checks
 % wnum2 = ncread(nc_data, 'wnum');

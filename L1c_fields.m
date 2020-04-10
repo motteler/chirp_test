@@ -1,8 +1,5 @@
 
-% adir = '/asl/data/airs/L1C/2016/126';
-% agran = 'AIRS.2016.05.05.231.L1C.AIRS_Rad.v6.1.2.0.G16127122356.hdf';
-
-adir = '/asl/data/airs/L1C/2018/001';
+adir = '/asl/hpcnfs1/airs/L1C/2018/001';
 agran = '/AIRS.2018.01.01.220.L1C.AIRS_Rad.v6.1.2.0.G18002101815.hdf';
 afile = fullfile(adir, agran);
 

@@ -27,17 +27,17 @@ variables:
                 string rad_qc:flag_meanings = "Best Good Do_Not_Use" ;
                 rad_qc:flag_values = 0b, 1b, 2b ;
 
-        byte syn_qc(nchan) ;
-                string syn_qc:units = "1" ;
-                syn_qc:valid_range = 0b, 2b ;
-                string syn_qc:long_name = "rad synthetic fraction flag" ;
-                string syn_qc:standard_name = "radiance synthetic fraction flag" ;
-                string syn_qc:coordinates = "lon lat" ;
-                string syn_qc:description = "rad synthetic fraction flag" ;
-                syn_qc:_FillValue = -1b ;
-                string syn_qc:coverage_content_type = "qualityInformation" ;
-                string syn_qc:flag_meanings = "Best Good Do_Not_Use" ;
-                syn_qc:flag_values = 0b, 1b, 2b ;
+        byte chan_qc(nchan) ;
+                string chan_qc:units = "1" ;
+                chan_qc:valid_range = 0b, 2b ;
+                string chan_qc:long_name = "rad synthetic fraction flag" ;
+                string chan_qc:standard_name = "radiance synthetic fraction flag" ;
+                string chan_qc:coordinates = "lon lat" ;
+                string chan_qc:description = "rad synthetic fraction flag" ;
+                chan_qc:_FillValue = -1b ;
+                string chan_qc:coverage_content_type = "qualityInformation" ;
+                string chan_qc:flag_meanings = "Best Good Do_Not_Use" ;
+                chan_qc:flag_values = 0b, 1b, 2b ;
 
 	float synfrac(nchan) ;
 		string synfrac:units = "synthetic fraction (ratio)" ;
