@@ -133,7 +133,7 @@ instrument_state = reshape(d1.state,     nobs, 1);
 subsat_lat     = reshape(repmat(d1.sat_lat',   90, 1), nobs, 1);
 subsat_lon     = reshape(repmat(d1.sat_lon',   90, 1), nobs, 1);
 scan_mid_time  = reshape(repmat(d1.nadirTAI',  90, 1), nobs, 1);
-sat_alt        = reshape(repmat(d1.satheight', 90, 1), nobs, 1);
+sat_alt        = reshape(repmat(d1.satheight', 90, 1), nobs, 1) * 1000;
 sun_glint_lat  = reshape(repmat(d1.glintlat',  90, 1), nobs, 1);
 sun_glint_lon  = reshape(repmat(d1.glintlon',  90, 1), nobs, 1);
 asc_flag       = reshape(repmat(d1.scan_node_type', 90, 1), nobs, 1);
@@ -148,6 +148,9 @@ airs_xtrack = reshape(repmat((1:90)', 1, 135), nobs, 1);
 atrack = floor((airs_atrack - 1) / 3) + 1;
 xtrack = floor((airs_xtrack - 1) / 3) + 1;
 fov = mod(airs_xtrack-1, 3) + 3 * mod(airs_atrack-1, 3) + 1;
+
+% generate an obs_id for AIRS 
+obs_id = airs_obs_id(obs_time_utc, airs_atrack, airs_xtrack);
 
 % whos rad_airs nedn_airs
 % whos obs_time_tai93 lat lon view_ang sat_zen sat_azi ...
@@ -299,40 +302,41 @@ end
 nc_data = fullfile(chirp_dir, chirp_name);
 copyfile(nc_init, nc_data);
 
-ncwrite(nc_data, 'rad', single(rad_chirp));
-ncwrite(nc_data, 'rad_qc', uint8(rad_qc));
-ncwrite(nc_data, 'chan_qc', uint8(chan_qc));
-ncwrite(nc_data, 'synth_frac', single(synfrac_chirp));
-ncwrite(nc_data, 'nedn', single(nedn_chirp));
-ncwrite(nc_data, 'wnum', wnum_chirp);
+h5write(nc_data, '/rad', single(rad_chirp));
+h5write(nc_data, '/rad_qc', int8(rad_qc));
+h5write(nc_data, '/chan_qc', int8(chan_qc));
+h5write(nc_data, '/synth_frac', single(synfrac_chirp));
+h5write(nc_data, '/nedn', single(nedn_chirp));
+h5write(nc_data, '/wnum', wnum_chirp);
 
-ncwrite(nc_data, 'obs_time_tai93', obs_time_tai93);
-ncwrite(nc_data, 'obs_time_utc', obs_time_utc);
-ncwrite(nc_data, 'lat', lat);
-ncwrite(nc_data, 'lon', lon);
-ncwrite(nc_data, 'view_ang', view_ang);
-ncwrite(nc_data, 'sat_zen', sat_zen);
-ncwrite(nc_data, 'sat_azi', sat_azi);
-ncwrite(nc_data, 'sol_zen', sol_zen);
-ncwrite(nc_data, 'sol_azi', sol_azi);
-ncwrite(nc_data, 'land_frac', land_frac);
-ncwrite(nc_data, 'surf_alt', surf_alt);
-ncwrite(nc_data, 'surf_alt_sdev', surf_alt_sdev);
-% ncwrite(nc_data, 'instrument_state', instrument_state);
+h5write(nc_data, '/obs_time_tai93', obs_time_tai93);
+h5write(nc_data, '/obs_time_utc', obs_time_utc);
+h5write(nc_data, '/obs_id', obs_id);
 
-ncwrite(nc_data, 'subsat_lat', subsat_lat);
-ncwrite(nc_data, 'subsat_lon', subsat_lon);
-ncwrite(nc_data, 'scan_mid_time', scan_mid_time);
-ncwrite(nc_data, 'sat_alt', sat_alt);
-ncwrite(nc_data, 'sun_glint_lat', sun_glint_lat);
-ncwrite(nc_data, 'sun_glint_lon', sun_glint_lon);
-ncwrite(nc_data, 'asc_flag', asc_flag);
+h5write(nc_data, '/lat', single(lat));
+h5write(nc_data, '/lon', single(lon));
+h5write(nc_data, '/view_ang', view_ang);
+h5write(nc_data, '/sat_zen', sat_zen);
+h5write(nc_data, '/sat_azi', sat_azi);
+h5write(nc_data, '/sol_zen', sol_zen);
+h5write(nc_data, '/sol_azi', sol_azi);
+h5write(nc_data, '/land_frac', land_frac);
+h5write(nc_data, '/surf_alt', surf_alt);
+h5write(nc_data, '/surf_alt_sdev', surf_alt_sdev);
 
-ncwrite(nc_data, 'airs_atrack', uint8(airs_atrack));
-ncwrite(nc_data, 'airs_xtrack', uint8(airs_xtrack));
-ncwrite(nc_data, 'atrack', uint8(atrack));
-ncwrite(nc_data, 'xtrack', uint8(xtrack));
-ncwrite(nc_data, 'fov_num', uint8(fov));
+h5write(nc_data, '/subsat_lat', single(subsat_lat));
+h5write(nc_data, '/subsat_lon', single(subsat_lon));
+h5write(nc_data, '/scan_mid_time', scan_mid_time);
+h5write(nc_data, '/sat_alt', sat_alt);
+h5write(nc_data, '/sun_glint_lat', sun_glint_lat);
+h5write(nc_data, '/sun_glint_lon', sun_glint_lon);
+h5write(nc_data, '/asc_flag', uint8(asc_flag));
+
+h5write(nc_data, '/airs_atrack', uint8(airs_atrack));
+h5write(nc_data, '/airs_xtrack', uint8(airs_xtrack));
+h5write(nc_data, '/atrack', uint8(atrack));
+h5write(nc_data, '/xtrack', uint8(xtrack));
+h5write(nc_data, '/fov_num', uint8(fov));
 
 % write the global attributes
 write_prod_attr(nc_data, prod_attr);

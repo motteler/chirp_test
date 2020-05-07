@@ -2,13 +2,14 @@
 % quick look at chirp granules
 %
 
-addpath /home/motteler/cris/ccast/source
+% addpath /home/motteler/cris/ccast/source
 
 p1 = '/asl/hpcnfs1/chirp/airs_L1c_src/2019/061';
-g1 = 'SNDR.SS1330.CHIRP.20190302T0023.m06.g004.L1_AIR.std.v01_07.U.2004091424.nc';
+% g1 = 'SNDR.SS1330.CHIRP.20190302T0011.m06.g002.L1_AIR.std.v01_07.U.2004132227.nc';
+  g1 = 'SNDR.SS1330.CHIRP.20190302T0017.m06.g003.L1_AIR.std.v01_07.U.2004132229.nc';
 
-p2 = '/asl/hpcnfs1/chirp/cris_npp_xxx/2019/061';
-g2 = 'SNDR.SS1330.CHIRP.20190302T0017.m06.g004.L1_CNP.std.v01_07.U.2004091900.nc';
+p2 = '/asl/hpcnfs1/chirp/cris_npp_src/2019/061';
+g2 = 'SNDR.SS1330.CHIRP.20190302T0453.m06.g050.L1_CNP.std.v01_07.U.2004132235.nc';
 
 [d1, a1] = read_netcdf_h5(fullfile(p1, g1));  % AIRS
 [d2, a2] = read_netcdf_h5(fullfile(p2, g2));  % CrIS

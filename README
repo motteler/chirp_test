@@ -1,13 +1,13 @@
 
 production loop
 ----------------
-  airs2chirp    - translate AIRS to CHIRP granules
-  cris2chirp    - interpolate CrIS to CHIRP granules
-  read_airs_h4  - read an AIRS HDF4 granule
-  read_cris_h5  - read a CrIS H5/netCDF granule
-  airs_loop     - run airs2chirp on a list of days
-  cris_loop     - run cris2chirp on a list of days
-  chirp_batch   - run chirp translation on doy = job array ID
+  airs2chirp     - translate AIRS to CHIRP granules
+  cris2chirp     - interpolate CrIS to CHIRP granules
+  read_airs_h4   - read an AIRS HDF4 granule
+  read_cris_h5   - read a CrIS H5/netCDF granule
+  opts_airs_src  - run airs2chirp on a list of days
+  opts_cris_src  - run cris2chirp on a list of days
+  chirp_batch    - run chirp translation on doy = job array ID
 
 support and test
 -----------------

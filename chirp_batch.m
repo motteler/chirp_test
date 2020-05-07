@@ -6,7 +6,7 @@
 %   chirp_batch(src, year)
 %
 % src values include
-%   AIRS_L1c, CCAST_NPP, CCAST_J01, UW_NPP, UW_J01
+%   airs_L1c, cris_npp
 %
 
 function chirp_batch(src, year)
@@ -35,10 +35,8 @@ fprintf(1, 'job array ID %d\n', jarid)
 fprintf(1, 'process ID %d\n', procid)
 
 switch src
-  case 'AIRS_L1c', airs_loop(year, doy);
-  case 'CCAST_NPP', cris_loop(year, doy);   % just a place holder
-  case 'CCAST_J01', cris_loop(year, doy);   % just a place holder
-  case 'UW_NPP',  cris_loop(year, doy);   % just a place holder
+  case 'airs_L1c', opts_airs_src(year, doy);
+  case 'cris_npp', opts_cris_src(year, doy);
   otherwise, error('bad src spec')
 end
 

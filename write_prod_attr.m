@@ -11,5 +11,6 @@ function write_prod_attr(nc_data, prod_attr)
 ftmp = fieldnames(prod_attr);
 
 for i = 1 : length(ftmp)
-  ncwriteatt(nc_data, '/', ftmp{i}, prod_attr.(ftmp{i}))
+% ncwriteatt(nc_data, '/', ftmp{i}, prod_attr.(ftmp{i}))
+  h5writeatt(nc_data, '/', ftmp{i}, prod_attr.(ftmp{i}))
 end

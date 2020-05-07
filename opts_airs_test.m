@@ -1,23 +1,9 @@
 %
-% NAME
-%   opts_airs_src - set airs2chirp options and loop on days
-%
-% SYNOPSIS
-%   opts_airs_src(year, dlist)
-%
-% INPUTS
-%   year   - integer year
-%   dlist  - integer vector of days-of-the-year
-%
-% DISCUSSION
-%   This is where run parameters and paths should be set.
-%   Assumes data is organized as home/yyyy/doy/granules.
-%
-% AUTHOR
-%   H. Motteler, 12 Dec 2019
+% opts_airs_test - test driver for airs2chirp
 %
 
-function opts_airs_src(year, dlist)
+year = 2017;
+dlist = 101;
 
 % set up source paths
 addpath /home/motteler/cris/ccast/source
@@ -25,8 +11,8 @@ addpath /home/motteler/cris/ccast/motmsc/time
 addpath /home/motteler/shome/airs_decon/source
 
 % AIRS and CHIRP local homes
-ahome = '/asl/xfs3/airs/L1C_v672';          % AIRS source home
-chome = '/asl/hpcnfs1/chirp/airs_L1c_src';  % CHIRP output home
+ahome = '/asl/xfs3/airs/L1C_v672';      % AIRS source home
+chome = './test_airs_src';              % CHIRP output home
 
 % AIRS and CHIRP annual data (home/yyyy)
 ayear = fullfile(ahome, sprintf('%d', year));
@@ -46,7 +32,7 @@ prod_attr.product_name_extension  = 'nc';
 
 % airs2chirp options
 proc_opts = struct;
-proc_opts.verbose = 1;   % 0=quiet, 1=talky, 2=plots
+proc_opts.verbose = 2;   % 0=quiet, 1=talky, 2=plots
 proc_opts.tchunk = 400;  % translation chunk size
 
 % this function name

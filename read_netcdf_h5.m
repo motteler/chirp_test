@@ -28,12 +28,14 @@ for g = 1:ng
   end
 end
 
-% global attributes
-if isfield(ni,'Attributes')
-  n = length(ni.Attributes);
-  for i=1:n
-    ntmp = ni.Attributes(i).Name;
-    a.(ntmp) = h5readatt(fn, '/', ntmp);
+% option for global attributes
+if nargout == 2
+  if isfield(ni,'Attributes')
+    n = length(ni.Attributes);
+    for i=1:n
+      ntmp = ni.Attributes(i).Name;
+      a.(ntmp) = h5readatt(fn, '/', ntmp);
+    end
   end
 end
 

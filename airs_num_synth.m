@@ -5,7 +5,7 @@
 addpath /asl/packages/ccast/motmsc/time
 
 % year and path to data
-ayear = '/asl/data/airs/L1C/2017';
+ayear = '/asl/data/airs/L1C_v672/2017';
 
 % days of the year
 dlist = 183 : 203;

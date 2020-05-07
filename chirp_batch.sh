@@ -24,10 +24,10 @@
 # #SBATCH --exclusive
 
 # exclude list
-#SBATCH --exclude=cnode[106]
+# #SBATCH --exclude=cnode[106]
 
 # matlab options
-MATLAB=/usr/ebuild/software/MATLAB/2018b/bin/matlab
+MATLAB=/usr/ebuild/software/MATLAB/2020a/bin/matlab
 MATOPT='-nojvm -nodisplay -nosplash'
 
 srun --output=$1_%A_%a.out \
