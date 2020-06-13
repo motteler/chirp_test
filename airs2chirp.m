@@ -28,8 +28,10 @@ function airs2chirp(airs_gran, chirp_dir, prod_attr, proc_opts)
 verbose = 0;                  % 0=quiet, 1=talky, 2=plots
 hapod = 1;                    % apply Hamming apodization
 scorr = 1;                    % do a statistical correction
+bcorr = 1;                    % do a bias correction
 cfile = 'corr_midres.mat';    % statistical correction weights
 sfile = 'airs_demo_srf.hdf';  % AIRS SRF tabulation file
+bfile = 'airs_bias_v01a.mat'; % AIRS bias file
 tchunk = 400;                 % translation chunk size
 synlim = 0.15;                % syn channel warn threshold
 nc_init = 'chirp_1330.nc';    % initial empty netcdf file
@@ -39,8 +41,10 @@ if nargin == 4
   if isfield(proc_opts, 'verbose'), verbose = proc_opts.verbose; end
   if isfield(proc_opts, 'hapod'),   hapod   = proc_opts.hapod; end
   if isfield(proc_opts, 'scorr'),   scorr   = proc_opts.scorr; end
+  if isfield(proc_opts, 'bcorr'),   bcorr   = proc_opts.bcorr; end
   if isfield(proc_opts, 'cfile'),   cfile   = proc_opts.cfile; end
   if isfield(proc_opts, 'sfile'),   sfile   = proc_opts.sfile; end
+  if isfield(proc_opts, 'bfile'),   bfile   = proc_opts.bfile; end
   if isfield(proc_opts, 'tchunk'),  tchunk  = proc_opts.tchunk; end
   if isfield(proc_opts, 'synlim'),  synlim  = proc_opts.synlim; end
   if isfield(proc_opts, 'nc_init'), nc_init = proc_opts.nc_init; end
@@ -92,7 +96,7 @@ end
 % read the AIRS data
 %---------------------
 try
-  d1 = read_airs_h4(airs_gran);
+  [d1, airs_attr] = read_airs_h4(airs_gran);
 catch
   fprintf(1, '%s: could not read %s\n', fstr, airs_gran)
   return
@@ -160,6 +164,7 @@ obs_id = airs_obs_id(obs_time_utc, airs_atrack, airs_xtrack);
 %   freq_airs nsynth_airs
 
 % update per-granule attributes
+prod_attr = copy_airs_attr(airs_attr, prod_attr);
 run_time = now;
 obs_time = airs2dnum(obs_time_tai93(1));
 prod_attr = gran_prod_attr(gran_num, obs_time, run_time, prod_attr);
@@ -202,6 +207,12 @@ for j = 1 : tchunk : nobs
   % save the current chunk
   rad_chirp(eix, cix) = rtmp;
 
+end
+
+% option to do the bias correction
+if bcorr
+  db = load(bfile);
+  rad_chirp = bias_correct(wnum_chirp, rad_chirp, db.bias);
 end
 
 %-------------------

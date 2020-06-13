@@ -3,28 +3,29 @@
 %   read_airs_h4 - read an AIRS HDF4 granule
 %
 % SYNOPSIS
-%   d1 = read_airs_h4(agran) 
+%   [d1, a1] = read_airs_h4(agran) 
 %
 % INPUT
 %   agran - AIRS input granule file
 %
 % OUTPUT
 %   d1 - struct with AIRS data
+%   a1 - struct with selected attributes
 %
 % Data is returned in column order, with h4 data types and the h4
 % variable names as fields.  read_airs_h4 is faster than looping on
 % hdfinfo output but not as fast as simply calling hdfread, if only
 % a few fields are needed.
 %
-% hdfread does not return errors and so needs a try/catch wrapper;
-% it's probably simpler to do that at a higher level with try/catch
-% around the read_airs_h4 call.
+% hdfread does not appear to return errors and so may need a
+% try/catch wrapper; it's probably simpler to do that at a higher
+% level with a single try/catch around the read_airs_h4 call.
 %
 % AUTHOR
 %   H. Motteler, 12 July 2019
 %
 
-function d1 =read_airs_h4(agran)
+function [d1, a1] = read_airs_h4(agran)
 
 d1 = struct;
 
@@ -81,4 +82,36 @@ d1.nominal_freq = d1.nominal_freq{1}';
 d1.ChanID       = d1.ChanID{1}';
 d1.ChanMapL1b   = d1.ChanMapL1b{1}';
 d1.L1cNumSynth  = d1.L1cNumSynth{1}';
+
+% return if attributes were not requested
+if nargout == 1, return, end
+
+% read attributes
+a1 = struct;
+a1.granule_number  = hdfread(agran, 'granule_number');
+a1.AutomaticQAFlag = hdfread(agran, 'AutomaticQAFlag');
+a1.node_type       = hdfread(agran, 'node_type');
+a1.DayNightFlag    = hdfread(agran, 'DayNightFlag');
+a1.LatGranuleCen   = hdfread(agran, 'LatGranuleCen');
+a1.LonGranuleCen   = hdfread(agran, 'LonGranuleCen');
+a1.NumMissingData  = hdfread(agran, 'NumMissingData');
+a1.NumTotalData    = hdfread(agran, 'NumTotalData');
+a1.NumSpecialData  = hdfread(agran, 'NumSpecialData');
+a1.NumProcessData  = hdfread(agran, 'NumProcessData');
+a1.start_Time      = hdfread(agran, 'start_Time');
+a1.end_Time        = hdfread(agran, 'end_Time');
+
+% drop cell array wrappers
+a1.granule_number  = a1.granule_number{1};
+a1.AutomaticQAFlag = a1.AutomaticQAFlag{1}';
+a1.node_type       = a1.node_type{1}';
+a1.DayNightFlag    = a1.DayNightFlag{1}';
+a1.LatGranuleCen   = a1.LatGranuleCen{1};
+a1.LonGranuleCen   = a1.LonGranuleCen{1};
+a1.NumMissingData  = a1.NumMissingData{1};
+a1.NumTotalData    = a1.NumTotalData{1};
+a1.NumSpecialData  = a1.NumSpecialData{1};
+a1.NumProcessData  = a1.NumProcessData{1};
+a1.start_Time      = a1.start_Time{1};
+a1.end_Time        = a1.end_Time{1};
 

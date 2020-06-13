@@ -80,7 +80,7 @@ end
 % read CrIS data
 %----------------
 try
-  [d1, a1] = read_netcdf_h5(cris_gran);
+  [d1, cris_attr] = read_netcdf_h5(cris_gran);
 catch
   fprintf(1, '%s: could not read %s\n', fstr, cris_gran)
   return
@@ -188,10 +188,10 @@ airs_xtrack = 3 * (for_ind - 1) + xi;
 airs_atrack = 3 * (scan_ind - 1) + ai;
 
 % update per-granule global attributes
+prod_attr = copy_cris_attr(cris_attr, prod_attr);
 run_time = now;
 obs_time = airs2dnum(obs_time_tai93(1));
 prod_attr = gran_prod_attr(gran_num, obs_time, run_time, prod_attr);
-prod_attr = copy_prod_attr(a1, prod_attr, {});
 
 % build the output filename
 chirp_name = nasa_fname(prod_attr);

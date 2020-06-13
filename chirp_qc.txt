@@ -1,0 +1,35 @@
+
+CHIRP Channel Sets
+
+The basic CHIRP channel set is the concatenation of the three CrIS
+bands in a "mid-res" mode, with OPD 0.8, 0.6, 0.4 cm, without any
+guard channels.  This is not an official resolution for the CrIS SDR
+product, but it is supported by UMBC CCAST.  The AIRS-parent CHIRP
+channel set is a subset of this, because not all CrIS channels are
+close to AIRS L1c channels, in particular at the high end of the CrIS
+MW band.  The missing channels for AIRS-parent CHIRP are described
+below.
+
+CHIRP QC
+
+AIRS-parent CHIRP granules have two QC fields, rad_qc, an nobs-vector
+with one flag value per obs, and chan_qc, an nchan-vector with one
+flag value per channel.  For both, 0 = OK, 1 = warn, and 2 = bad.
+(For CHIRP as currently defined, nobs = 12150 and nchan = 1679.)
+
+rad_qc is a combination of the AIRS "state" field and some basic
+sanity checks of the data.  As currently implemented there is no
+warn state because it's not clear that the AIRS "state" variable has
+that; it's values are 0:Process, 1:Special, 2:Erroneous, 3:Missing.
+(I think the idea with L1c was to try and fix anything that would
+otherwise need a warning.)
+
+chan_qc is set to 2 (bad) for AIRS-parent CHIRP, for those channels
+without AIRS parents.  For channels with AIRS parents, chan_qc is set
+to 1 (warn) for parents with excessive synthetic content.  synth_frac
+is the linearized AIRS to CrIS transform applied to AIRs L1cNumSynth,
+expressed as a percentage.  Channels with AIRS parents are set to 0
+(OK) if synfrac < 0.15, and to 1 (WARN) otherwise.  This typically
+gives around 420 WARN values out of approximately 1435 translated
+channels.
+

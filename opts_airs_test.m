@@ -11,8 +11,8 @@ addpath /home/motteler/cris/ccast/motmsc/time
 addpath /home/motteler/shome/airs_decon/source
 
 % AIRS and CHIRP local homes
-ahome = '/asl/xfs3/airs/L1C_v672';      % AIRS source home
-chome = './test_airs_src';              % CHIRP output home
+ahome = '/asl/hpcnfs1/airs/L1C';  % AIRS source home
+chome = './test_airs_src';        % CHIRP output home
 
 % AIRS and CHIRP annual data (home/yyyy)
 ayear = fullfile(ahome, sprintf('%d', year));
@@ -32,7 +32,7 @@ prod_attr.product_name_extension  = 'nc';
 
 % airs2chirp options
 proc_opts = struct;
-proc_opts.verbose = 2;   % 0=quiet, 1=talky, 2=plots
+proc_opts.verbose = 1;   % 0=quiet, 1=talky, 2=plots
 proc_opts.tchunk = 400;  % translation chunk size
 
 % this function name

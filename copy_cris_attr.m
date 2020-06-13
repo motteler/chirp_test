@@ -1,16 +1,22 @@
 %
 % NAME
-%   copy_prod_attr - update per-granule product attributes
+%   copy_cris_attr - update per-granule product attributes
 %
 % SYNOPSIS
-%   prod_attr = copy_prod_attr(cris_attr, prod_attr, alist);
+%   prod_attr = copy_cris_attr(cris_attr, prod_attr);
 %
 % INPUTS
 %   cris_attr - cris global product attributes
 %   prod_attr - chirp global product attributes
-%   alist     - list of fields to copy
+%
+% NOTE
+%   for CrIS-parent simply copy global attributes with matching
+%   names
+%
 
-function prod_attr = copy_prod_attr(cris_attr, prod_attr, alist)
+function prod_attr = copy_cris_attr(cris_attr, prod_attr);
+
+fstr = mfilename;
 
 alist = {
   'day_night_flag', ...
@@ -20,6 +26,7 @@ alist = {
   'geospatial_lat_min', ...
   'geospatial_lon_max', ...
   'geospatial_lon_mid', ...
+  'geospatial_lon_min', ...
   'granule_number', ...
   'orbitDirection', ...
   'time_coverage_duration', ...
@@ -32,12 +39,12 @@ alist = {
 for i = 1 : length(alist)
 
   if ~isfield(cris_attr, alist{i})
-    fprintf(1, 'copy_prod_attr: no %s in CrIS attributes\n', alist{i})
+    fprintf(1, '%s: no %s in CrIS attributes\n', fstr, alist{i})
     continue
   end
 
 % if ~isfield(prod_attr, alist{i})
-%   fprintf(1, 'copy_prod_attr: no %s in CHIRP attributes\n', alist{i})
+%   fprintf(1, '%s: no %s in CHIRP attributes\n', fstr, alist{i})
 %   continue
 % end
 
