@@ -40,3 +40,6 @@
 *.bak
 *~
 
+# old files
+zold
+

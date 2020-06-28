@@ -1,7 +1,9 @@
 
 % function prod_attr = read_cfgfile(cfg_file, prod_attr)
 
-  cfg_file = 'chirp_airs.cfg';
+
+  cfg_file = 'chirp_airs.yaml';
+% cfg_file = 'chirp_airs.cfg';
 % cfg_file = 'test1.cfg';
 
 prod_attr = struct;
@@ -15,6 +17,7 @@ d1 = readtable(cfg_file, 'FileType', 'text', ...
                'Delimiter', ':', ...
                'Whitespace', '\b\t ', ...
                'ReadVariableNames', false, ...
+               'PreserveVariableNames', true, ...
                'Format', 'auto');
 
 % loop on attribute names

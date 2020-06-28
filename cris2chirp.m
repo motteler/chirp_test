@@ -3,22 +3,19 @@
 %   cris2chirp - interpolate CrIS to CHIRP granules
 %
 % SYNOPSIS
-%   cris2chirp(cris_gran, chirp_dir, prod_attr, proc_opts)
+%   cris2chirp(cris_gran, chirp_dir, proc_opts, prod_attr)
 %
 % INPUTS
 %   cris_gran  - CrIS input granule file
 %   chirp_dir  - CHIRP output granule dir
-%   prod_attr  - global product attributes
 %   proc_opts  - processing options
-%
-% proc_opts are mainly for testing; the default values should
-% generally be used for production.
+%   prod_attr  - global product attributes
 %
 % AUTHOR
 %  H. Motteler, 18 Dec 2019
 %
 
-function cris2chirp(cris_gran, chirp_dir, prod_attr, proc_opts)
+function cris2chirp(cris_gran, chirp_dir, proc_opts, prod_attr)
 
 %---------------------------
 % setup and default options
@@ -187,7 +184,7 @@ ai = 3 - floor((fov_ind - 1) / 3);      % FOR atrack ind
 airs_xtrack = 3 * (for_ind - 1) + xi;
 airs_atrack = 3 * (scan_ind - 1) + ai;
 
-% update per-granule global attributes
+% set global attributes
 prod_attr = copy_cris_attr(cris_attr, prod_attr);
 run_time = now;
 obs_time = airs2dnum(obs_time_tai93(1));

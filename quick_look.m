@@ -2,20 +2,13 @@
 % quick look at chirp granules
 %
 
-% addpath /home/motteler/cris/ccast/source
+addpath /home/motteler/cris/ccast/source
 
-% p1 = '/asl/hpcnfs1/chirp/airs_L1c_src/2019/061';
-% g1 = 'SNDR.SS1330.CHIRP.20190302T0011.m06.g002.L1_AIR.std.v01_07.U.2004132227.nc';
-% g1 = 'SNDR.SS1330.CHIRP.20190302T0017.m06.g003.L1_AIR.std.v01_07.U.2004132229.nc';
+p1 = '/asl/hpcnfs1/chirp/chirp_AQ_test/2018/102';
+g1 = 'SNDR.SS1330.CHIRP.20180412T0105.m06.g011.L1_AQ.std.v02_07.U.2006270332.nc';
 
-% p2 = '/asl/hpcnfs1/chirp/cris_npp_src/2019/061';
-% g2 = 'SNDR.SS1330.CHIRP.20190302T0453.m06.g050.L1_CNP.std.v01_07.U.2004132235.nc';
-
-p1 = './test_airs_src/2017/101';
-g1 = 'SNDR.SS1330.CHIRP.20170411T0053.m06.g009.L1_AQ.std.v01_07.U.2006121913.nc';
-
-p2 = './test_cris_src/2019/061';
-g2 = 'SNDR.SS1330.CHIRP.20190302T0117.m06.g014.L1_SN.std.v01_07.U.2006121723.nc';
+p2 = '/asl/hpcnfs1/chirp/chirp_SN_test/2019/062';
+g2 = 'SNDR.SS1330.CHIRP.20190303T2029.m06.g206.L1_SN.std.v02_07.U.2006280146.nc';
 
 [d1, a1] = read_netcdf_h5(fullfile(p1, g1));  % AIRS
 [d2, a2] = read_netcdf_h5(fullfile(p2, g2));  % CrIS
@@ -37,7 +30,7 @@ xlabel('wavenumber (cm-1)')
 ylabel('BT (K)')
 grid on
 
-return
+% return
 
 figure(2); clf
 subplot(2,1,1)

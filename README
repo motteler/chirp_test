@@ -1,16 +1,24 @@
 
 production loop
 ----------------
-  airs2chirp     - translate AIRS to CHIRP granules
-  cris2chirp     - interpolate CrIS to CHIRP granules
-  read_airs_h4   - read an AIRS HDF4 granule
-  read_cris_h5   - read a CrIS H5/netCDF granule
-  opts_airs_src  - run airs2chirp on a list of days
-  opts_cris_src  - run cris2chirp on a list of days
-  chirp_batch    - run chirp translation on doy = job array ID
+  airs2chirp      - translate AIRS to CHIRP granules
+  cris2chirp      - interpolate CrIS to CHIRP granules
+  opts_airs_loop  - run airs2chirp on a list of days
+  opts_cris_loop  - run cris2chirp on a list of days
+  chirp_batch     - run chirp translation as a batch job
+  chirp_main      - top-level single-granule processing
 
 support and test
 -----------------
+  read_airs_h4    - read an AIRS HDF4 granule
+  read_cris_h5    - read a CrIS H5/netCDF granule
+  read_netcdf_h5  - general purpose netcdf H5 reader
+  read_yaml_cfg   - read yaml proc opts and prod attr
+  write_yaml_cfg  - write yaml proc opts and prod attr
+  copy_airs_attr  - add airs-parent product attributes
+  copy_cris_attr  - add cris-parent product attributes
+  bias_correct    - simple bias correction
+
   a2cris_lin      - airs2cris linearization test
   a2cris_srfs     - airs2cris linearization with SRF plots
   airs_num_synth  - multi-granule count of L1cNumSynth values
@@ -18,7 +26,6 @@ support and test
   nedn_est        - NEdN estimate for the AIRS-to-CrIS translation
   nedn_interp     - NEdN interpolation demo
   pen_lift        - add NaNs for pen lift at frequency gaps
-  L1c_fields      - dump all L1c fields and attributes
 
 netCDF format
 --------------
@@ -27,11 +34,14 @@ netCDF format
   airs2chirp.nc   - AIRS CHIRP SDR netCDF initial file
   cris2chirp.nc   - CrIS CHIRP SDR netCDF initial file
 
-  ncgen -o chirp_master.nc chirp_master.cdl
+YAML config files
+-----------------
+ chirp_airs.yaml, chirp_cris.yaml: initial files from Evan
+ chirp_airs_init.yaml: initial yaml spec for airs-parent chirp
+ chirp_cris_init.yaml: initial yaml spec for cris-parent chirp
 
 netCDF notes
 -------------
-
 chirp initial netcdf file from CDL spec
 
   ncgen -o chirp_master.nc chirp_master.cdl

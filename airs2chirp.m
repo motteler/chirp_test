@@ -3,22 +3,19 @@
 %   airs2chirp - translate AIRS to CHIRP granules
 %
 % SYNOPSIS
-%   airs2chirp(airs_gran, chirp_dir, prod_attr, proc_opts)
+%   airs2chirp(airs_gran, chirp_dir, proc_opts, prod_attr)
 %
 % INPUTS
 %   airs_gran  - AIRS input granule file
 %   chirp_dir  - CHIRP output granule dir
-%   prod_attr  - product attributes
 %   proc_opts  - processing options
-%
-% proc_opts are mainly for testing; the default values should
-% generally be used for production.
+%   prod_attr  - product attributes
 %
 % AUTHOR
 %  H. Motteler, 8 July 2019
 %
 
-function airs2chirp(airs_gran, chirp_dir, prod_attr, proc_opts)
+function airs2chirp(airs_gran, chirp_dir, proc_opts, prod_attr)
 
 %--------------------------
 % setup and default options
@@ -163,7 +160,7 @@ obs_id = airs_obs_id(obs_time_utc, airs_atrack, airs_xtrack);
 %   sun_glint_lat sun_glint_lon asc_flag airs_xtrack airs_atrack ...
 %   freq_airs nsynth_airs
 
-% update per-granule attributes
+% set global attributes
 prod_attr = copy_airs_attr(airs_attr, prod_attr);
 run_time = now;
 obs_time = airs2dnum(obs_time_tai93(1));
