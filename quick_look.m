@@ -4,14 +4,14 @@
 
 addpath /home/motteler/cris/ccast/source
 
-p1 = '/asl/hpcnfs1/chirp/chirp_AQ_test/2018/102';
-g1 = 'SNDR.SS1330.CHIRP.20180412T0105.m06.g011.L1_AQ.std.v02_07.U.2006270332.nc';
+p1 = '/asl/hpcnfs1/chirp/chirp_AQ_test/2019/063';
+g1 = 'SNDR.SS1330.CHIRP.20190304T0059.m06.g010.L1_AQ.std.v02_07.U.2006281817.nc';
 
-p2 = '/asl/hpcnfs1/chirp/chirp_SN_test/2019/062';
-g2 = 'SNDR.SS1330.CHIRP.20190303T2029.m06.g206.L1_SN.std.v02_07.U.2006280146.nc';
+p2 = '/asl/hpcnfs1/chirp/chirp_SN_test/2019/063';
+g2 = 'SNDR.SS1330.CHIRP.20190304T0053.m06.g010.L1_SN.std.v02_07.U.2006281058.nc';
 
-[d1, a1] = read_netcdf_h5(fullfile(p1, g1));  % AIRS
-[d2, a2] = read_netcdf_h5(fullfile(p2, g2));  % CrIS
+[d1, a1] = read_netcdf_h5(fullfile(p1, g1));  % AIRS parent 
+[d2, a2] = read_netcdf_h5(fullfile(p2, g2));  % CrIS parent
 
 bt1 = real(rad2bt(d1.wnum, d1.rad));
 bt2 = real(rad2bt(d2.wnum, d2.rad));

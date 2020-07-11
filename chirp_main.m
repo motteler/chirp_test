@@ -23,10 +23,10 @@
 function chirp_main(parent, yaml_cfg)
 
 % set up source paths (comment out for compiler)
-addpath /home/motteler/cris/ccast/source
-addpath /home/motteler/cris/ccast/motmsc/time
-addpath /home/motteler/shome/airs_decon/source
-addpath /home/motteler/matlab/yaml
+% addpath /home/motteler/cris/ccast/source
+% addpath /home/motteler/cris/ccast/motmsc/time
+% addpath /home/motteler/shome/airs_decon/source
+% addpath /home/motteler/matlab/yaml
 
 % get the yaml config sepcs
 [proc_opts, prod_attr] = read_yaml_cfg(yaml_cfg);

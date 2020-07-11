@@ -1,21 +1,14 @@
 #
 # Evan's sample runtime config split into processing options
 # (proc_opts) and product attributes (prod_attr).  This version
-# (chirp_cros_init.yaml) is a template for processing a set of
+# (chirp_cris_init.yaml) is a template for processing a set of
 # granules, so some values, like cris filename, granule number,
-# and processing time are just filler to be set properly before 
-# or as the individual granules are processed.
+# and processing time are just filler to be set properly as the
+# individual granules are processed.
 #
-# chirp_main calls cris2chirp, which will write all the product
-# attributes set here, read from the CrIS L1B file, or calculated
-# locally (such as processing time and granule number).  So the only
-# things that really need to be updated before calling chirp_main
-# with a new granule are the paths and CrIS L1B file.
-#
-# I've left all the prod_attr fields alone, but added quite a few
+# I've left the prod_attr fields Evan set alone, and added some
 # proc_opts fields.  These all have the names I was already using,
-# for now, but that would not be hard to change.
-#
+# but that would not be hard to change.
 #
 # CHIRP sample runtime configuration file for CrIS-source data
 # Format:
