@@ -282,6 +282,10 @@ rad_qc = max(rad_lw_qc, max(rad_lw_qc, rad_lw_qc));
 % save translation as netCDF
 %----------------------------
 
+if exist(nc_init) ~= 2
+  error(sprintf('missing template file %s', nc_init))
+end
+
 nc_data = fullfile(chirp_dir, chirp_name);
 copyfile(nc_init, nc_data);
 
