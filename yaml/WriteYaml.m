@@ -11,19 +11,17 @@ function result = WriteYaml(filename, data, flowstyle)
         error('Flowstyle must be 0,1 or empty.');
     end;
     result = [];
-    [pth,~,~] = fileparts(mfilename('fullpath'));
-    try
+%   [pth,~,~] = fileparts(mfilename('fullpath'));
+%   try
         import('org.yaml.snakeyaml.*');
-        javaObject('Yaml');
-    catch
+%       javaObject('Yaml');
+%   catch
 %       dp = [pth filesep 'external' filesep 'snakeyaml-1.9.jar'];
-        dp = './yaml/external/snakeyaml-1.9.jar';   %**** PATH HACK ****
-
-        if not(ismember(dp, javaclasspath ('-dynamic')))
-        	javaaddpath(dp); % javaaddpath clears global variables...!?
-        end
-        import('org.yaml.snakeyaml.*');
-    end;
+%       if not(ismember(dp, javaclasspath ('-dynamic')))
+%       	javaaddpath(dp); % javaaddpath clears global variables...!?
+%       end
+%       import('org.yaml.snakeyaml.*');
+%   end;
     javastruct = scan(data);
     dumperopts = DumperOptions();
     dumperopts.setLineBreak(...

@@ -38,9 +38,12 @@
 
 function tai58 = utc2tai(utc58, sfile)
 
+% global RUNLIB
+
 % default leap-seconds file
 if nargin == 1
-  sfile = './time/leap-seconds.list';
+% sfile = fullfile(RUNLIB, 'leap-seconds.list');
+  sfile = fullfile('leap-seconds.list');
 end
 
 % read the leap seconds file

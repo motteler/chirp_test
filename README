@@ -63,3 +63,16 @@ Initial netcdf file from a CDL spec
 
   ncgen -o ncgen_test.nc uw_sdr_test.cdl
 
+Compilation notes
+------------------
+The environment variable MCR_CACHE_ROOT will set an alternate path
+to the .mcrCache9.8 (or whatever) directory.  The directory is set
+at runtime, not at compile time, and you can move it around by
+changing MCR_CACHE_ROOT without recompiling.  ctfroot called at
+runtime returns this path.
+
+Beware "ls" may miss .mcrCache9.8 since it's a "dotfile".  
+
+We don't want the "-C" option, that seems to always create the cache
+directory in the run directory.
+

@@ -25,21 +25,19 @@ function result = ReadYamlRaw(filename, verbose, nosuchfileaction, treatasdata)
         error('treatasdata parameter must be 0,1 or missing.');
     end;
     
-    [pth,~,~] = fileparts(mfilename('fullpath'));       
-    try
+%   [pth,~,~] = fileparts(mfilename('fullpath'));       
+%   try
         import('org.yaml.snakeyaml.*');
-        javaObject('Yaml');
-    catch
+%       javaObject('Yaml');  % this gives an error
+%   catch
 %       dp = [pth filesep 'external' filesep 'snakeyaml-1.9.jar'];
-%       display(pth)
-%       display(dp)
-        dp = './yaml/external/snakeyaml-1.9.jar';   %**** PATH HACK ****
-
-        if not(ismember(dp, javaclasspath ('-dynamic')))
-        	javaaddpath(dp); % javaaddpath clears global variables...!?
-        end
-        import('org.yaml.snakeyaml.*');
-    end;
+%       dp = fullfile('snakeyaml-1.9.jar'); %**** PATH HACK ****        
+%       dp = 'yaml/external/snakeyaml-1.9.jar';
+%        if not(ismember(dp, javaclasspath ('-dynamic')))
+%       	javaaddpath(dp); % javaaddpath clears global variables...!?
+%        end
+%       import('org.yaml.snakeyaml.*');
+%   end;
     
     setverblevel(verbose);
     % import('org.yaml.snakeyaml.Yaml'); % import here does not affect import in load_yaml ...!?

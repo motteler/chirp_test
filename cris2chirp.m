@@ -11,6 +11,12 @@
 %   proc_opts  - processing options
 %   prod_attr  - global product attributes
 %
+% DISCUSSION 
+%   product attributes are set in the prod_attr struct, and by the
+%   functions copy_cris_attr, and gran_prod_attr, in reverse order 
+%   of priority.   See the "alist" in copy_cris_attr for the values
+%   that are copied, and gran_prod_attr for the values set there.
+%
 % AUTHOR
 %  H. Motteler, 18 Dec 2019
 %
@@ -83,11 +89,6 @@ catch
   return
 end
 
-% get the CrIS granule ID from filenames
-[~, gstr, ~] = fileparts(cris_gran);
-% gran_num = str2double(gstr(38:40));  % UMBC CCAST SDR filenames
-  gran_num = str2double(gstr(35:37));  % UW SDR filenames
-
 % get data sizes
 [~, nscan] = size(d1.obs_time_tai93);
 iFOV = 1 : 9;
@@ -100,6 +101,28 @@ nobs = nFOV * nFOR * nscan;
 [nchan_lw,~] = size(d1.wnum_lw);
 [nchan_mw,~] = size(d1.wnum_mw);
 [nchan_sw,~] = size(d1.wnum_sw);
+
+% get the CrIS granule number from filename
+% [~, gstr, ~] = fileparts(cris_gran);
+% gran_num = str2double(gstr(38:40));  % UMBC CCAST SDR filenames
+% gran_num = str2double(gstr(35:37));  % UW SDR filenames
+
+% get the granule number from cris attributes
+gran_num = double(cris_attr.granule_number);
+
+% set global chirp product attributes
+prod_attr = copy_cris_attr(cris_attr, prod_attr);
+run_time = now;
+obs_time = airs2dnum(d1.obs_time_tai93(1));
+prod_attr = gran_prod_attr(gran_num, obs_time, run_time, prod_attr);
+
+% build the output filename
+chirp_name = nasa_fname(prod_attr);
+
+% print a status message
+dstr = datestr(airs2dnum(d1.obs_time_tai93(1)));
+sfmt = '%s: processing granule %03d, %s\n';
+fprintf(1, sfmt, fstr, gran_num, dstr);
 
 %-----------------------
 % reshape CrIS to CHIRP
@@ -118,8 +141,6 @@ nedn_sw = d1.nedn_sw;
 rad_lw = reshape(d1.rad_lw, nchan_lw, nobs);
 rad_mw = reshape(d1.rad_mw, nchan_mw, nobs);
 rad_sw = reshape(d1.rad_sw, nchan_sw, nobs);
-
-% sdummy values (0 = OK) for chan_qc
 
 % set AIRS-specific QC to zero
 chan_qc = zeros(nchan_chirp, 1);  % AIRS parent channel QC
@@ -183,20 +204,6 @@ xi = mod(fov_ind - 1, 3) + 1;           % FOR xtrack ind
 ai = 3 - floor((fov_ind - 1) / 3);      % FOR atrack ind
 airs_xtrack = 3 * (for_ind - 1) + xi;
 airs_atrack = 3 * (scan_ind - 1) + ai;
-
-% set global attributes
-prod_attr = copy_cris_attr(cris_attr, prod_attr);
-run_time = now;
-obs_time = airs2dnum(obs_time_tai93(1));
-prod_attr = gran_prod_attr(gran_num, obs_time, run_time, prod_attr);
-
-% build the output filename
-chirp_name = nasa_fname(prod_attr);
-
-% print a status message
-dstr = datestr(airs2dnum(obs_time_tai93(1)));
-sfmt = '%s: processing granule %03d, %s\n';
-fprintf(1, sfmt, fstr, gran_num, dstr);
 
 %-----------------------------
 % CrIS to CHIRP interpolation
