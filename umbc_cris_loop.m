@@ -1,9 +1,9 @@
 %
 % NAME
-%   opts_cris_loop - set cris2chirp options and loop on days
+%   umbc_cris_loop - set cris2chirp options and loop on days
 %
 % SYNOPSIS
-%   opts_cris_loop(year, dlist)
+%   umbc_cris_loop(year, dlist)
 %
 % INPUTS
 %   year   - integer year
@@ -16,7 +16,7 @@
 %   H. Motteler, 12 Dec 2019
 %
 
-function opts_cris_loop(year, dlist)
+function umbc_cris_loop(year, dlist)
 
 % set up source paths
 addpath /home/motteler/cris/ccast/source
@@ -26,7 +26,7 @@ addpath /home/motteler/matlab/yaml
 
 % CrIS and CHIRP local data homes
 cris_home = '/home/motteler/shome/daac_test/SNPPCrISL1B.2'; % CrIS source home
-chirp_home = '/asl/hpcnfs1/chirp/chirp_SN_test2';           % CHIRP output home
+chirp_home = '/asl/hpcnfs1/chirp/chirp_NP_test3';           % CHIRP output home
 
 % CrIS and CHIRP annual data (home/yyyy)
 cris_year = fullfile(cris_home, sprintf('%d', year));
@@ -77,7 +77,7 @@ for di = dlist
   if exist(chirp_dir) ~= 7, mkdir(chirp_dir), end
 
   % loop on CrIS granules
-  flist = dir(fullfile(cris_dir, 'SNDR*CRIS*.nc'));
+  flist = dir(fullfile(cris_dir, 'SNDR.*.CRIS*L1B.*.nc'));
   for fi = 1 : length(flist)
     cris_l1b = flist(fi).name;
     cris_gran = fullfile(cris_dir, cris_l1b);
@@ -96,7 +96,7 @@ for di = dlist
     write_yaml_cfg(yaml_gran, proc_opts, prod_attr);
 
     % chirp main calls airs2chirp
-    chirp_main('SN', yaml_gran);
+    chirp_cris_main(yaml_gran);
 
   end % loop on granules
 end % loop on days

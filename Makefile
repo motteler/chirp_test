@@ -12,23 +12,33 @@
 #   make run
 #
 
-chirp_main:
+all: chirp_air_main chirp_cris_main
+
+chirp_cris_main:
 	mcc -m -I /home/motteler/cris/ccast/source \
 	-I /home/motteler/shome/airs_decon/source \
 	-I ./time \
 	-I ./yaml \
 	-a ./time/leap-seconds.list \
 	-a ./yaml/external/snakeyaml-1.9.jar \
-	chirp_main.m
+	chirp_cris_main.m
+
+chirp_airs_main:
+	mcc -m -I /home/motteler/cris/ccast/source \
+	-I /home/motteler/shome/airs_decon/source \
+	-I ./time \
+	-I ./yaml \
+	-a ./time/leap-seconds.list \
+	-a ./yaml/external/snakeyaml-1.9.jar \
+	chirp_airs_main.m
+
+run_cris_main: chirp_cris_main run_chirp_cris_main.sh
+	./run_chirp_cris_main.sh /opt/matlab/R2020a 'chirp_cris_gran.yaml'
+
+run_airs_main: chirp_airs_main run_chirp_airs_main.sh
+	./run_chirp_airs_main.sh /opt/matlab/R2020a 'chirp_airs_gran.yaml'
 
 clean:
-	rm chirp_main 2> /dev/null || true
-
-run: chirp_main run_chirp_main.sh
-	./run_chirp_main.sh /opt/matlab/R2020a 'SN' 'chirp_cris_gran.yaml'
-
-# run: chirp_main
-#	./run_chirp_main.sh /usr/ebuild/software/MATLAB/2020a \
-#	'SN' 'chirp_cris_gran.yaml'
-
+	rm chirp_cris_main 2> /dev/null || true
+	rm chirp_airs_main 2> /dev/null || true
 

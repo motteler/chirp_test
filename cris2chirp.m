@@ -49,7 +49,7 @@ end
 
 % fixed CHIRP parameters
 user_res = 'midres';   % translation user resolution
-nchan_chirp = 1679;    % should match the chirp cdl spec
+nchan_chirp = 1679;    % should match the chirp CDL spec
 
 % arguments for inst_params
 opt2 = struct;             % inst_params opts
@@ -102,11 +102,6 @@ nobs = nFOV * nFOR * nscan;
 [nchan_mw,~] = size(d1.wnum_mw);
 [nchan_sw,~] = size(d1.wnum_sw);
 
-% get the CrIS granule number from filename
-% [~, gstr, ~] = fileparts(cris_gran);
-% gran_num = str2double(gstr(38:40));  % UMBC CCAST SDR filenames
-% gran_num = str2double(gstr(35:37));  % UW SDR filenames
-
 % get the granule number from cris attributes
 gran_num = double(cris_attr.granule_number);
 
@@ -142,10 +137,6 @@ rad_lw = reshape(d1.rad_lw, nchan_lw, nobs);
 rad_mw = reshape(d1.rad_mw, nchan_mw, nobs);
 rad_sw = reshape(d1.rad_sw, nchan_sw, nobs);
 
-% set AIRS-specific QC to zero
-chan_qc = zeros(nchan_chirp, 1);  % AIRS parent channel QC
-synfrac = zeros(nchan_chirp, 1);  % AIRS parent synthetic fraction
-
 % copy time across FOVs and reshape as an nobs vector
 obs_time_tai93 = ...
   reshape(ones(nFOV,1)*d1.obs_time_tai93(:)', nobs, 1);
@@ -155,23 +146,25 @@ obs_time_utc = tai93_to_tuple(obs_time_tai93);
 obs_id = reshape(d1.fov_obs_id, nobs, 1);
 
 % reshape nFOV x nFOR x nscan arrays to nobs vectors
-lat              = reshape(d1.lat,            nobs, 1);
-lon              = reshape(d1.lon,            nobs, 1);
-view_ang         = reshape(d1.view_ang,       nobs, 1);
-sat_zen          = reshape(d1.sat_zen,        nobs, 1);
-sat_azi          = reshape(d1.sat_azi,        nobs, 1);
-sol_zen          = reshape(d1.sol_zen,        nobs, 1);
-sol_azi          = reshape(d1.sol_azi,        nobs, 1);
-land_frac        = reshape(d1.land_frac,      nobs, 1);
-surf_alt         = reshape(d1.surf_alt,       nobs, 1);
-surf_alt_sdev    = reshape(d1.surf_alt_sdev,  nobs, 1);
-rad_lw_qc        = reshape(d1.rad_lw_qc,      nobs, 1);
-rad_mw_qc        = reshape(d1.rad_mw_qc,      nobs, 1);
-rad_sw_qc        = reshape(d1.rad_sw_qc,      nobs, 1);
+lat              = reshape(d1.lat,              nobs, 1);
+lon              = reshape(d1.lon,              nobs, 1);
+view_ang         = reshape(d1.view_ang,         nobs, 1);
+sat_zen          = reshape(d1.sat_zen,          nobs, 1);
+sat_azi          = reshape(d1.sat_azi,          nobs, 1);
+sol_zen          = reshape(d1.sol_zen,          nobs, 1);
+sol_azi          = reshape(d1.sol_azi,          nobs, 1);
+sun_glint_dist   = reshape(d1.sun_glint_dist,   nobs, 1);
+local_solar_time = reshape(d1.local_solar_time, nobs, 1);
+land_frac        = reshape(d1.land_frac,        nobs, 1);
+surf_alt         = reshape(d1.surf_alt,         nobs, 1);
+surf_alt_sdev    = reshape(d1.surf_alt_sdev,    nobs, 1);
+rad_lw_qc        = reshape(d1.rad_lw_qc,        nobs, 1);
+rad_mw_qc        = reshape(d1.rad_mw_qc,        nobs, 1);
+rad_sw_qc        = reshape(d1.rad_sw_qc,        nobs, 1);
 
-sat_range        = reshape(d1.sat_range,      nobs, 1);
-lat_bnds         = reshape(d1.lat_bnds,       8, nobs);
-lon_bnds         = reshape(d1.lon_bnds,       8, nobs);
+sat_range        = reshape(d1.sat_range,        nobs, 1);
+lat_bnds         = reshape(d1.lat_bnds,         8, nobs);
+lon_bnds         = reshape(d1.lon_bnds,         8, nobs);
 
 % reshape nscan arrays to nobs (copy values across scans)
 subsat_lat     = reshape(repmat(d1.subsat_lat',    nxtr, 1), nobs, 1);
@@ -204,6 +197,10 @@ xi = mod(fov_ind - 1, 3) + 1;           % FOR xtrack ind
 ai = 3 - floor((fov_ind - 1) / 3);      % FOR atrack ind
 airs_xtrack = 3 * (for_ind - 1) + xi;
 airs_atrack = 3 * (scan_ind - 1) + ai;
+
+% set AIRS-specific QC to zero
+chan_qc = zeros(nchan_chirp, 1);  % AIRS parent channel QC
+synfrac = zeros(nchan_chirp, 1);  % AIRS parent synthetic fraction
 
 %-----------------------------
 % CrIS to CHIRP interpolation
@@ -314,6 +311,8 @@ h5write(nc_data, '/sat_zen', sat_zen);
 h5write(nc_data, '/sat_azi', sat_azi);
 h5write(nc_data, '/sol_zen', sol_zen);
 h5write(nc_data, '/sol_azi', sol_azi);
+h5write(nc_data, '/sun_glint_dist', sun_glint_dist);
+h5write(nc_data, '/local_solar_time', local_solar_time);
 h5write(nc_data, '/land_frac', land_frac);
 h5write(nc_data, '/surf_alt', surf_alt);
 h5write(nc_data, '/surf_alt_sdev', surf_alt_sdev);

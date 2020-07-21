@@ -23,10 +23,8 @@ addpath ./time
 addpath ./yaml
 
 % CrIS and CHIRP local data homes
-% cris_home = '/peate_archive/NPPOps/snpp/gdisc/2';
-% chirp_home = '/home/motteler/data/chirp_SN_test2';
-  cris_home =  '/peate_archive/NPPOps/jpss1/gdisc/2';
-  chirp_home = '/home/motteler/data/chirp_J1_test2';
+cris_home =  '/peate_archive/NPPOps/jpss1/gdisc/2';
+chirp_home = '/home/motteler/data/chirp_J1_test2';
 
 % CrIS and CHIRP path with year and month
 cris_month = fullfile(cris_home, sprintf('%d/%02d', year, month));
@@ -61,8 +59,7 @@ for di = dlist
   if exist(chirp_dir) ~= 7, mkdir(chirp_dir), end
 
   % loop on CrIS granules
-% flist = dir(fullfile(cris_dir, 'SNDR.SNPP.CRIS*L1B.*.nc'));
-  flist = dir(fullfile(cris_dir, 'SNDR.J1.CRIS*L1B.*.nc'));
+  flist = dir(fullfile(cris_dir, 'SNDR.*.CRIS*L1B.*.nc'));
   for fi = 1 : length(flist)
     cris_l1b = flist(fi).name;
     cris_gran = fullfile(cris_dir, cris_l1b);
@@ -81,7 +78,7 @@ for di = dlist
     write_yaml_cfg(yaml_gran, proc_opts, prod_attr);
 
     % chirp main calls airs2chirp
-    chirp_main('SN', yaml_gran);
+    chirp_cris_main(yaml_gran);
 
   end % loop on granules
 end % loop on days

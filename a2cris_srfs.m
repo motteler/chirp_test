@@ -29,6 +29,9 @@ opt1.cfile = 'corr_midres.mat';  % correction weights
 [Tac, cfrq] = airs2cris(eye(n), afrq, sfile, opt1);
 Tac = real(Tac);
 
+% save Tac for other applications
+% save Tac afrq cfrq Tac
+
 % air2cris translation of test data
 [cr_ref1, cfrq] = airs2cris(ar_ref, afrq, sfile, opt1);
 

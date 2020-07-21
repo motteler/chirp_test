@@ -1,9 +1,9 @@
 %
 % NAME
-%   opts_airs_loop - set airs2chirp options and loop on days
+%   umbc_airs_loop - set airs2chirp options and loop on days
 %
 % SYNOPSIS
-%   opts_airs_loop(year, dlist)
+%   umbc_airs_loop(year, dlist)
 %
 % INPUTS
 %   year   - integer year
@@ -16,7 +16,7 @@
 %   H. Motteler, 12 Dec 2019
 %
 
-function opts_airs_loop(year, dlist)
+function umbc_airs_loop(year, dlist)
 
 % set up source paths
 addpath /home/motteler/cris/ccast/source
@@ -25,8 +25,8 @@ addpath /home/motteler/shome/airs_decon/source
 addpath /home/motteler/matlab/yaml
 
 % AIRS and CHIRP local homes
-airs_home = '/asl/hpcnfs1/airs/L1C';              % AIRS source home
-chirp_home = '/asl/hpcnfs1/chirp/chirp_AQ_test';  % CHIRP output home
+airs_home = '/asl/hpcnfs1/airs/L1C';               % AIRS source home
+chirp_home = '/asl/hpcnfs1/chirp/chirp_AQ_test1';  % CHIRP output home
 
 % AIRS and CHIRP annual data (home/yyyy)
 airs_year = fullfile(airs_home, sprintf('%d', year));
@@ -97,7 +97,7 @@ for di = dlist
     write_yaml_cfg(yaml_gran, proc_opts, prod_attr);
 
     % chirp main calls airs2chirp
-    chirp_main('AQ', yaml_gran);
+    chirp_airs_main(yaml_gran);
 
   end % loop on granules
 end % loop on days
