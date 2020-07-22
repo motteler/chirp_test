@@ -27,7 +27,8 @@ if ~isdeployed
   addpath /home/motteler/cris/ccast/source
   addpath /home/motteler/shome/airs_decon/source
   addpath ./time
-  addpath ./yaml
+  addpath /home/motteler/matlab/yaml
+% addpath ./yaml
 end
 
 % matlabpath

@@ -12,15 +12,15 @@
 #   make run
 #
 
-all: chirp_air_main chirp_cris_main
+all: chirp_airs_main chirp_cris_main
 
 chirp_cris_main:
 	mcc -m -I /home/motteler/cris/ccast/source \
 	-I /home/motteler/shome/airs_decon/source \
 	-I ./time \
-	-I ./yaml \
-	-a ./time/leap-seconds.list \
+	-I /home/motteler/matlab/yaml \
 	-a ./yaml/external/snakeyaml-1.9.jar \
+	-a ./time/leap-seconds.list \
 	chirp_cris_main.m
 
 chirp_airs_main:
@@ -30,6 +30,8 @@ chirp_airs_main:
 	-I ./yaml \
 	-a ./time/leap-seconds.list \
 	-a ./yaml/external/snakeyaml-1.9.jar \
+	-a ./airs_demo_srf.hdf \
+	-a ./airs_bias_v01a.mat \
 	chirp_airs_main.m
 
 run_cris_main: chirp_cris_main run_chirp_cris_main.sh

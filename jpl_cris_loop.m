@@ -23,8 +23,10 @@ addpath ./time
 addpath ./yaml
 
 % CrIS and CHIRP local data homes
-cris_home =  '/peate_archive/NPPOps/jpss1/gdisc/2';
-chirp_home = '/home/motteler/data/chirp_J1_test2';
+% cris_home =  '/peate_archive/NPPOps/jpss1/gdisc/2';
+% chirp_home = '/home/motteler/data/chirp_J1_test2';
+  cris_home =  '/peate_archive/NPPOps/snpp/gdisc/2';
+  chirp_home = '/home/motteler/data/chirp_SN_test3';
 
 % CrIS and CHIRP path with year and month
 cris_month = fullfile(cris_home, sprintf('%d/%02d', year, month));
