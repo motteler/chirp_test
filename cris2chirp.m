@@ -30,6 +30,7 @@ function cris2chirp(cris_gran, chirp_dir, proc_opts, prod_attr)
 % default parameters
 verbose = 0;                % 0=quiet, 1=talky, 2=plots
 hapod = 1;                  % apply Hamming apodization
+bcorr = 0;                  % do a bias correction
 nc_init = 'chirp_1330.nc';  % initial empty netcdf file
 
 % mid-res apodized scale factors for high res CrIS NEdN
@@ -41,6 +42,7 @@ nedn_sw_sf = 0.4446;   % interpolation and Hamming
 if nargin == 4
   if isfield(proc_opts, 'verbose'),    verbose    = proc_opts.verbose; end
   if isfield(proc_opts, 'hapod'),      hapod      = proc_opts.hapod; end
+  if isfield(proc_opts, 'bcorr'),      bcorr      = proc_opts.bcorr; end
   if isfield(proc_opts, 'nc_init'),    nc_init    = proc_opts.nc_init; end
   if isfield(proc_opts, 'nedn_lw_sf'), nedn_lw_sf = proc_opts.nedn_lw_sf; end
   if isfield(proc_opts, 'nedn_mw_sf'), nedn_mw_sf = proc_opts.nedn_mw_sf; end
@@ -239,6 +241,12 @@ clear rad_sw
 rad = [rtmp_lw; rtmp_mw; rtmp_sw];
 wnum = [vtmp_lw; vtmp_mw; vtmp_sw];
 clear rtmp_lw rtmp_mw rtmp_sw
+
+% option to do a bias correction
+if bcorr
+  db = load(bfile);
+  rad = bias_correct(wnum, rad, db.bias);
+end
 
 %--------------------
 % CrIS to CHIRP NEdN

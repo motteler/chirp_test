@@ -46,6 +46,6 @@ end
 airs_gran = fullfile(proc_opts.airs_dir, proc_opts.airs_l1c);
 chirp_dir = proc_opts.chirp_dir;
 
-% call cris2chirp
+% call airs2chirp
 airs2chirp(airs_gran, chirp_dir, proc_opts, prod_attr);
 

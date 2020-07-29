@@ -9,7 +9,6 @@
 %   yaml_cfg  - yaml file with proc_opts and prod_addr 
 %
 % DISCUSSION
-% 
 %   This is the top-level function for translating a single granule
 %   from AIRS or CrIS to CHIRP.  It reads a YAML spec that specifies
 %   processing options and product attributes and calls airs2chirp
@@ -27,8 +26,7 @@ if ~isdeployed
   addpath /home/motteler/cris/ccast/source
   addpath /home/motteler/shome/airs_decon/source
   addpath ./time
-  addpath /home/motteler/matlab/yaml
-% addpath ./yaml
+  addpath ./yaml
 end
 
 % matlabpath
