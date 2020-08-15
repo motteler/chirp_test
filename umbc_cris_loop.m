@@ -26,7 +26,7 @@ addpath /home/motteler/matlab/yaml
 
 % CrIS and CHIRP local data homes
 cris_home = '/home/motteler/shome/daac_test/SNPPCrISL1B.2'; % CrIS source home
-chirp_home = '/asl/hpcnfs1/chirp/chirp_NP_test3';           % CHIRP output home
+chirp_home = '/asl/isilon/chirp/chirp_SN_test4';            % CHIRP output home
 
 % CrIS and CHIRP annual data (home/yyyy)
 cris_year = fullfile(cris_home, sprintf('%d', year));
@@ -44,7 +44,7 @@ yaml_gran = 'chirp_cris_gran.yaml';  % current granule
 % proc_opts.verbose = 1;   % 0=quiet, 1=talky, 2=plots
 
 % run-specific CHIRP product attributes
-% prod_attr = init_prod_attr;
+% prod_attr = struct;
 % prod_attr.product_name_project    = 'SNDR';
 % prod_attr.product_name_platform   = 'SS1330';
 % prod_attr.product_name_instr      = 'CHIRP';

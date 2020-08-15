@@ -4,19 +4,19 @@
 
 addpath /home/motteler/cris/ccast/source
 
-ahome = '/asl/data/airs/L1C';  % AIRS source home
-chome = '/asl/hpcnfs1/chirp/airs_L1c'; % CHIRP output home
+ahome = '/asl/hpcnfs1/airs/L1C';  % AIRS source home
+chome = '/asl/hpcnfs1/chirp/chirp_AQ_test'; % CHIRP output home
 
-year = 2018;
-dstr = '093';  % doy as a string
-gi = 166;      % granule index
+year = 2019;
+dstr = '061';  % doy as a string
+gi = 21;      % granule index
 
 % paths to AIRS and CHIRP data (home/yyyy)
 apath = fullfile(ahome, sprintf('%d', year), dstr);
 cpath = fullfile(chome, sprintf('%d', year), dstr);
 
 alist = dir(fullfile(apath, 'AIRS*L1C*.hdf'));
-clist = dir(fullfile(cpath, 'CHIRP*.nc'));
+clist = dir(fullfile(cpath, 'SNDR.SS1330.CHIRP*.nc'));
 
 agran = fullfile(apath, alist(gi).name);
 cgran = fullfile(cpath, clist(gi).name);
@@ -46,9 +46,11 @@ legend('AIRS', 'CHIRP', 'location', 'southeast')
 grid on; zoom on
 
 subplot(2,1,2)
-plot(v1, b1, v2, b2)
+plot(v1, b1, '+', v2, b2, 'o')
 % axis([760,820,260,300])
-  axis([1300,1360,220,300])
+% axis([1300,1360,220,300])
+%  axis([640,700, 200,300])
+  axis([1590,1610, 230,260])
 title('AIRS and CHIRP detail')
 legend('AIRS', 'CHIRP', 'location', 'southeast')
 grid on; zoom on

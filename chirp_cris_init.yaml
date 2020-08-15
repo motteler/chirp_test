@@ -66,7 +66,7 @@ prod_attr:
   # Moved product_name_type_id down to the section which changes with platform, etc.
   # product_name_type_id: L1_SN
   product_name_variant: std
-  product_name_version: v02_07
+  product_name_version: v02_20
   product_name_producer: U
   product_name_timestamp: 2004132227
   product_name_extension: nc
@@ -116,8 +116,8 @@ prod_attr:
   
   ################################################################
   # Uncomment one source
-  source: Aqua AIRS Level-1C v6.7
-  # source: SNPP CrIS Level-1B v2
+  # source: Aqua AIRS Level-1C v6.7
+  source: SNPP CrIS Level-1B v2
   # source: JPSS-1 CrIS Level-1B v2
   
   ################################################################

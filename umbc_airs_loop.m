@@ -25,8 +25,8 @@ addpath /home/motteler/shome/airs_decon/source
 addpath /home/motteler/matlab/yaml
 
 % AIRS and CHIRP local homes
-airs_home = '/asl/hpcnfs1/airs/L1C';               % AIRS source home
-chirp_home = '/asl/hpcnfs1/chirp/chirp_AQ_test1';  % CHIRP output home
+airs_home = '/asl/hpcnfs1/airs/L1C';              % AIRS source home
+chirp_home = '/asl/isilon/chirp/chirp_AQ_test4';  % CHIRP output home
 
 % AIRS and CHIRP annual data (home/yyyy)
 airs_year = fullfile(airs_home, sprintf('%d', year));
@@ -45,7 +45,7 @@ yaml_gran = 'chirp_airs_gran.yaml';  % current granule
 % proc_opts.tchunk = 400;  % translation chunk size
 
 % run-specific CHIRP product attributes
-% prod_attr = init_prod_attr;
+% prod_attr = struct;
 % prod_attr.product_name_project    = 'SNDR';
 % prod_attr.product_name_platform   = 'SS1330';
 % prod_attr.product_name_instr      = 'CHIRP';

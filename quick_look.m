@@ -4,11 +4,11 @@
 
 addpath /home/motteler/cris/ccast/source
 
-p1 = '/asl/hpcnfs1/chirp/chirp_AQ_test/2019/063';
-g1 = 'SNDR.SS1330.CHIRP.20190304T0059.m06.g010.L1_AQ.std.v02_07.U.2006281817.nc';
+p1 = '/asl/isilon/chirp/chirp_AQ_test1/2019/061';
+g1 = 'SNDR.SS1330.CHIRP.20190302T2059.m06.g210.L1_AQ.std.v02_07.U.2007302119.nc';
 
-p2 = '/asl/hpcnfs1/chirp/chirp_SN_test/2019/063';
-g2 = 'SNDR.SS1330.CHIRP.20190304T0053.m06.g010.L1_SN.std.v02_07.U.2006281058.nc';
+p2 = '/asl/isilon/chirp/chirp_SN_test1/2019/061';
+g2 = 'SNDR.SS1330.CHIRP.20190302T2053.m06.g210.L1_SN.std.v02_07.U.2007301537.nc';
 
 [d1, a1] = read_netcdf_h5(fullfile(p1, g1));  % AIRS parent 
 [d2, a2] = read_netcdf_h5(fullfile(p2, g2));  % CrIS parent
@@ -30,7 +30,7 @@ xlabel('wavenumber (cm-1)')
 ylabel('BT (K)')
 grid on
 
-% return
+return
 
 figure(2); clf
 subplot(2,1,1)

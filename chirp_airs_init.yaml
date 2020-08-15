@@ -80,7 +80,7 @@ prod_attr:
   # Moved product_name_type_id down to the section which changes with platform, etc.
   # product_name_type_id: L1_AQ
   product_name_variant: std
-  product_name_version: v02_07
+  product_name_version: v02_20
   product_name_producer: U
   product_name_timestamp: 2004132227
   product_name_extension: nc

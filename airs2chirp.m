@@ -139,8 +139,6 @@ sun_glint_lat  = reshape(repmat(d1.glintlat',  90, 1), nobs, 1);
 sun_glint_lon  = reshape(repmat(d1.glintlon',  90, 1), nobs, 1);
 asc_flag       = reshape(repmat(d1.scan_node_type', 90, 1), nobs, 1);
 
-clear d1
-
 % basic AIRS atrack and xtrack indices
 airs_atrack = reshape(repmat(1:135, 90, 1), nobs, 1);
 airs_xtrack = reshape(repmat((1:90)', 1, 135), nobs, 1);
@@ -153,18 +151,24 @@ fov = mod(airs_xtrack-1, 3) + 3 * mod(airs_atrack-1, 3) + 1;
 % generate an obs_id for AIRS 
 obs_id = airs_obs_id(obs_time_utc, airs_atrack, airs_xtrack);
 
-% whos rad_airs nedn_airs
-% whos obs_time_tai93 lat lon view_ang sat_zen sat_azi ...
-%   sol_zen sol_azi land_frac surf_alt surf_alt_sdev instrument_state
-% whos subsat_lat subsat_lon scan_mid_time sat_alt ...
-%   sun_glint_lat sun_glint_lon asc_flag airs_xtrack airs_atrack ...
-%   freq_airs nsynth_airs
+% call airs_fov_gen for FOV polygons and sat range
+[lat_bnds, lon_bnds, sat_range] = ...
+  airs_fov_gen(d1.sat_lat, d1.sat_lon, ...
+               d1.Latitude, d1.Longitude, ...
+               d1.satheight * 1e3, ...
+               d1.scanang, d1.satazi, 1.1);
+
+% reshape to chirp spec
+lat_bnds = reshape(lat_bnds, 8, nobs);
+lon_bnds = reshape(lat_bnds, 8, nobs);
+sat_range =  reshape(sat_range, nobs, 1);
 
 % set global attributes
-prod_attr = copy_airs_attr(airs_attr, prod_attr);
 run_time = now;
 obs_time = airs2dnum(obs_time_tai93(1));
-prod_attr = gran_prod_attr(gran_num, obs_time, run_time, prod_attr);
+prod_attr = copy_airs_attr(airs_attr, prod_attr);
+prod_attr = airs_src_attr(gran_num, obs_time, run_time, prod_attr);
+prod_attr = airs_geo_attr(d1, prod_attr);
 
 % build the output filename
 chirp_name = nasa_fname(prod_attr);
@@ -173,6 +177,8 @@ chirp_name = nasa_fname(prod_attr);
 dstr = datestr(airs2dnum(obs_time_tai93(1)));
 sfmt = '%s: processing granule %03d, %s\n';
 fprintf(1, sfmt, fstr, gran_num, dstr);
+
+clear d1
 
 %--------------------------
 % AIRS to CrIS translation
@@ -346,17 +352,12 @@ h5write(nc_data, '/atrack', uint8(atrack));
 h5write(nc_data, '/xtrack', uint8(xtrack));
 h5write(nc_data, '/fov_num', uint8(fov));
 
+h5write(nc_data, '/lat_bnds', lat_bnds);
+h5write(nc_data, '/lon_bnds', lon_bnds);
+h5write(nc_data, '/sat_range', sat_range);
+
 % write the global attributes
 write_prod_attr(nc_data, prod_attr);
-
-% return
-
-% quick sanity checks
-% wnum2 = ncread(nc_data, 'wnum');
-% rad2 = ncread(nc_data, 'rad');
-
-% isequal(freq_cris, wnum2)
-% isequal(single(rad_chirp), rad2)
 
 end
 
