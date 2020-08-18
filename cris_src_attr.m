@@ -1,6 +1,6 @@
 %
 % NAME
-%   cris_src_attr - update per-granule product attributes
+%   cris_src_attr - cris-parent per-granule product attributes
 %
 % SYNOPSIS
 %   prod_attr = cris_src_attr(gran_num, obs_time, run_time, prod_attr);
@@ -40,12 +40,22 @@ prod_attr.date_created = utc_string(run_time);
 if s == 0, prod_attr.production_host = string(w(1:end-1)); end
 
 % algorithm version
-% *** TEMPORARY *** this should be set in the yaml spec
-prod_attr.algorithm_version = 'v1.2.0';
+fid = fopen('VERSION');
+if fid > 0
+  tx = textscan(fid, '%s');
+  prod_attr.algorithm_version = tx{1}{1};
+  fclose(fid);
+else
+  prod_attr.algorithm_version = 'unassigned';
+end
 
-% history
+% user, for history
 [s,w] = unix('whoami');
-if s == 0, run_user = string(w(1:end-1)); end
+if s == 0
+  run_user = string(w(1:end-1)); 
+else
+  run_user = "unassigned_user";
+end
 
 % history is a concatenation
 prod_attr.history = prod_attr.history + " || " + ...

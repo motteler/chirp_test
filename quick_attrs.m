@@ -5,12 +5,12 @@
 addpath /home/motteler/cris/ccast/source
 
 % airs-parent chirp
-p1 = '/asl/isilon/chirp/chirp_AQ_test1/2019/061';
-g1 = 'SNDR.SS1330.CHIRP.20190302T2059.m06.g210.L1_AQ.std.v02_07.U.2007302119.nc';
+p1 = '/asl/isilon/chirp/chirp_AQ_test4/2019/063';
+g1 = 'SNDR.SS1330.CHIRP.20190304T0223.m06.g024.L1_AQ.std.v02_20.U.2008161625.nc';
 
-% cris-parent chirp
-p2 = '/asl/isilon/chirp/chirp_SN_test3/2019/061';
-g2 = 'SNDR.SS1330.CHIRP.20190302T0053.m06.g010.L1_SN.std.v02_20.U.2008092133.nc';
+% cris_parent chirp
+p2 = '/asl/isilon/chirp/chirp_SN_test4/2019/063';
+g2 = 'SNDR.SS1330.CHIRP.20190304T0217.m06.g024.L1_SN.std.v02_20.U.2008161547.nc';
 
 % AIRS L1b data
 p3 = '/asl/airs/l1c_v672/2019/061';

@@ -1,33 +1,33 @@
 %
 % NAME
-%   airs_geo_attr - geo-dependent product attributes
+%   airs_geo_attr - geo-dependent AIRS product attributes
 %
 % SYNOPSIS
 %   prod_attr = airs_geo_attr(d1, prod_attr)
 %
 % INPUTS
-%   d1 - airs data before reshape
+%   d1        - airs data before reshape
 %   prod_attr - global product attributes
 %
 % OUTPUT
 %   prod_attr - global product attributes
 %
 % DISCUSSION
-%   This is easier with the original xtrack x atrack L1b arrays, 
-%   so we simply pass in the whole d1 read struct.  Matlab uses a
-%   conditional call by reference, so d1 is not copied as long as
-%   it is not modified.
+%   The values we want are easier to find with the original xtrack
+%   by atrack L1b arrays, so we simply pass in the whole AIRS read
+%   struct.  Matlab uses a conditional call by reference, so d1 is
+%   not copied as long as it is not modified.
 %
 %   The prod_attr.geospatial_bounds spec is from Evan.  This is a
-%   list of five lon, lat pairs (note not the more typical lat, lon
-%   order) as a text string, with the prefix "POLYGON".  Looking
-%   along track from space we have the corner indices
+%   list of five lon, lat pairs as a text string, with the prefix
+%   "POLYGON".  Looking along track from space we have the corner
+%   indices
 %
 %       1,135 xtrack 90,135
 %
 %       1,1   xtrack 90,1
 %
-%   We list these counterclockwise, starting from (1,1), duplicating
+%   we list these counterclockwise, starting from (1,1), duplicating
 %   (1,1) at the end
 %
 

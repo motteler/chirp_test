@@ -33,12 +33,6 @@ if ~isdeployed
   addpath ./yaml
 end
 
-% matlabpath
-% javaclasspath
-% ctfroot
-% which leap-seconds.list
-% which snakeyaml-1.9.jar
-
 % read the yaml config specs
 [proc_opts, prod_attr] = read_yaml_cfg(yaml_cfg);
 

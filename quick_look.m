@@ -4,11 +4,11 @@
 
 addpath /home/motteler/cris/ccast/source
 
-p1 = '/asl/isilon/chirp/chirp_AQ_test1/2019/061';
-g1 = 'SNDR.SS1330.CHIRP.20190302T2059.m06.g210.L1_AQ.std.v02_07.U.2007302119.nc';
+p1 = '/asl/isilon/chirp/chirp_AQ_test4/2019/063';
+g1 = 'SNDR.SS1330.CHIRP.20190304T0223.m06.g024.L1_AQ.std.v02_20.U.2008161625.nc';
 
-p2 = '/asl/isilon/chirp/chirp_SN_test1/2019/061';
-g2 = 'SNDR.SS1330.CHIRP.20190302T2053.m06.g210.L1_SN.std.v02_07.U.2007301537.nc';
+p2 = '/asl/isilon/chirp/chirp_SN_test4/2019/063';
+g2 = 'SNDR.SS1330.CHIRP.20190304T0217.m06.g024.L1_SN.std.v02_20.U.2008161547.nc';
 
 [d1, a1] = read_netcdf_h5(fullfile(p1, g1));  % AIRS parent 
 [d2, a2] = read_netcdf_h5(fullfile(p2, g2));  % CrIS parent

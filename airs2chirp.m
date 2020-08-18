@@ -11,6 +11,11 @@
 %   proc_opts  - processing options
 %   prod_attr  - product attributes
 %
+% DISCUSSION
+%   This function does the actual translation of AIRS to CHIRP
+%   granule files.  Some global product attributes are set here
+%   because we need the values from the AIRS read for that.
+%
 % AUTHOR
 %  H. Motteler, 8 July 2019
 %
@@ -99,9 +104,8 @@ catch
   return
 end
 
-% get the AIRS granule ID
-[~, gstr, ~] = fileparts(airs_gran);
-gran_num = str2double(gstr(17:19));
+% get the granule number from airs attributes
+gran_num = double(airs_attr.granule_number);
 
 %----------------------------------
 % reshape and rename the AIRS data
@@ -158,7 +162,7 @@ obs_id = airs_obs_id(obs_time_utc, airs_atrack, airs_xtrack);
                d1.satheight * 1e3, ...
                d1.scanang, d1.satazi, 1.1);
 
-% reshape to chirp spec
+% reshape airs_fov_gen outputs to chirp spec
 lat_bnds = reshape(lat_bnds, 8, nobs);
 lon_bnds = reshape(lat_bnds, 8, nobs);
 sat_range =  reshape(sat_range, nobs, 1);

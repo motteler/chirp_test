@@ -25,8 +25,8 @@ addpath /home/motteler/shome/airs_decon/source
 addpath /home/motteler/matlab/yaml
 
 % CrIS and CHIRP local data homes
-cris_home = '/home/motteler/shome/daac_test/SNPPCrISL1B.2'; % CrIS source home
-chirp_home = '/asl/isilon/chirp/chirp_SN_test4';            % CHIRP output home
+cris_home = '/home/motteler/shome/daac_test/SNPPCrISL1B.2';
+chirp_home = '/asl/isilon/chirp/chirp_SN_test4';
 
 % CrIS and CHIRP annual data (home/yyyy)
 cris_year = fullfile(cris_home, sprintf('%d', year));

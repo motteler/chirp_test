@@ -1,6 +1,6 @@
 %
 % NAME
-%   copy_cris_attr - update granule product attributes
+%   copy_cris_attr - copy product attributes from CRIS data
 %
 % SYNOPSIS
 %   prod_attr = copy_cris_attr(cris_attr, prod_attr);
@@ -10,8 +10,8 @@
 %   prod_attr - chirp global product attributes
 %
 % NOTE
-%   for CrIS-parent simply copy global attributes with matching
-%   names
+%   for CrIS-parent CHIRP we simply copy global attributes with
+%   matching names
 %
 
 function prod_attr = copy_cris_attr(cris_attr, prod_attr);

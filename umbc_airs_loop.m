@@ -25,8 +25,8 @@ addpath /home/motteler/shome/airs_decon/source
 addpath /home/motteler/matlab/yaml
 
 % AIRS and CHIRP local homes
-airs_home = '/asl/hpcnfs1/airs/L1C';              % AIRS source home
-chirp_home = '/asl/isilon/chirp/chirp_AQ_test4';  % CHIRP output home
+airs_home = '/asl/hpcnfs1/airs/L1C';
+chirp_home = '/asl/isilon/chirp/chirp_AQ_test4';
 
 % AIRS and CHIRP annual data (home/yyyy)
 airs_year = fullfile(airs_home, sprintf('%d', year));

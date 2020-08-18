@@ -1,6 +1,6 @@
 %
 % NAME
-%   copy_airs_attr - update per-granule product attributes
+%   copy_airs_attr - copy product attributes from AIRS data
 %
 % SYNOPSIS
 %   prod_attr = copy_airs_attr(airs_attr, prod_attr);
@@ -10,8 +10,9 @@
 %   prod_attr - chirp global product attributes
 %
 % NOTE
-%   for AIRS-parent, an ad hoc list of copies and calcs
-%   reference: email from Evan and Alex, 3 Jun 2020
+%   for AIRS-parent CHIRP we have have to do some renaming and
+%   calculations from the AIRS attributes.  reference: email from
+%   Evan and Alex, 3 Jun 2020
 %
 
 function prod_attr = copy_airs_attr(airs_attr, prod_attr);

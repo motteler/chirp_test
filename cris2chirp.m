@@ -11,11 +11,10 @@
 %   proc_opts  - processing options
 %   prod_attr  - global product attributes
 %
-% DISCUSSION 
-%   product attributes are set in the prod_attr struct, and by the
-%   functions copy_cris_attr, and gran_prod_attr, in reverse order 
-%   of priority.   See the "alist" in copy_cris_attr for the values
-%   that are copied, and gran_prod_attr for the values set there.
+% DISCUSSION
+%   This function does the actual translation of CrIS to CHIRP
+%   granule files.  Some global product attributes are set here
+%   because we need the values from the CrIS read for that.
 %
 % AUTHOR
 %  H. Motteler, 18 Dec 2019
@@ -179,11 +178,6 @@ asc_flag       = reshape(repmat(d1.asc_flag',      nxtr, 1), nobs, 1);
 
 clear d1
 
-% extend asc from nscan to nFOV x nFOR x nscan
-% atmp = d1.sat_alt(:);
-% sat_alt2 = reshape(ones(nFOV*nFOR,1)*atmp', nobs, 1);
-% isequal(sat_alt, sat_alt2)
-
 % add a FOV index
 fov_ind = reshape(iFOV' * ones(1,nFOR*nscan), nobs, 1);
 
@@ -272,10 +266,6 @@ ntmp_sw = ntmp_sw * nedn_sw_sf;
 % combine the bands
 nedn = [ntmp_lw; ntmp_mw; ntmp_sw];
 
-% semilogy(wnum, nedn);
-% axis([600, 2600, 0, 1])
-% grid on; zoom on
-
 %------------------
 % CrIS to CHIRP QC
 %------------------
@@ -348,11 +338,4 @@ h5write(nc_data, '/airs_atrack', uint8(airs_atrack));
 
 % write the global attributes
 write_prod_attr(nc_data, prod_attr);
-
-% quick sanity checks
-% wnum2 = ncread(nc_data, 'wnum');
-% rad2 = ncread(nc_data, 'rad');
-
-% isequal(wnum, wnum2)
-% isequal(rad, single(rad2))
 
