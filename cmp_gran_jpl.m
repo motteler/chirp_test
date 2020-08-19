@@ -5,12 +5,12 @@
 addpath /home/motteler/cris/ccast/source
 
 % CrIS parent test
-  p1 = '/home/motteler/data/chirp_SN_test4/2016/01/14/crisl1b';
-  t1 = 'SNDR.SS1330.CHIRP.20160114T2354.m06.g240.L1_SN.std.v02_07.U.*.nc';
+% p1 = '/home/motteler/data/chirp_SN_test5/2016/01/14/crisl1b';
+% t1 = 'SNDR.SS1330.CHIRP.20160114T2354.m06.g240.L1_SN.std.v02_20.U.*.nc';
 
 % AIRS parent test
-% p1 = '/home/motteler/data/chirp_AQ_test4/2016/01/14/airicrad';
-% t1 = 'SNDR.SS1330.CHIRP.20160114T2359.m06.g240.L1_AQ.std.v02_07.U.*.nc';
+  p1 = '/home/motteler/data/chirp_AQ_test4/2016/01/14/airicrad';
+  t1 = 'SNDR.SS1330.CHIRP.20160114T2359.m06.g240.L1_AQ.std.v02_20.U.*.nc';
 
 % grab the last two files in the list
 flist = dir(fullfile(p1, t1));

@@ -23,6 +23,7 @@ chirp_cris_main:
 	-I /home/motteler/shome/airs_decon/source \
 	-I ./time \
 	-I ./yaml \
+	-a ./ALGVERS \
 	-a ./yaml/external/snakeyaml-1.9.jar \
 	-a ./time/leap-seconds.list \
 	chirp_cris_main.m
@@ -32,6 +33,7 @@ chirp_airs_main:
 	-I /home/motteler/shome/airs_decon/source \
 	-I ./time \
 	-I ./yaml \
+	-a ./ALGVERS \
 	-a ./time/leap-seconds.list \
 	-a ./yaml/external/snakeyaml-1.9.jar \
 	-a ./airs_demo_srf.hdf \
@@ -53,4 +55,7 @@ clean_airs:
 
 show_cache:
 	echo "MCR cache root:" ${MCR_CACHE_ROOT}
+
+version:
+	git tag | tail -1 > ALGVERS
 

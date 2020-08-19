@@ -26,7 +26,7 @@ addpath ./time
 % cris_home =  '/peate_archive/NPPOps/jpss1/gdisc/2';
 % chirp_home = '/home/motteler/data/chirp_J1_test3';
   cris_home =  '/peate_archive/NPPOps/snpp/gdisc/2';
-  chirp_home = '/home/motteler/data/chirp_SN_test4';
+  chirp_home = '/home/motteler/data/chirp_SN_test5';
 
 % CrIS and CHIRP path with year and month
 cris_month = fullfile(cris_home, sprintf('%d/%02d', year, month));

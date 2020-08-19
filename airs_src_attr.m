@@ -40,7 +40,7 @@ prod_attr.date_created = utc_string(run_time);
 if s == 0, prod_attr.production_host = string(w(1:end-1)); end
 
 % algorithm version
-fid = fopen('VERSION');
+fid = fopen('ALGVERS');
 if fid > 0
   tx = textscan(fid, '%s');
   prod_attr.algorithm_version = tx{1}{1};
