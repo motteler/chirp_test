@@ -33,13 +33,17 @@
 
 function prod_attr = airs_geo_attr(d1, prod_attr)
 
+% start and end times as a string
+prod_attr.time_of_first_valid_obs = utc_string(airs2dnum(d1.Time(1)));
+prod_attr.time_of_last_valid_obs  = utc_string(airs2dnum(d1.Time(end)));
+
 % attributes set from data
-prod_attr.geospatial_lat_max = max(d1.Latitude(:));
-prod_attr.geospatial_lat_mid = d1.Latitude(45,68);
-prod_attr.geospatial_lat_min = min(d1.Latitude(:));
-prod_attr.geospatial_lon_max = max(d1.Longitude(:));
-prod_attr.geospatial_lon_mid = d1.Longitude(45,68);
-prod_attr.geospatial_lon_min = min(d1.Longitude(:));
+prod_attr.geospatial_lat_max = single(max(d1.Latitude(:)));
+prod_attr.geospatial_lat_mid = single(d1.Latitude(45,68));
+prod_attr.geospatial_lat_min = single(min(d1.Latitude(:)));
+prod_attr.geospatial_lon_max = single(max(d1.Longitude(:)));
+prod_attr.geospatial_lon_mid = single(d1.Longitude(45,68));
+prod_attr.geospatial_lon_min = single(min(d1.Longitude(:)));
 
 % granule corners, counterclockwise along track
 gcorn = [d1.Longitude(1,1),    d1.Latitude(1,1), ...

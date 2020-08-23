@@ -33,8 +33,10 @@ cris_month = fullfile(cris_home, sprintf('%d/%02d', year, month));
 chirp_month = fullfile(chirp_home, sprintf('%d/%02d', year, month));
 
 % yaml config files
-yaml_init = 'chirp_cris_init.yaml';  % initial config
-yaml_gran = 'chirp_cris_gran.yaml';  % current granule 
+% yaml_init = 'chirp_J1_init.yaml';  % initial config
+% yaml_gran = 'chirp_J1_gran.yaml';  % current granule 
+  yaml_init = 'chirp_SN_init.yaml';  % initial config
+  yaml_gran = 'chirp_SN_gran.yaml';  % current granule 
 
 % read the initial yaml specs
 [proc_opts, prod_attr] = read_yaml_cfg(yaml_init);

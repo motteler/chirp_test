@@ -1,5 +1,6 @@
-
-% datenum to UTC format string for global attributes
+%
+% datenum to UTC format char array, for global attributes
+%
 
 function s = utc_string(d)
 v = datevec(d);

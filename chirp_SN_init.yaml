@@ -1,0 +1,145 @@
+#
+# Evan's sample runtime config split into processing options
+# (proc_opts) and product attributes (prod_attr).  This version
+# (chirp_cris_init.yaml) is a template for processing a set of
+# granules, so some values, like cris filename, granule number,
+# and processing time are just filler to be set properly as the
+# individual granules are processed.
+#
+# I've left the prod_attr fields Evan set alone, and added some
+# proc_opts fields.  These all have the names I was already using,
+# but that would not be hard to change.
+#
+# CHIRP sample runtime configuration file for CrIS-source data
+# Format:
+#   line order doesn't matter
+#   blank lines don't matter
+#   '#' is comment-to-end-of-line
+#   all other lines are of the form:
+#      [ows]TAG[ows]:[ows]VALUE[ows]
+#     where:
+#        [ows] is optional whitespace, and commbination of tabs and space characters
+#        TAG is a literal tag from a set of tags agreed between JPL Sounder SIPS and UMBC ASL
+#        VALUE is the desired value
+#
+# If duplicate lines are present with the same tag then the last one is the one that is used
+#
+
+#--------------------
+# processing options
+#--------------------
+proc_opts:  
+  # L1 input
+  # can include a path but typically the PGE will be run with a local symbolic link
+  # so the value will be a simple file name
+  # l1ir: some CrIS file that we need to set somewhere
+  # NOTE: this is set as cris_l1b, below
+
+  # The netCDF template file to use
+  # template: chirp_1330.nc
+  # NOTE: this is set as nc_init, below
+
+  # values for chirp_main, the top-level function
+  cris_l1b: 'replace me with a CrIS L1b granule file'
+  cris_dir: 'replace me with the CrIS input path'
+  chirp_dir: 'replace me with the CHIRP output path'
+
+  # cris2chirp parameters
+  verbose: 1                   # 0=quiet, 1=talky, 2=plots
+  nc_init: 'chirp_1330.nc'     # initial empty netcdf file
+  bcorr: 0                     # no bias correction
+
+
+#--------------------
+# product attributes
+#--------------------
+prod_attr:
+  # attributes closely associated with product_name.  The PGE will build the
+  # product_name from these pieces and will put the product_name along with all
+  # of these aprts in the global attributes of the CHIRP product netCDF file.
+  # SNDR.SS1330.CHIRP.20190302T0011.m06.g002.L1_AIR.std.v01_07.U.2004132227.nc
+  product_name_project: SNDR
+  product_name_platform: SS1330
+  product_name_instr: CHIRP
+  gran_id: 20190302T0011
+  product_name_duration: m06
+  granule_number: 101
+  product_name_granule_number: g101
+  # Moved product_name_type_id down to the section which changes with platform, etc.
+  # product_name_type_id: L1_SN
+  product_name_variant: std
+  product_name_version: v02_20
+  product_name_producer: U
+  product_name_timestamp: 2004132227
+  product_name_extension: nc
+  
+  
+  # These get copied directly into the global attributes of the CHIRP netCDF product file
+  license: Limited to SNPP Sounder affiliates
+  creator_name: JPL/Caltech Sounder SIPS Operations
+  creator_email: sounder.sips@jpl.nasa.gov
+  creator_url: http://www.jpl.nasa.gov/
+  creator_institution: Jet Propulsion Laboratory - California Institute of Technology
+  institution: Jet Propulsion Laboratory - California Institute of Technology
+  publisher_name: "Sounder SIPS: JPL/Caltech"
+  publisher_email: sounder.sips@jpl.nasa.gov
+  publisher_url: Unassigned
+  id: Unassigned
+  identifier_product_doi: Unassigned
+  naming_authority: Unassigned
+  identifier_product_doi_authority: Unassigned
+  metadata_link: Unassigned
+  
+  # This section changes depending on which platform is used and also based on
+  # whether that platform is primary for this period.
+  # 9/1/2002 - 8/31/2016 AQUA AIRS
+  # 9/1/2016 - 8/31/2018 SNPP CrIS
+  # 9/1/2018+          J1 CrIS
+  
+  
+  ################################################################
+  # Uncomment the first of the following shortname/title/summary blocks for official CHIRP
+  # Uncomment the second of the following shortname/title/summary blocks for CHIRP-CAL
+  
+  # Official CHIRP derived from any instrument
+  shortname: SSYN1330CHIRPv2_placeholder
+  title: 13:30 orbit L1 CHIRP
+  summary: The CHIRP Level 1 product for the 13:30 sun-synchronous orbit consists of calibrated radiance spectra at a common resolution derived from hyperspectral instruments on EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms adjusted to form a co  ntinuous climate-quality record.
+  
+  # CHIRP-CAL derived from any instrument
+  # shortname: SSYN1330CHIRPCALv2_placeholder
+  # title: 13:30 orbit L1 CHIRP-CAL
+  # summary: The CHIRP-CAL Level 1 product for the 13:30
+  # sun-synchronous orbit consists of calibrated radiance spectra at
+  # a   common resolution derived from hyperspectral instruments on
+  # EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms as for the   main
+  # CHIRP product but for times when a givein platforms data   is not used as the main CHIRP.
+  
+  
+  ################################################################
+  # Uncomment one source
+  # source: Aqua AIRS Level-1C v6.7
+  source: SNPP CrIS Level-1B v2
+  # source: JPSS-1 CrIS Level-1B v2
+  
+  ################################################################
+  # Uncomment one product_name_type_id for the appropriate platform/period
+  #
+  # The PGE can determine the appropriate platform/isntrument 
+  # from characters 4-5 of product_name_type_id
+  #
+  # primary Aqua period 9/1/2002 - 8/31/2016
+  # product_name_type_id: L1_AQ
+  # extra Aqua
+  # product_name_type_id: L1_AQ_CAL
+  #
+  # Primary SNPP period 9/1/2016 - 8/31/2018
+  product_name_type_id: L1_SN
+  # extra SNPP
+  # product_name_type_id: L1_SN_CAL
+  #
+  # Primary JPSS1 period 9/1/2018 - TBD
+  # product_name_type_id: L1_J1
+  # extra JPSS1
+  # product_name_type_id: L1_J1_CAL
+  

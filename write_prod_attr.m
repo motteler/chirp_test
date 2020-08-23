@@ -1,26 +1,32 @@
 %
 % NAME
-%   write_prod_attr - write global attributes from prod_attr
+%   write_prod_attr - write global attributes from prod_attr struct
 %
 % SYNOPSIS
 %   write_prod_attr(nc_data, prod_attr);
 %
+% INPUTS
+%   nc_data   - initial ".nc" file, from CDL spec
+%   prod_attr - cumulative global attribute struct
+%
+% DISCUSSION
+%   prod_attr is a mix of text and numeric values, with most of
+%   the text values as char arrays, with a few strings in the mix.
+%   The CDL spec for global text attributes is string, so we coerce
+%   char arrays to strings before calling writeatt.  Text from the
+%   CDL spec appears as strings, so if we don't do this we get a mix
+%   of strings and char arrays in the netCDF global attributes.
+%
+%   In addition there seems to be a problem compiling code without
+%   the coercion when prod_attr.qa_no_data is set to 'TRUE' rather
+%   than "TRUE".
+%
+%   ncwriteatt (commented out below) ignores the string coercion and
+%   writes everything as char arrays
 
 function write_prod_attr(nc_data, prod_attr)
 
-% check strange compiler bug with char arrays
-% prod_attr.qa_no_data = "TRUE";  % try a string
-% display(prod_attr.qa_no_data)
-% prod_attr = rmfield(prod_attr, 'qa_no_data');
-
 ftmp = fieldnames(prod_attr);
-
-% fprintf(1, 'length(ftmp) = %d\n', length(ftmp))
-
-% the CDL spec for string attributes is string, so as a precaution
-% coerce char arrays to strings before calling writeatt.  This does
-% not seem to be necessary for the interpreter, but should not hurt,
-% and fixes the problem for the compiler.
 
 for i = 1 : length(ftmp)
   vtmp = prod_attr.(ftmp{i});
@@ -29,6 +35,6 @@ for i = 1 : length(ftmp)
   end
 
   h5writeatt(nc_data, '/', ftmp{i}, vtmp)
-% ncwriteatt(nc_data, '/', ftmp{i}, vtmp)
+% ncwriteatt(nc_data, '/', ftmp{i}, vtmp)  % string coercion fails
 
 end

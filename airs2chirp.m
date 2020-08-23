@@ -12,9 +12,9 @@
 %   prod_attr  - product attributes
 %
 % DISCUSSION
-%   This function does the actual translation of AIRS to CHIRP
-%   granule files.  Some global product attributes are set here
-%   because we need the values from the AIRS read for that.
+%   This function takes AIRS to CHIRP granules, and adds a lot of
+%   CHIRP-specific support info.  The actual radiance translation is
+%   done by the function airs2cris, from the airs_decon repo.
 %
 % AUTHOR
 %  H. Motteler, 8 July 2019
@@ -168,10 +168,9 @@ lon_bnds = reshape(lat_bnds, 8, nobs);
 sat_range =  reshape(sat_range, nobs, 1);
 
 % set global attributes
-run_time = now;
 obs_time = airs2dnum(obs_time_tai93(1));
 prod_attr = copy_airs_attr(airs_attr, prod_attr);
-prod_attr = airs_src_attr(gran_num, obs_time, run_time, prod_attr);
+prod_attr = airs_src_attr(gran_num, obs_time, airs_gran, prod_attr);
 prod_attr = airs_geo_attr(d1, prod_attr);
 
 % build the output filename

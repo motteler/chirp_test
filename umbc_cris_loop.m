@@ -25,7 +25,8 @@ addpath /home/motteler/shome/airs_decon/source
 addpath /home/motteler/matlab/yaml
 
 % CrIS and CHIRP local data homes
-cris_home = '/home/motteler/shome/daac_test/SNPPCrISL1B.2';
+% cris_home = '/home/motteler/shome/daac_test/SNPPCrISL1B.2';
+cris_home = '/asl/isilon/cris/nasa_l1b/npp';
 chirp_home = '/asl/isilon/chirp/chirp_SN_test4';
 
 % CrIS and CHIRP annual data (home/yyyy)
@@ -33,8 +34,10 @@ cris_year = fullfile(cris_home, sprintf('%d', year));
 chirp_year = fullfile(chirp_home, sprintf('%d', year));
 
 % yaml config files
-yaml_init = 'chirp_cris_init.yaml';  % initial config
-yaml_gran = 'chirp_cris_gran.yaml';  % current granule 
+  yaml_init = 'chirp_SN_init.yaml';  % initial config
+  yaml_gran = 'chirp_SN_gran.yaml';  % current granule 
+% yaml_init = 'chirp_J1_init.yaml';  % initial config
+% yaml_gran = 'chirp_J1_gran.yaml';  % current granule 
 
 % read the initial yaml specs
 [proc_opts, prod_attr] = read_yaml_cfg(yaml_init);

@@ -3,42 +3,70 @@ production loop
 ----------------
   airs2chirp      - translate AIRS to CHIRP granules
   cris2chirp      - interpolate CrIS to CHIRP granules
-  opts_airs_loop  - run airs2chirp on a list of days
-  opts_cris_loop  - run cris2chirp on a list of days
+  chirp_airs_main  - top-level wrapper for airs2chirp
+  chirp_cris_main  - top-level wrapper for cris2chirp
+
+  umbc_cris_loop  - set cris2chirp options and loop on days
+  umbc_airs_loop  - set airs2chirp options and loop on days
+  jpl_cris_loop   - set cris2chirp options and loop on days
+  jpl_airs_loop   - set airs2chirp options and loop on days
+
   chirp_batch     - run chirp translation as a batch job
-  chirp_main      - top-level single-granule processing
+
+global attributes
+------------------
+  airs_src_attr   - airs-parent per-granule attributes
+  cris_src_attr   - cris-parent per-granule attributes
+  copy_airs_attr  - copy attributes from AIRS data
+  copy_cris_attr  - copy attributes from CRIS data
+  airs_geo_attr   - geo-dependent AIRS attributes  
+  write_prod_attr - write prod_attr global attributes
 
 support and test
 -----------------
+  utc_string      - datenum to UTC char array
+  nasa_fname      - build a nasa product filename
   read_airs_h4    - read an AIRS HDF4 granule
-  read_cris_h5    - read a CrIS H5/netCDF granule
   read_netcdf_h5  - general purpose netcdf H5 reader
   read_yaml_cfg   - read yaml proc opts and prod attr
   write_yaml_cfg  - write yaml proc opts and prod attr
-  copy_airs_attr  - add airs-parent product attributes
-  copy_cris_attr  - add cris-parent product attributes
-  bias_correct    - simple bias correction
+  airs_obs_id     - generate obs id strings for AIRS
+  nedn_est        - NEdN estimate for the AIRS-to-CrIS translation
+
+  airs_fov_gen    - FOV polygons and range from AIRS L1b data
+  test_fov_gen    - quick test of matlab version of airs_fov_gen
+  bias_correct    - apply a simple bias correction
+  mk_airs_bias    - bias file for AIRS-parent CHIRP
+  bias_check      - compare radiance and BT bias corrections
 
   a2cris_lin      - airs2cris linearization test
   a2cris_srfs     - airs2cris linearization with SRF plots
   airs_num_synth  - multi-granule count of L1cNumSynth values
   check_synth     - counts for synthetic and fixed channels
-  nedn_est        - NEdN estimate for the AIRS-to-CrIS translation
   nedn_interp     - NEdN interpolation demo
   pen_lift        - add NaNs for pen lift at frequency gaps
 
-netCDF format
---------------
-  airs2chirp.cdl  - AIRS CHIRP SDR netCDF CDL template
-  cris2chirp.cdl  - CrIS CHIRP SDR netCDF CDL template
-  airs2chirp.nc   - AIRS CHIRP SDR netCDF initial file
-  cris2chirp.nc   - CrIS CHIRP SDR netCDF initial file
+  quick_look      - quick look at chirp granules
+  quick_attrs     - quick look at chirp attributes
+  cmp_parent      - basic 1-granule AIRS and CHIRP comparison
+  cmp_gran_jpl    - compare last 2 runs of the same jpl granule
+  cmp_gran_umbc   - compare last 2 runs of the same umbc granule
 
 YAML config files
 -----------------
- chirp_airs.yaml, chirp_cris.yaml: initial files from Evan
- chirp_airs_init.yaml: initial yaml spec for airs-parent chirp
- chirp_cris_init.yaml: initial yaml spec for cris-parent chirp
+  chirp_AQ_init.yaml  - AIRS parent yaml job spec file
+  chirp_J1_init.yaml  - CrIS j01 parent yaml job spec file
+  chirp_SN_init.yaml  - CrIS npp parent yaml job spec file
+
+  chirp_AQ_gran.yaml  - machine-written AIRS yaml granule file
+  chirp_J1_gran.yaml  - machine-written CrIS j01 yaml granule file
+  chirp_SN_gran.yaml  - machine-written CrIS npp yaml granule file
+
+netCDF format
+--------------
+  chirp_1330.cdl  - CHIRP 1330 netCDF CDL template
+  chirp_1330.nc   - CHIRP 1330 netCDF initial (aka template) file
+  chirp_1000.nc   - (temporary) symlink to chirp_1330.nc
 
 netCDF notes
 -------------
@@ -50,10 +78,10 @@ Starting from an existing netCDF file (a UW CrIS granule) I've been
 able to dump the CDL format spec, edit it extensively, removing some
 variables and add new ones, write an empty netCDF file from the CDL
 spec, and write data to the netCDF file.  The UW file (and I think
-all the new NASA netCDF products) are bloated and groaning with
-attributes, and my new netCDF file is, too.  Creating something like
-that from scratch would be a major hassle, but copying and modifying
-it is not as bad.
+all the new NASA netCDF products) include a lot of global attributes,
+and my new netCDF file is, too.  Creating something like that from
+scratch would be a major hassle, but copying and modifying it is not
+as bad.
 
 CDL spec extrated from a netCDF file
 

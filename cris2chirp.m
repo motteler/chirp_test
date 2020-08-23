@@ -107,10 +107,9 @@ nobs = nFOV * nFOR * nscan;
 gran_num = double(cris_attr.granule_number);
 
 % update global chirp product attributes
-run_time = now;
 obs_time = airs2dnum(d1.obs_time_tai93(1));
 prod_attr = copy_cris_attr(cris_attr, prod_attr);
-prod_attr = cris_src_attr(gran_num, obs_time, run_time, prod_attr);
+prod_attr = cris_src_attr(gran_num, obs_time, cris_gran, prod_attr);
 
 % build the output filename
 chirp_name = nasa_fname(prod_attr);

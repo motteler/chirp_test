@@ -1,22 +1,16 @@
 #
 # Evan's sample runtime config split into processing options
 # (proc_opts) and product attributes (prod_attr).  This version
-# (chirp_airs_init.yaml) is a template for processing a set of
-# granules, so some values, like airs filename, granule number,
-# and processing time are just filler to be set properly before 
-# or as the individual granules are processed.
+# (chirp_cris_init.yaml) is a template for processing a set of
+# granules, so some values, like cris filename, granule number,
+# and processing time are just filler to be set properly as the
+# individual granules are processed.
 #
-# chirp_main calls airs2chirp, which will write all the product
-# attributes set here, read from the AIRS L1C file, or calculated
-# locally (such as processing time and granule number).  So the only
-# things that really need to be updated before calling chirp_main
-# with a new granule are the paths and AIR l1c file.
-#
-# I've left all the prod_attr fields alone, but added quite a few
+# I've left the prod_attr fields Evan set alone, and added some
 # proc_opts fields.  These all have the names I was already using,
-# for now, but that would not be hard to change.
+# but that would not be hard to change.
 #
-# CHIRP sample runtime configuration file for AIRS-source data
+# CHIRP sample runtime configuration file for CrIS-source data
 # Format:
 #   line order doesn't matter
 #   blank lines don't matter
@@ -38,29 +32,24 @@ proc_opts:
   # L1 input
   # can include a path but typically the PGE will be run with a local symbolic link
   # so the value will be a simple file name
-  # l1ir: AIRS.2016.01.14.101.L1B.AIRS_Rad.v5.0.23.0.G16015100554.hdf
-  # NOTE: this is set as airs_l1c, below
+  # l1ir: some CrIS file that we need to set somewhere
+  # NOTE: this is set as cris_l1b, below
 
   # The netCDF template file to use
-  # template: chirp_1330.nc
+  # template: chirp_1000.nc
   # NOTE: this is set as nc_init, below
-  
+
   # values for chirp_main, the top-level function
-  airs_l1c: 'replace me with an AIRS L1C granule file'
-  airs_dir: 'replace me with the AIRS input path'
+  cris_l1b: 'replace me with a CrIS L1b granule file'
+  cris_dir: 'replace me with the CrIS input path'
   chirp_dir: 'replace me with the CHIRP output path'
 
-  # airs2chirp defaults, uncomment and edit to change
+  # cris2chirp parameters
   verbose: 1                   # 0=quiet, 1=talky, 2=plots
-# hapod: 1                     # apply Hamming apodization
-# scorr: 1                     # do a statistical correction
-# bcorr: 1                     # do a bias correction
-# cfile: 'corr_midres.mat'     # statistical correction weights
-# sfile: 'airs_demo_srf.hdf'   # AIRS SRF tabulation file
-# bfile: 'airs_bias_v01a.mat'  # AIRS bias file
-# tchunk: 400                  # translation chunk size
-# synlim: 0.15                 # syn channel warn threshold
-# nc_init: 'chirp_1330.nc'     # initial empty netcdf file
+  nc_init: 'chirp_1000.nc'     # initial empty netcdf file
+  # bcorr: 1                     # do a bias correction
+  # bfile: bias_J1_v01b.mat      # bias correction data
+  bcorr: 0                       # until we get a bias file
 
 #--------------------
 # product attributes
@@ -69,16 +58,16 @@ prod_attr:
   # attributes closely associated with product_name.  The PGE will build the
   # product_name from these pieces and will put the product_name along with all
   # of these aprts in the global attributes of the CHIRP product netCDF file.
-  # SNDR.SS1330.CHIRP.20190302T0011.m06.g002.L1_AIR.std.v01_07.U.2004132227.nc
+  # SNDR.SS1000.CHIRP.20190302T0011.m06.g002.L1_AIR.std.v01_07.U.2004132227.nc
   product_name_project: SNDR
-  product_name_platform: SS1330
+  product_name_platform: SS1000
   product_name_instr: CHIRP
   gran_id: 20190302T0011
   product_name_duration: m06
   granule_number: 101
   product_name_granule_number: g101
   # Moved product_name_type_id down to the section which changes with platform, etc.
-  # product_name_type_id: L1_AQ
+  # product_name_type_id: L1_SN
   product_name_variant: std
   product_name_version: v02_20
   product_name_producer: U
@@ -114,25 +103,25 @@ prod_attr:
   # Uncomment the second of the following shortname/title/summary blocks for CHIRP-CAL
   
   # Official CHIRP derived from any instrument
-  shortname: SSYN1330CHIRPv2_placeholder
-  title: 13:30 orbit L1 CHIRP
-  summary: The CHIRP Level 1 product for the 13:30 sun-synchronous orbit consists of calibrated radiance spectra at a common resolution derived from hyperspectral instruments on EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms adjusted to form a co  ntinuous climate-quality record.
+  shortname: SSYN1000CHIRPv2_placeholder
+  title: 10:00 orbit L1 CHIRP
+  summary: The CHIRP Level 1 product for the 10:00 sun-synchronous orbit consists of calibrated radiance spectra at a common resolution derived from hyperspectral instruments on EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms adjusted to form a continuous climate-quality record.
   
   # CHIRP-CAL derived from any instrument
   # shortname: SSYN1330CHIRPCALv2_placeholder
   # title: 13:30 orbit L1 CHIRP-CAL
   # summary: The CHIRP-CAL Level 1 product for the 13:30
   # sun-synchronous orbit consists of calibrated radiance spectra at
-  # a   common resolution derived from hyperspectral instruments on
-  # EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms as for the   main
-  # CHIRP product but for times when a givein platforms data   is not used as the main CHIRP.
+  # a common resolution derived from hyperspectral instruments on
+  # EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms as for the main
+  # CHIRP product but for times when a givein platforms data is not used as the main CHIRP.
   
   
   ################################################################
   # Uncomment one source
-  source: Aqua AIRS Level-1C v6.7
+  # source: Aqua AIRS Level-1C v6.7
   # source: SNPP CrIS Level-1B v2
-  # source: JPSS-1 CrIS Level-1B v2
+  source: JPSS-1 CrIS Level-1B v2
   
   ################################################################
   # Uncomment one product_name_type_id for the appropriate platform/period
@@ -141,7 +130,7 @@ prod_attr:
   # from characters 4-5 of product_name_type_id
   #
   # primary Aqua period 9/1/2002 - 8/31/2016
-  product_name_type_id: L1_AQ
+  # product_name_type_id: L1_AQ
   # extra Aqua
   # product_name_type_id: L1_AQ_CAL
   #
@@ -151,7 +140,7 @@ prod_attr:
   # product_name_type_id: L1_SN_CAL
   #
   # Primary JPSS1 period 9/1/2018 - TBD
-  # product_name_type_id: L1_J1
+  product_name_type_id: L1_J1
   # extra JPSS1
   # product_name_type_id: L1_J1_CAL
   

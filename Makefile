@@ -30,15 +30,15 @@ chirp_cris_main:
 
 chirp_airs_main:
 	mcc -m -I /home/motteler/cris/ccast/source \
-	-I /home/motteler/shome/airs_decon/source \
+	-I ../airs_decon/source \
 	-I ./time \
 	-I ./yaml \
 	-a ./ALGVERS \
 	-a ./time/leap-seconds.list \
 	-a ./yaml/external/snakeyaml-1.9.jar \
 	-a ./airs_demo_srf.hdf \
-	-a ./airs_bias_v01a.mat \
-	-a /home/motteler/shome/airs_decon/source/corr_midres.mat \
+	-a ./bias_AQ_v01b.mat \
+	-a ../airs_decon/source/corr_midres.mat \
 	chirp_airs_main.m
 
 run_cris_main: chirp_cris_main run_chirp_cris_main.sh

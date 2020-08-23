@@ -1,6 +1,6 @@
 %
 % NAME
-%   copy_cris_attr - copy product attributes from CRIS data
+%   copy_cris_attr - copy global attributes from CRIS data
 %
 % SYNOPSIS
 %   prod_attr = copy_cris_attr(cris_attr, prod_attr);
@@ -11,8 +11,10 @@
 %
 % NOTE
 %   for CrIS-parent CHIRP we simply copy global attributes with
-%   matching names
-%
+%   matching names.  Although the UW/NASA L1b global text attributes
+%   are a mix of char and string types, the text values copied here
+%   are all char arrays, possibly because they were written by the
+%   L1b processing software rather than taken from the CDL spec.
 
 function prod_attr = copy_cris_attr(cris_attr, prod_attr);
 

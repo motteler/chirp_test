@@ -1,6 +1,6 @@
 %
 % NAME
-%   copy_airs_attr - copy product attributes from AIRS data
+%   copy_airs_attr - copy global attributes from AIRS data
 %
 % SYNOPSIS
 %   prod_attr = copy_airs_attr(airs_attr, prod_attr);
@@ -12,8 +12,9 @@
 % NOTE
 %   for AIRS-parent CHIRP we have have to do some renaming and
 %   calculations from the AIRS attributes.  reference: email from
-%   Evan and Alex, 3 Jun 2020
-%
+%   Evan and Alex, 3 Jun 2020.  The AIRS text attributes are char
+%   arrays, and utc_string also returns a char array, so the text
+%   values here are all returned as char arrays.
 
 function prod_attr = copy_airs_attr(airs_attr, prod_attr);
 
@@ -26,14 +27,17 @@ prod_attr.geospatial_lat_mid   = airs_attr.LatGranuleCen;
 prod_attr.geospatial_lon_mid   = airs_attr.LonGranuleCen;
 prod_attr.granule_number       = airs_attr.granule_number;
 
-prod_attr.qa_pct_data_missing = ...
-  airs_attr.NumMissingData / airs_attr.NumTotalData;
+% convert int32 to single
+NumTotalData    = single(airs_attr.NumTotalData);
+NumMissingData  = single(airs_attr.NumMissingData);
+NumProcessData  = single(airs_attr.NumProcessData);
+NumSpecialData  = single(airs_attr.NumSpecialData);
 
+% report the following three values as a percentage
+prod_attr.qa_pct_data_missing = 100 * (NumMissingData / NumTotalData);
+prod_attr.qa_pct_data_sci_mode = 100 * (NumProcessData / NumTotalData);
 prod_attr.qa_pct_data_geo = ...
-  (airs_attr.NumProcessData + airs_attr.NumSpecialData) / airs_attr.NumTotalData;
-
-prod_attr.qa_pct_data_sci_mode = ...
-  airs_attr.NumProcessData / airs_attr.NumTotalData;
+  100 * ((NumProcessData + NumSpecialData) / NumTotalData);
 
 prod_attr.time_coverage_start = utc_string(airs2dnum(airs_attr.start_Time));
 

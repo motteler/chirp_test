@@ -33,8 +33,8 @@ airs_year = fullfile(airs_home, sprintf('%d', year));
 chirp_year = fullfile(chirp_home, sprintf('%d', year));
 
 % yaml config files
-yaml_init = 'chirp_airs_init.yaml';  % initial config
-yaml_gran = 'chirp_airs_gran.yaml';  % current granule 
+yaml_init = 'chirp_AQ_init.yaml';  % initial config
+yaml_gran = 'chirp_AQ_gran.yaml';  % current granule 
 
 % read the initial yaml specs
 [proc_opts, prod_attr] = read_yaml_cfg(yaml_init);
