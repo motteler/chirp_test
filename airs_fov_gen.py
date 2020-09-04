@@ -9,14 +9,12 @@ R = 6371008.8
 
 def haversine(lat0, lon0, lat1, lon1):
     """Great circle distance between two sets of points.
-
     Parameters
     ----------
     lat0, lon0 : array_like
         Latitude and Longitude of starting point.
     lat1, lon1 : array_like
         Latitude and Longitude of ending point.
-
     Returns
     -------
     array_like
@@ -37,14 +35,12 @@ def haversine(lat0, lon0, lat1, lon1):
 
 def great_circle_arc(h, zen):
     """Calculate length of great circle arc from altitude and zenith angle.
-
     Parameters
     ----------
     h : array_like
         Distance to satellite from reference point (m).
     zen : array_like
         Zenith angle.
-
     Returns
     -------
     array_like
@@ -56,14 +52,12 @@ def great_circle_arc(h, zen):
 
 def initial_azi(lat0, lon0, lat1, lon1):
     """Determine initial azimuth given start and end points.
-
     Parameters
     ----------
     lat0, lon0 : array_like
         Latitude and Longitude of starting point.
     lat1, lon1 : array_like
         Latitude and Longitude of ending point.
-
     Returns
     -------
     array_like
@@ -82,7 +76,6 @@ def initial_azi(lat0, lon0, lat1, lon1):
 def destination_point(lat0, lon0, s, azi):
     """Locate destination point on Earth given given starting point, total
     distance, and azimuth angle.
-
     Parameters
     ----------
     lat0, lon0 : array_like
@@ -91,7 +84,6 @@ def destination_point(lat0, lon0, s, azi):
         Great circle distance from starting point to destination point.
     azi : array_like
         Azimuth angle, measured E of N.
-
     Returns
     -------
     array_like
@@ -112,12 +104,10 @@ def destination_point(lat0, lon0, s, azi):
 
 def spherical_to_cart(lat, lon, r):
     """Spherical to Cartesian coordinate tranformation
-
     Parameters
     ----------
     lat, lon, r : array_like
         Latitude, Longitude, and distance to center of Earth.
-
     Returns
     -------
     array_like
@@ -133,14 +123,12 @@ def spherical_to_cart(lat, lon, r):
 
 def distance(lat0, lon0, r0, lat1, lon1, r1):
     """Determine LOS distance between two points.
-
     Parameters
     ----------
     lat0, lon0, r0 : array_like
         Latitude, Longitude, and earth-center distance of starting point.
     lat1, lon1, r1 : array_like
         Latitude, Longitude, and earth-center distance of ending point.
-
     Returns
     -------
     array_like
@@ -155,7 +143,6 @@ def distance(lat0, lon0, r0, lat1, lon1, r1):
 class FOV:
     def __init__(self, slat, slon, lat0, lon0, h0, zen0, azi0, beam):
         """Build FOV from satellite position and orientation.
-
         Parameters
         ----------
         slat, slon : array_like
@@ -209,19 +196,17 @@ class FOV:
         self.b = b
         self.sat_range = h
         self.lat, self.lon = lat0, lon0
-        self.lat_bnds, self.lon_bnds = lat_bnds, lon_bnds
+        self.lat_bnds, self.lon_bnds = lat_bnds, (lon_bnds - 180) % 360 - 180
 
 
 def load_hdf_var(vs, variable):
     """Load a single variable into memory from an HDF file.
-
     Parameters
     ----------
     vs : pyhdf.VS
         Start of vdata
     variable : str
         Name of variable
-
     Returns
     -------
     numpy.ndarray
@@ -251,3 +236,4 @@ if __name__ == '__main__':
     (xr.Dataset(dict(lat_bnds=lat_bnds, lon_bnds=lon_bnds, sat_range=sat_range))
         .transpose('atrack', 'xtrack', 'fov_poly')
         .to_netcdf('airs_fov_bnds.nc'))
+

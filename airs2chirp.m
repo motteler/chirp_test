@@ -164,7 +164,7 @@ obs_id = airs_obs_id(obs_time_utc, airs_atrack, airs_xtrack);
 
 % reshape airs_fov_gen outputs to chirp spec
 lat_bnds = reshape(lat_bnds, 8, nobs);
-lon_bnds = reshape(lat_bnds, 8, nobs);
+lon_bnds = reshape(lon_bnds, 8, nobs);
 sat_range =  reshape(sat_range, nobs, 1);
 
 % set global attributes

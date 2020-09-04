@@ -88,6 +88,7 @@ azi0 = azi0';
 
   lat_bnds = permute(lat_bnds, [3,2,1]);
   lon_bnds = permute(lon_bnds, [3,2,1]);
+  lon_bnds = mod(lon_bnds - 180, 360) - 180;
   sat_range = permute(h, [2,1]);
 
 end % of airs_fov_gen
