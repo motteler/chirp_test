@@ -10,9 +10,6 @@
 %   month  - integer month
 %   dlist  - integer vector of days
 %
-% DISCUSSION
-%   set to CrIS FSR SNPP in granule loop, for tests
-%
 
 function jpl_cris_loop(year, month, dlist)
 

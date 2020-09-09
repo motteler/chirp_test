@@ -2,8 +2,10 @@
 % quick test of matlab version of airs_fov_gen
 % 
 
-p1 = '/asl/airs/l1c_v672/2019/175';
-g1 = 'AIRS.2019.06.24.005.L1C.AIRS_Rad.v6.7.2.0.G19365195435.hdf';
+% p1 = '/asl/airs/l1c_v672/2019/175';
+% g1 = 'AIRS.2019.06.24.005.L1C.AIRS_Rad.v6.7.2.0.G19365195435.hdf';
+p1 = './';
+g1 = 'airs_test.hdf';
 [d1, a1] = read_airs_h4(fullfile(p1,g1));
 
 % copy the fields we will be using
