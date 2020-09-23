@@ -9,9 +9,8 @@
 # file, for example
 # 
 #   MCR_CACHE_ROOT=/home/motteler/runlib
-#   MCR_CACHE_VERBOSE=1
-#   export MCR_CACHE_ROOT MCR_CACHE_VERBOSE
-#   make cris_all; make airs_all
+#   export MCR_CACHE_ROOT 
+#   make run_SN
 #
 
 cris_all: show_cache clean_cris chirp_cris_main

@@ -1,10 +1,62 @@
 
+compilation
+------------
+The Matlab compiler bundles related files to make a "deployable
+archive," and writes a short shell script to set some paths and call
+the compiled program.  In addition to the CHIRP repo, CHIRP depends
+on the CCAST and airs_decon git repos.  CCAST is the UMBC CrIS L0 to
+L1b package, and is used mainly for support routines.  airs_decon is
+the AIRS to CrIS translation, and is the heart of the AIRS-parent
+CHIRP product.
+
+These dependencies are set in the Makefile, for compiled files, and
+as Matlab "addpath" statements for interpreted files.  To compile
+CHIRP, check the paths in the Makefile, and then type "make cris_all"
+and "make airs_all".
+
+running chirp
+--------------
+cris_chirp_main and airs_chirp_main translate one AIRS or CrIS
+granule to one CHIRP granule per call.  They can be run either as
+interpreted or as compiled functions.  Runtime parameters and some
+attributes are are set in YAML spec files, for example
+
+  chirp_AQ_gran.yaml  - machine-written AIRS YAML granule file
+  chirp_J1_gran.yaml  - machine-written CrIS J1 YAML granule file
+  chirp_SN_gran.yaml  - machine-written CrIS SNPP YAML granule file
+
+For testing, the scripts jpl_airs_loop and jpl_cris_loop read a
+more general human-readable YAML spec, loop on days and granules,
+update the single-granule YAML spec, and call cris_chirp_main or
+airs_chirp_main.  This is intended as a rough simulation of the JPL
+production environment.  The top-level yaml spec files are
+
+  chirp_AQ_init.yaml  - AIRS parent YAML job spec file
+  chirp_J1_init.yaml  - CrIS J1 parent YAML job spec file
+  chirp_SN_init.yaml  - CrIS SNPP parent YAML job spec file
+
+For multi-granule tests, the loop scripts and top-level YAML specs
+can be edited as needed.  The Makefile includes examples of running
+compiled files.
+
+To run compiled files, Matlab needs space to unpack the deployable
+archive.  The default path is a dotfile subdirectory in the user's
+home directory, a bad choice for a production environment.  This can
+be changed with the environment variable MCR_CACHE_ROOT, and should
+be set before running the compiled file.  For example, to unpack the
+bundle in /home/motteler/runlib and run in the current working
+directory
+
+  MCR_CACHE_ROOT=/home/motteler/runlib
+  export MCR_CACHE_ROOT
+  run_chirp_airs_main.sh /opt/matlab/R2020a chirp_AQ_gran.yaml
+
 production loop
 ----------------
   airs2chirp      - translate AIRS to CHIRP granules
   cris2chirp      - interpolate CrIS to CHIRP granules
-  chirp_airs_main  - top-level wrapper for airs2chirp
-  chirp_cris_main  - top-level wrapper for cris2chirp
+  chirp_airs_main - top-level wrapper for airs2chirp
+  chirp_cris_main - top-level wrapper for cris2chirp
 
   umbc_cris_loop  - set cris2chirp options and loop on days
   umbc_airs_loop  - set airs2chirp options and loop on days
@@ -14,7 +66,7 @@ production loop
   chirp_batch     - run chirp translation as a batch job
 
 global attributes
-------------------
+-----------------
   airs_src_attr   - airs-parent per-granule attributes
   cris_src_attr   - cris-parent per-granule attributes
   copy_airs_attr  - copy attributes from AIRS data
@@ -66,41 +118,32 @@ netCDF format
 --------------
   chirp_1330.cdl  - CHIRP 1330 netCDF CDL template
   chirp_1330.nc   - CHIRP 1330 netCDF initial (aka template) file
-  chirp_1000.nc   - (temporary) symlink to chirp_1330.nc
+  chirp_1000.nc   - (temporary, a) symlink to chirp_1330.nc
 
 netCDF notes
 -------------
-chirp initial netcdf file from CDL spec
+Starting from an existing netCDF file, you can dump the CDL format
+spec, edit it extensively, add or delete variables, write an empty
+netCDF file from the CDL spec, and write data to the netCDF file.
+This is convenient for managing relatively complex formats.  Some
+examples:
 
-  ncgen -o chirp_master.nc chirp_master.cdl
+ - chirp initial netCDF file from a CDL spec
+     ncgen -o chirp_master.nc chirp_master.cdl
 
-Starting from an existing netCDF file (a UW CrIS granule) I've been
-able to dump the CDL format spec, edit it extensively, removing some
-variables and add new ones, write an empty netCDF file from the CDL
-spec, and write data to the netCDF file.  The UW file (and I think
-all the new NASA netCDF products) include a lot of global attributes,
-and my new netCDF file is, too.  Creating something like that from
-scratch would be a major hassle, but copying and modifying it is not
-as bad.
+ - CDL spec extrated from a netCDF file
+      ncdump -h uw_sdr_test.nc > uw_sdr_test.cdl
 
-CDL spec extrated from a netCDF file
+ - initial netcdf file from a CDL spec
+      ncgen -o ncgen_test.nc uw_sdr_test.cdl
 
-  ncdump -h uw_sdr_test.nc > uw_sdr_test.cdl
-
-Initial netcdf file from a CDL spec
-
-  ncgen -o ncgen_test.nc uw_sdr_test.cdl
-
-Compilation notes
+compilation notes
 ------------------
-The environment variable MCR_CACHE_ROOT will set an alternate path
-to the .mcrCache9.8 (or whatever) directory.  The directory is set
-at runtime, not at compile time, and you can move it around by
-changing MCR_CACHE_ROOT without recompiling.  ctfroot called at
-runtime returns this path.
-
-Beware "ls" may miss .mcrCache9.8 since it's a "dotfile".  
-
-We don't want the "-C" option, that seems to always create the cache
-directory in the run directory.
+The environment variable MCR_CACHE_ROOT will set an alternate
+path to the .mcrCache9.8 (or whatever) directory.  The directory
+is set at runtime, not at compile time, and you can move it around
+by changing MCR_CACHE_ROOT without recompiling.  ctfroot called at
+runtime returns this path.  Beware "ls" may miss .mcrCache9.8 since
+it's a "dotfile".  We don't want the "-C" option, that creates the
+cache directory in the run directory.
 

@@ -47,9 +47,8 @@ proc_opts:
   # cris2chirp parameters
   verbose: 1                   # 0=quiet, 1=talky, 2=plots
   nc_init: 'chirp_1000.nc'     # initial empty netcdf file
-  # bcorr: 1                     # do a bias correction
-  # bfile: bias_J1_v01b.mat      # bias correction data
-  bcorr: 0                       # until we get a bias file
+  bcorr: 1                     # do a bias correction
+  bfile: bias_j1_v01a.mat     # bias correction data
 
 #--------------------
 # product attributes

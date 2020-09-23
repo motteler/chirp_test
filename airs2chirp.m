@@ -35,7 +35,7 @@ cfile = 'corr_midres.mat';    % statistical correction weights
 sfile = 'airs_demo_srf.hdf';  % AIRS SRF tabulation file
 bfile = 'airs_bias_v01a.mat'; % AIRS bias file
 tchunk = 400;                 % translation chunk size
-synlim = 0.15;                % syn channel warn threshold
+synlim = 0.25;                % syn channel warn threshold
 nc_init = 'chirp_1330.nc';    % initial empty netcdf file
 
 % option to override defaults 
@@ -121,7 +121,7 @@ nedn_airs  = reshape(d1.NeN,       [nchan_airs, nobs]);
 
 % xtrack x atrack to nobs
 obs_time_tai93   = reshape(d1.Time,      nobs, 1);
-obs_time_utc     = tai93_to_tuple(obs_time_tai93);
+obs_time_utc     = tai93_to_utc(obs_time_tai93);
 lat              = reshape(d1.Latitude,  nobs, 1);
 lon              = reshape(d1.Longitude, nobs, 1);
 view_ang         = abs(reshape(d1.scanang,   nobs, 1));
@@ -211,8 +211,7 @@ for j = 1 : tchunk : nobs
   end
 
   % save the current chunk
-  rad_chirp(eix, cix) = rtmp;
-
+  rad_chirp(eix, cix) = real(rtmp);
 end
 
 % option to do the bias correction
@@ -243,17 +242,15 @@ nedn_chirp = nedn_chirp * ones(1, 9);
 %-----------------
 % AIRS-to-CrIS QC
 %-----------------
-
 % we create two QC fields, rad_qc, an nobs-vector with one flag
-% value per obs, and syn_qc, an nchan-vector with one flag value per
-% channel.  For both, 0 = OK, 1 = warn, and 2 = bad.  But rad_qc is
-% always 0 or 2 (because AIRS L1c doesn't have a "warn" flag) while
-% synth_qc is 0 or 1.
+% value per obs, and chan_qc, an nchan-vector with one flag value
+% per channel.  For both, 0 = OK, 1 = warn, and 2 = bad.  rad_qc
+% is always 0 or 2, because AIRS L1c doesn't have a "warn" flag.
 
-% A linearized version of the AIRS to CrIS transform is used for
-% translation QC.  It is simply the translation of the identity
-% matrix.
-
+% The array Tac is a linearized version of the AIRS to CrIS
+% transform, and is used to take AIRS synthetic fraction to CrIS
+% synthetic fraction.  If this is too high (synfrac >= synlim)
+% chan_qc is set to 1 (warn).
 opt3 = opt2;     % use options as set above
 opt3.scorr = 0;  % turn off statistical correction
 [Tac, freq_cris] = airs2cris(eye(nchan_airs), freq_airs, sfile, opt3);
@@ -272,6 +269,13 @@ sOK = synfrac < synlim;
 
 % translate sOK to NASA-style 3-value flags, 0=OK, 1=warn, 2=bad
 syn_qc = ~sOK;
+
+% add "warn" at band edges
+band_edges = [1, 713, 714, 1188, 1189, 1483];
+syn_qc(band_edges) = 1;
+
+% quick sanity check
+% plot(1:1483, freq_cris, band_edges, freq_cris(band_edges), 'og')
 
 % embed syn_qc in the chirp chan_qc
 chan_qc = ones(nchan_chirp, 1) * 2;  % initially all are missing

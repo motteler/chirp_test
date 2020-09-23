@@ -42,6 +42,7 @@ if nargin == 4
   if isfield(proc_opts, 'verbose'),    verbose    = proc_opts.verbose; end
   if isfield(proc_opts, 'hapod'),      hapod      = proc_opts.hapod; end
   if isfield(proc_opts, 'bcorr'),      bcorr      = proc_opts.bcorr; end
+  if isfield(proc_opts, 'bfile'),      bfile      = proc_opts.bfile; end
   if isfield(proc_opts, 'nc_init'),    nc_init    = proc_opts.nc_init; end
   if isfield(proc_opts, 'nedn_lw_sf'), nedn_lw_sf = proc_opts.nedn_lw_sf; end
   if isfield(proc_opts, 'nedn_mw_sf'), nedn_mw_sf = proc_opts.nedn_mw_sf; end
@@ -140,7 +141,7 @@ rad_sw = reshape(d1.rad_sw, nchan_sw, nobs);
 % copy time across FOVs and reshape as an nobs vector
 obs_time_tai93 = ...
   reshape(ones(nFOV,1)*d1.obs_time_tai93(:)', nobs, 1);
-obs_time_utc = tai93_to_tuple(obs_time_tai93);
+obs_time_utc = tai93_to_utc(obs_time_tai93);
 
 % reshape fov_obs_id and copy to obs_id
 obs_id = reshape(d1.fov_obs_id, nobs, 1);

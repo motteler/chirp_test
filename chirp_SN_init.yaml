@@ -47,8 +47,7 @@ proc_opts:
   # cris2chirp parameters
   verbose: 1                   # 0=quiet, 1=talky, 2=plots
   nc_init: 'chirp_1330.nc'     # initial empty netcdf file
-  bcorr: 0                     # no bias correction
-
+  bcorr: 0                     # no bias correction for SNPP
 
 #--------------------
 # product attributes
