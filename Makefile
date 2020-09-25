@@ -1,9 +1,11 @@
 #
 # Makefile to build and test chirp_airs_main and chirp_cris_main
 #
-# There are too many dependencies to properly sort out, so we call
-# clean_cris or clean_airs before a new compilation.
-# 
+# "make cris_all" and "make airs_all" compiles chirp_airs_main and
+# chirp_cris_main.  The git version is saved to the file ALGVERS.
+# This is made part of the deployable archive, and used to set the
+# global attribute "algorithm_version".
+#
 # The environment variable MCR_CACHE_ROOT should be set to the
 # desired location for the MCR cache before running the compiled
 # file, for example
@@ -13,8 +15,8 @@
 #   make run_SN
 #
 
-cris_all: show_cache clean_cris chirp_cris_main
-airs_all: show_cache clean_airs chirp_airs_main
+cris_all: clean_cris version chirp_cris_main
+airs_all: clean_airs version chirp_airs_main
 
 chirp_cris_main:
 	mcc -m -I /home/motteler/cris/ccast/source \
@@ -24,6 +26,7 @@ chirp_cris_main:
 	-a ./ALGVERS \
 	-a ./yaml/external/snakeyaml-1.9.jar \
 	-a ./time/leap-seconds.list \
+	-a ./bias_j1_v01a.mat \
 	chirp_cris_main.m
 
 chirp_airs_main:
@@ -35,7 +38,7 @@ chirp_airs_main:
 	-a ./time/leap-seconds.list \
 	-a ./yaml/external/snakeyaml-1.9.jar \
 	-a ./airs_demo_srf.hdf \
-	-a ./bias_AQ_v01b.mat \
+	-a ./bias_aq_v01c.mat \
 	-a ../airs_decon/source/corr_midres.mat \
 	chirp_airs_main.m
 
