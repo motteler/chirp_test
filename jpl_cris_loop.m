@@ -14,26 +14,26 @@
 function jpl_cris_loop(year, month, dlist)
 
 % set up source paths
-addpath /home/motteler/cris/ccast/source
-addpath /home/motteler/shome/airs_decon/source
+addpath /home/motteler/repos/ccast/source
+addpath /home/motteler/repos/airs_decon/source
 addpath /home/motteler/matlab/yaml
 addpath ./time
 
 % CrIS and CHIRP local data homes
 % cris_home =  '/peate_archive/NPPOps/jpss1/gdisc/2';
-% chirp_home = '/home/motteler/data/chirp_J1_test8';
+% chirp_home = '/home/motteler/data/chirp_J1_testX';
   cris_home =  '/peate_archive/NPPOps/snpp/gdisc/2';
-  chirp_home = '/home/motteler/data/chirp_SN_test8';
+  chirp_home = '/home/motteler/data/chirp_SN_testX';
 
 % CrIS and CHIRP path with year and month
 cris_month = fullfile(cris_home, sprintf('%d/%02d', year, month));
 chirp_month = fullfile(chirp_home, sprintf('%d/%02d', year, month));
 
 % yaml config files
-% yaml_init = 'chirp_J1_init.yaml';  % initial config
-% yaml_gran = 'chirp_J1_gran.yaml';  % current granule 
-  yaml_init = 'chirp_SN_init.yaml';  % initial config
-  yaml_gran = 'chirp_SN_gran.yaml';  % current granule 
+% yaml_init = 'chirp_J1_demo.yaml';  % initial config
+% yaml_gran = 'chirp_J1_gtmp.yaml';  % current granule 
+  yaml_init = 'chirp_SN_demo.yaml';  % initial config
+  yaml_gran = 'chirp_SN_gtmp.yaml';  % current granule 
 
 % read the initial yaml specs
 [proc_opts, prod_attr] = read_yaml_cfg(yaml_init);

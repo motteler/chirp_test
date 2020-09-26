@@ -14,22 +14,22 @@
 function jpl_airs_loop(year, month, dlist)
 
 % set up source paths
-addpath /home/motteler/cris/ccast/source
-addpath /home/motteler/shome/airs_decon/source
+addpath /home/motteler/repos/ccast/source
+addpath /home/motteler/repos/airs_decon/source
 addpath /home/motteler/matlab/yaml
 addpath ./time
 
 % AIRS and CHIRP local homes
 airs_home =  '/archive/AIRSOps/airs/gdaac/v6.7';
-chirp_home = '/home/motteler/data/chirp_AQ_test8';
+chirp_home = '/home/motteler/data/chirp_AQ_testX';
 
 % Airs and CHIRP path with year and month
 airs_month = fullfile(airs_home, sprintf('%d/%02d', year, month));
 chirp_month = fullfile(chirp_home, sprintf('%d/%02d', year, month));
 
 % yaml config files
-yaml_init = 'chirp_AQ_init.yaml';  % initial config
-yaml_gran = 'chirp_AQ_gran.yaml';  % current granule 
+yaml_init = 'chirp_AQ_demo.yaml';  % initial config
+yaml_gran = 'chirp_AQ_gtmp.yaml';  % current granule 
 
 % read the initial yaml specs
 [proc_opts, prod_attr] = read_yaml_cfg(yaml_init);

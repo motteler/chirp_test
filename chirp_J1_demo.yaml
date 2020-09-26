@@ -36,18 +36,19 @@ proc_opts:
   # NOTE: this is set as cris_l1b, below
 
   # The netCDF template file to use
-  # template: chirp_1330.nc
+  # template: chirp_1000.nc
   # NOTE: this is set as nc_init, below
 
   # values for chirp_main, the top-level function
-  cris_l1b: 'replace me with a CrIS L1b granule file'
-  cris_dir: 'replace me with the CrIS input path'
-  chirp_dir: 'replace me with the CHIRP output path'
+  cris_l1b: 'SNDR.J1.CRIS.20200401T2354.m06.g240.L1B.std.v02_11.G.200402104757.nc'
+  cris_dir: '/peate_archive/NPPOps/jpss1/gdisc/2/2020/04/01/crisl1b'
+  chirp_dir: '/home/motteler/data/chirp_J1_testX/2020/04/01/crisl1b'
 
   # cris2chirp parameters
   verbose: 1                   # 0=quiet, 1=talky, 2=plots
-  nc_init: 'chirp_1330.nc'     # initial empty netcdf file
-  bcorr: 0                     # no bias correction for SNPP
+  nc_init: 'chirp_1000.nc'     # initial empty netcdf file
+  bcorr: 1                     # do a bias correction
+  bfile: bias_j1_v01a.mat     # bias correction data
 
 #--------------------
 # product attributes
@@ -56,14 +57,14 @@ prod_attr:
   # attributes closely associated with product_name.  The PGE will build the
   # product_name from these pieces and will put the product_name along with all
   # of these aprts in the global attributes of the CHIRP product netCDF file.
-  # SNDR.SS1330.CHIRP.20190302T0011.m06.g002.L1_AIR.std.v01_07.U.2004132227.nc
+  # SNDR.SS1000.CHIRP.20190302T0011.m06.g002.L1_AIR.std.v01_07.U.2004132227.nc
   product_name_project: SNDR
-  product_name_platform: SS1330
+  product_name_platform: SS1000
   product_name_instr: CHIRP
   gran_id: 20190302T0011
   product_name_duration: m06
-  granule_number: 101
-  product_name_granule_number: g101
+  granule_number: 240
+  product_name_granule_number: g240
   # Moved product_name_type_id down to the section which changes with platform, etc.
   # product_name_type_id: L1_SN
   product_name_variant: std
@@ -71,7 +72,6 @@ prod_attr:
   product_name_producer: U
   product_name_timestamp: 2004132227
   product_name_extension: nc
-  
   
   # These get copied directly into the global attributes of the CHIRP netCDF product file
   license: Limited to SNPP Sounder affiliates
@@ -95,31 +95,29 @@ prod_attr:
   # 9/1/2016 - 8/31/2018 SNPP CrIS
   # 9/1/2018+          J1 CrIS
   
-  
   ################################################################
   # Uncomment the first of the following shortname/title/summary blocks for official CHIRP
   # Uncomment the second of the following shortname/title/summary blocks for CHIRP-CAL
   
   # Official CHIRP derived from any instrument
-  shortname: SSYN1330CHIRPv2_placeholder
-  title: 13:30 orbit L1 CHIRP
-  summary: The CHIRP Level 1 product for the 13:30 sun-synchronous orbit consists of calibrated radiance spectra at a common resolution derived from hyperspectral instruments on EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms adjusted to form a co  ntinuous climate-quality record.
+  shortname: SSYN1000CHIRPv2_placeholder
+  title: 10:00 orbit L1 CHIRP
+  summary: The CHIRP Level 1 product for the 10:00 sun-synchronous orbit consists of calibrated radiance spectra at a common resolution derived from hyperspectral instruments on EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms adjusted to form a continuous climate-quality record.
   
   # CHIRP-CAL derived from any instrument
   # shortname: SSYN1330CHIRPCALv2_placeholder
   # title: 13:30 orbit L1 CHIRP-CAL
   # summary: The CHIRP-CAL Level 1 product for the 13:30
   # sun-synchronous orbit consists of calibrated radiance spectra at
-  # a   common resolution derived from hyperspectral instruments on
-  # EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms as for the   main
-  # CHIRP product but for times when a givein platforms data   is not used as the main CHIRP.
-  
-  
+  # a common resolution derived from hyperspectral instruments on
+  # EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms as for the main
+  # CHIRP product but for times when a givein platforms data is not used as the main CHIRP.
+
   ################################################################
   # Uncomment one source
   # source: Aqua AIRS Level-1C v6.7
-  source: SNPP CrIS Level-1B v2
-  # source: JPSS-1 CrIS Level-1B v2
+  # source: SNPP CrIS Level-1B v2
+  source: JPSS-1 CrIS Level-1B v2
   
   ################################################################
   # Uncomment one product_name_type_id for the appropriate platform/period
@@ -133,12 +131,12 @@ prod_attr:
   # product_name_type_id: L1_AQ_CAL
   #
   # Primary SNPP period 9/1/2016 - 8/31/2018
-  product_name_type_id: L1_SN
+  # product_name_type_id: L1_SN
   # extra SNPP
   # product_name_type_id: L1_SN_CAL
   #
   # Primary JPSS1 period 9/1/2018 - TBD
-  # product_name_type_id: L1_J1
+  product_name_type_id: L1_J1
   # extra JPSS1
   # product_name_type_id: L1_J1_CAL
   

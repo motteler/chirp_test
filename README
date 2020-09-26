@@ -4,10 +4,10 @@ compilation
 The Matlab compiler bundles related files to make a "deployable
 archive," and writes a short shell script to set some paths and call
 the compiled program.  In addition to the CHIRP repo, CHIRP depends
-on the CCAST and airs_decon git repos.  CCAST is the UMBC CrIS L0 to
-L1b package, and is used mainly for support routines.  airs_decon is
-the AIRS to CrIS translation, and is the heart of the AIRS-parent
-CHIRP product.
+on the CCAST and airs_decon git repos.  airs_decon is the AIRS to
+CrIS translation, and is the heart of the AIRS-parent CHIRP product.
+CCAST is the UMBC CrIS L0 to L1b package, and is used here mainly
+for support routines.
 
 These dependencies are set in the Makefile, for compiled files, and
 as Matlab "addpath" statements for interpreted files.  To compile
@@ -17,27 +17,28 @@ and "make airs_all".
 running chirp
 --------------
 cris_chirp_main and airs_chirp_main translate one AIRS or CrIS
-granule to one CHIRP granule per call.  They can be run either as
-interpreted or as compiled functions.  Runtime parameters and some
-attributes are are set in YAML spec files, for example
+granule to one CHIRP granule, per call.  They can be run as either
+interpreted or compiled functions.  Runtime parameters and some
+attributes are are set in YAML spec files.  The following examples
+are included
 
-  chirp_AQ_gran.yaml  - machine-written AIRS YAML granule file
-  chirp_J1_gran.yaml  - machine-written CrIS J1 YAML granule file
-  chirp_SN_gran.yaml  - machine-written CrIS SNPP YAML granule file
+  chirp_AQ_demo.yaml  - AIRS parent YAML job spec file
+  chirp_J1_demo.yaml  - CrIS J1 parent YAML job spec file
+  chirp_SN_demo.yaml  - CrIS SNPP parent YAML job spec file
 
-For testing, the scripts jpl_airs_loop and jpl_cris_loop read a
-more general human-readable YAML spec, loop on days and granules,
-update the single-granule YAML spec, and call cris_chirp_main or
-airs_chirp_main.  This is intended as a rough simulation of the JPL
-production environment.  The top-level yaml spec files are
+These can be edited for single-granule tests.  The processing
+options airs_l1c, airs_dir, chirp_dir, and attributes gran_id,
+granule_number, and product_name_granule_number should be set to
+match the desired test granule.  (These files would normally be
+written automatically as part of a production environment.)  The
+Makefile includes examples of running compiled files on a single
+granule.
 
-  chirp_AQ_init.yaml  - AIRS parent YAML job spec file
-  chirp_J1_init.yaml  - CrIS J1 parent YAML job spec file
-  chirp_SN_init.yaml  - CrIS SNPP parent YAML job spec file
-
-For multi-granule tests, the loop scripts and top-level YAML specs
-can be edited as needed.  The Makefile includes examples of running
-compiled files.
+For more general testing, scripts jpl_airs_loop and jpl_cris_loop
+read such YAML spes, loop on days and granules, update temporary
+versions of the single-granule YAML spec, and call cris_chirp_main
+or airs_chirp_main.  This is intended as a rough simulation of the
+JPL production environment.
 
 To run compiled files, Matlab needs space to unpack the deployable
 archive.  The default path is a dotfile subdirectory in the user's
@@ -66,7 +67,7 @@ production loop
   chirp_batch     - run chirp translation as a batch job
 
 global attributes
------------------
+------------------
   airs_src_attr   - airs-parent per-granule attributes
   cris_src_attr   - cris-parent per-granule attributes
   copy_airs_attr  - copy attributes from AIRS data

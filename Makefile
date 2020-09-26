@@ -15,12 +15,15 @@
 #   make run_SN
 #
 
+# home for support packages
+REPOS = /home/motteler/repos
+
 cris_all: clean_cris version chirp_cris_main
 airs_all: clean_airs version chirp_airs_main
 
 chirp_cris_main:
-	mcc -m -I /home/motteler/cris/ccast/source \
-	-I /home/motteler/shome/airs_decon/source \
+	mcc -m -I $(REPOS)/ccast/source \
+	-I $(REPOS)/airs_decon/source \
 	-I ./time \
 	-I ./yaml \
 	-a ./ALGVERS \
@@ -30,8 +33,8 @@ chirp_cris_main:
 	chirp_cris_main.m
 
 chirp_airs_main:
-	mcc -m -I /home/motteler/cris/ccast/source \
-	-I ../airs_decon/source \
+	mcc -m -I $(REPOS)/ccast/source \
+	-I $(REPOS)/airs_decon/source \
 	-I ./time \
 	-I ./yaml \
 	-a ./ALGVERS \
@@ -39,17 +42,17 @@ chirp_airs_main:
 	-a ./yaml/external/snakeyaml-1.9.jar \
 	-a ./airs_demo_srf.hdf \
 	-a ./bias_aq_v01c.mat \
-	-a ../airs_decon/source/corr_midres.mat \
+	-a $(REPOS)/airs_decon/source/corr_midres.mat \
 	chirp_airs_main.m
 
 run_SN: chirp_cris_main run_chirp_cris_main.sh
-	./run_chirp_cris_main.sh /opt/matlab/R2020a 'chirp_SN_gran.yaml'
+	./run_chirp_cris_main.sh /opt/matlab/R2020a 'chirp_SN_demo.yaml'
 
 run_J1: chirp_cris_main run_chirp_cris_main.sh
-	./run_chirp_cris_main.sh /opt/matlab/R2020a 'chirp_J1_gran.yaml'
+	./run_chirp_cris_main.sh /opt/matlab/R2020a 'chirp_J1_demo.yaml'
 
 run_AQ: chirp_airs_main run_chirp_airs_main.sh
-	./run_chirp_airs_main.sh /opt/matlab/R2020a 'chirp_AQ_gran.yaml'
+	./run_chirp_airs_main.sh /opt/matlab/R2020a 'chirp_AQ_demo.yaml'
 
 clean_cris:
 	rm chirp_cris_main 2> /dev/null || true
