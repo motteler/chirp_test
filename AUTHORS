@@ -1,0 +1,26 @@
+
+AUTHORS
+
+  Howard E. Motteler
+  L. Larrabee Strow
+
+HISTORY
+
+  CHIRP evolved from work on an AIRS-to-CrIS translation, which
+  in turn was based on our AIRS deconvolution.  This is described
+  in [1] and is availabe as a git repo [2].
+
+ACKNOWLEDGMENTS
+
+  Thanks to Scott Hannon for the AIRS SRF tabulations and for early
+  encouragement on fundamentals of the AIRS deconvolution.
+
+REFERENCES
+
+  [1] H. E. Motteler and L. L. Strow. Airs deconvolution and the
+  translation of airs-to-cris radiances with applications for the ir
+  climate record. IEEE Transactions on Geoscience and Remote Sensing,
+  57(3):1793–1803, 2018
+
+  [2] https://github.com/strow/airs_deconv
+

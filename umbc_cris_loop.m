@@ -25,20 +25,20 @@ addpath /home/motteler/shome/airs_decon/source
 addpath /home/motteler/matlab/yaml
 
 % CrIS and CHIRP local data homes
-  cris_home = '/asl/isilon/cris/nasa_l1b/j01';
-% cris_home = '/asl/isilon/cris/nasa_l1b/npp';
-  chirp_home = '/asl/isilon/chirp/chirp_J1_test1';
-% chirp_home = '/asl/isilon/chirp/chirp_SN_test1';
+% cris_home  = '/asl/isilon/cris/nasa_l1b/npp';
+% chirp_home = '/asl/isilon/chirp/chirp_SN_test2';
+  cris_home  = '/asl/isilon/cris/nasa_l1b/j01';
+  chirp_home = '/asl/isilon/chirp/chirp_J1_test2';
 
 % CrIS and CHIRP annual data (home/yyyy)
 cris_year = fullfile(cris_home, sprintf('%d', year));
 chirp_year = fullfile(chirp_home, sprintf('%d', year));
 
 % yaml config files
-% yaml_init = 'chirp_SN_init.yaml';  % initial config
-% yaml_gran = 'chirp_SN_gran.yaml';  % current granule 
-  yaml_init = 'chirp_J1_init.yaml';  % initial config
-  yaml_gran = 'chirp_J1_gran.yaml';  % current granule 
+% yaml_init = 'chirp_SN_demo.yaml';  % initial config
+% yaml_gran = 'chirp_SN_gtmp.yaml';  % current granule 
+  yaml_init = 'chirp_J1_demo.yaml';  % initial config
+  yaml_gran = 'chirp_J1_gtmp.yaml';  % current granule 
 
 % read the initial yaml specs
 [proc_opts, prod_attr] = read_yaml_cfg(yaml_init);
