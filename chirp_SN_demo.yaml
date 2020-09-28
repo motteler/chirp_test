@@ -22,7 +22,7 @@ proc_opts:
   # chirp_cris_main L1 input values
   cris_l1b: 'SNDR.SNPP.CRIS.20200401T2354.m06.g240.L1B.std.v02_22.G.200402101014.nc'
   cris_dir: '/peate_archive/NPPOps/snpp/gdisc/2/2020/04/01/crisl1b'
-  chirp_dir: '/home/motteler/data/chirp_SN_testX/2020/04/01/crisl1b'
+  chirp_dir: '/home/motteler/data/chirp_SN_test8/2020/04/01/crisl1b'
 
   # chirp_cris_main runtime parameters
   # commented out-values are defaults, uncomment and edit to change
