@@ -114,6 +114,7 @@ prod_attr = cris_src_attr(gran_num, obs_time, cris_gran, prod_attr);
 
 % build the output filename
 chirp_name = nasa_fname(prod_attr);
+prod_attr.product_name = chirp_name;
 
 % print a status message
 dstr = datestr(airs2dnum(d1.obs_time_tai93(1)));

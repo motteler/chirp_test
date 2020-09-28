@@ -55,10 +55,10 @@ run_AQ: chirp_airs_main run_chirp_airs_main.sh
 	./run_chirp_airs_main.sh /opt/matlab/R2020a 'chirp_AQ_demo.yaml'
 
 clean_cris:
-	rm chirp_cris_main 2> /dev/null || true
+	rm chirp_cris_main run_chirp_cris_main.sh 2> /dev/null || true
 
 clean_airs:
-	rm chirp_airs_main 2> /dev/null || true
+	rm chirp_airs_main run_chirp_airs_main.sh 2> /dev/null || true
 
 show_cache:
 	echo "MCR cache root:" ${MCR_CACHE_ROOT}

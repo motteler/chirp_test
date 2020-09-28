@@ -1,56 +1,84 @@
 
-compilation
+Overview
+=========
+
+chirp_test is a package to translate CrIS L1b and AIRS L1c files 
+to a common, more generic L1c format.
+
+Source Repos
+-------------
+
+https://github.com/motteler/chirp_test.git
+https://github.com/strow/airs_deconv.git
+https://github.com/strow/ccast.git
+
+Compilation
 ------------
+
 The Matlab compiler bundles related files to make a "deployable
 archive," and writes a short shell script to set some paths and call
 the compiled program.  In addition to the CHIRP repo, CHIRP depends
-on the CCAST and airs_decon git repos.  airs_decon is the AIRS to
+on the ccast and airs_decon git repos.  airs_decon is the AIRS to
 CrIS translation, and is the heart of the AIRS-parent CHIRP product.
 CCAST is the UMBC CrIS L0 to L1b package, and is used here mainly
 for support routines.
 
-These dependencies are set in the Makefile, for compiled files, and
-as Matlab "addpath" statements for interpreted files.  To compile
-CHIRP, check the paths in the Makefile, and then type "make cris_all"
-and "make airs_all".
+The deployable archive also includes a number of support files.
+For example for CrIS-parent this includes a bias vector, the NIST
+table of leap-seconds, and a file ALGVERS used to pass the git
+version to the product attributes.  These dependencies and support
+files are set in the Makefile, for compiled files, and as Matlab
+"addpath" statements for interpreted files.
 
-running chirp
+To compile CHIRP, check the paths and files in the Makefile, and
+type "make cris_all" and "make airs_all".  This produces executables
+chirp_cris_main, chirp_airs_main, and wrappers run_chirp_cris_main.sh
+and run_chirp_airs_main.sh
+
+Running CHIRP
 --------------
+
 cris_chirp_main and airs_chirp_main translate one AIRS or CrIS
 granule to one CHIRP granule, per call.  They can be run as either
 interpreted or compiled functions.  Runtime parameters and some
-attributes are are set in YAML spec files.  The following examples
-are included
+attributes are set in YAML spec files,
 
-  chirp_AQ_demo.yaml  - AIRS parent YAML job spec file
-  chirp_J1_demo.yaml  - CrIS J1 parent YAML job spec file
-  chirp_SN_demo.yaml  - CrIS SNPP parent YAML job spec file
+  chirp_AQ_demo.yaml  - AIRS-parent YAML spec
+  chirp_J1_demo.yaml  - CrIS J1-parent YAML spec
+  chirp_SN_demo.yaml  - CrIS SNPP-parent YAML spec
 
-These can be edited for single-granule tests.  The processing
-options airs_l1c, airs_dir, chirp_dir, and attributes gran_id,
-granule_number, and product_name_granule_number should be set to
-match the desired test granule.  (These files would normally be
-written automatically as part of a production environment.)  The
-Makefile includes examples of running compiled files on a single
-granule.
+These can be edited for single-granule tests; for that case the
+processing options airs_l1c, airs_dir, and chirp_dir should be set
+to match the desired test granule.  The Makefile includes examples
+of running compiled files on a single granule.
 
 For more general testing, scripts jpl_airs_loop and jpl_cris_loop
-read such YAML spes, loop on days and granules, update temporary
-versions of the single-granule YAML spec, and call cris_chirp_main
-or airs_chirp_main.  This is intended as a rough simulation of the
-JPL production environment.
+read these YAML specs, use them as templates, loop on days and
+granules, update temporary versions of a single-granule YAML spec,
+and call cris_chirp_main or airs_chirp_main.  This is intended as a
+rough simulation of the JPL production environment.
 
 To run compiled files, Matlab needs space to unpack the deployable
 archive.  The default path is a dotfile subdirectory in the user's
 home directory, a bad choice for a production environment.  This can
-be changed with the environment variable MCR_CACHE_ROOT, and should
-be set before running the compiled file.  For example, to unpack the
-bundle in /home/motteler/runlib and run in the current working
-directory
+be changed with the environment variable MCR_CACHE_ROOT, which
+should be set before running the compiled file.  For example, to
+unpack the archive in /home/motteler/runlib and run in the current
+working directory
 
   MCR_CACHE_ROOT=/home/motteler/runlib
   export MCR_CACHE_ROOT
   run_chirp_airs_main.sh /opt/matlab/R2020a chirp_AQ_gran.yaml
+
+We set MCR_CACHE_ROOT in a separate step rather than in the run
+script because the latter is overwritten with each compilation.
+The run script parameters include a path to a local matlab install
+for the runtime, bin, and sys directories.  But the compiled file
+should not need a valid Matlab licence to run.
+
+
+CHIRP Files
+============
 
 production loop
 ----------------
@@ -120,6 +148,10 @@ netCDF format
   chirp_1330.cdl  - CHIRP 1330 netCDF CDL template
   chirp_1330.nc   - CHIRP 1330 netCDF initial (aka template) file
   chirp_1000.nc   - (temporary, a) symlink to chirp_1330.nc
+
+
+Notes
+======
 
 netCDF notes
 -------------

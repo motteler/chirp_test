@@ -175,6 +175,7 @@ prod_attr = airs_geo_attr(d1, prod_attr);
 
 % build the output filename
 chirp_name = nasa_fname(prod_attr);
+prod_attr.product_name = chirp_name;
 
 % print a status message
 dstr = datestr(airs2dnum(obs_time_tai93(1)));

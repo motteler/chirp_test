@@ -1,63 +1,38 @@
 #
-# Evan's sample runtime config split into processing options
-# (proc_opts) and product attributes (prod_attr).  This version
-# (chirp_airs_init.yaml) is a template for processing a set of
-# granules, so some values, like airs filename, granule number,
-# and processing time are just filler to be set properly before 
-# or as the individual granules are processed.
+# CHIRP AIRS-parent sample YAML config file
 #
-# chirp_main calls airs2chirp, which will write all the product
-# attributes set here, read from the AIRS L1C file, or calculated
-# locally (such as processing time and granule number).  So the only
-# things that really need to be updated before calling chirp_main
-# with a new granule are the paths and AIR l1c file.
+# This is Evan's sample runtime config file split into two main
+# sections, proc_opts for processing options and prod_attr for
+# product attributes.  prod_attr is largely unchanged from Evan's
+# example file, with just a few tweaks to keep it in YAML format,
+# and values that are now set in chirp processing commented out.
 #
-# I've left all the prod_attr fields alone, but added quite a few
-# proc_opts fields.  These all have the names I was already using,
-# for now, but that would not be hard to change.
-#
-# CHIRP sample runtime configuration file for AIRS-source data
-# Format:
-#   line order doesn't matter
-#   blank lines don't matter
-#   '#' is comment-to-end-of-line
-#   all other lines are of the form:
-#      [ows]TAG[ows]:[ows]VALUE[ows]
-#     where:
-#        [ows] is optional whitespace, and commbination of tabs and space characters
-#        TAG is a literal tag from a set of tags agreed between JPL Sounder SIPS and UMBC ASL
-#        VALUE is the desired value
-#
-# If duplicate lines are present with the same tag then the last one is the one that is used
+# This file can be used for single granule tests or as a template
+# for multi-granule batch jobs.  For single-granule tests the
+# processing options airs_l1c, airs_dir, and chirp_dir need to be
+# set.  For multi-granule batch jobs it can be used as a general
+# template, with a custom YAML spec written for each granule.  The
+# test script jpl_airs_loop.m does this.
 #
 
 #--------------------
 # processing options
 #--------------------
 proc_opts:  
-  # L1 input
-  # can include a path but typically the PGE will be run with a local symbolic link
-  # so the value will be a simple file name
-  # l1ir: AIRS.2016.01.14.101.L1B.AIRS_Rad.v5.0.23.0.G16015100554.hdf
-  # NOTE: this is set as airs_l1c, below
-
-  # The netCDF template file to use
-  # template: chirp_1330.nc
-  # NOTE: this is set as nc_init, below
-  
-  # values for chirp_main, the top-level function
+  # chirp_airs_main L1 input values
   airs_l1c: 'AIRS.2020.04.01.240.L1C.AIRS_Rad.v6.7.2.0.G20094033937.hdf'
   airs_dir: '/archive/AIRSOps/airs/gdaac/v6.7/2020/04/01/airicrad'
   chirp_dir: '/home/motteler/data/chirp_AQ_testX/2020/04/01/airicrad'
 
-  # airs2chirp defaults, uncomment and edit to change
+  # chirp_airs_main runtime parameters
+  # commented out-values are defaults, uncomment and edit to change
   verbose: 1                   # 0=quiet, 1=talky, 2=plots
 # hapod: 1                     # apply Hamming apodization
 # scorr: 1                     # do a statistical correction
 # cfile: 'corr_midres.mat'     # statistical correction weights
 # sfile: 'airs_demo_srf.hdf'   # AIRS SRF tabulation file
   bcorr: 1                     # do a bias correction
-  bfile: 'bias_aq_v01c.mat'  # AIRS bias file
+  bfile: 'bias_aq_v01c.mat'    # AIRS bias file
 # tchunk: 400                  # translation chunk size
   synlim: 0.25                 # syn channel warn threshold
 # nc_init: 'chirp_1330.nc'     # initial empty netcdf file
@@ -66,23 +41,25 @@ proc_opts:
 # product attributes
 #--------------------
 prod_attr:
-  # attributes closely associated with product_name.  The PGE will build the
-  # product_name from these pieces and will put the product_name along with all
-  # of these aprts in the global attributes of the CHIRP product netCDF file.
+  # attributes closely associated with product_name.  airs2chirp
+  # builds the product_name from these pieces and puts this along
+  # with all of these parts in the global attributes of the CHIRP
+  # product netCDF file.  Values set by airs2chirp are commented
+  # out, below.
   # SNDR.SS1330.CHIRP.20190302T0011.m06.g002.L1_AIR.std.v01_07.U.2004132227.nc
   product_name_project: SNDR
   product_name_platform: SS1330
   product_name_instr: CHIRP
-  gran_id: 20190302T0011
+# gran_id: 20190302T0011
   product_name_duration: m06
-  granule_number: 240
-  product_name_granule_number: g240
-  # Moved product_name_type_id down to the section which changes with platform, etc.
+# granule_number: 240
+# product_name_granule_number: g240
+  # Moved product_name_type_id down to the section which changes with platform
   # product_name_type_id: L1_AQ
   product_name_variant: std
   product_name_version: v02_20
   product_name_producer: U
-  product_name_timestamp: 2004132227
+# product_name_timestamp: 2004132227
   product_name_extension: nc
 
   # These get copied directly into the global attributes of the CHIRP netCDF product file
