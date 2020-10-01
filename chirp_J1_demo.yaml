@@ -22,14 +22,14 @@ proc_opts:
   # chirp_cris_main L1 input values
   cris_l1b: 'SNDR.J1.CRIS.20200401T2354.m06.g240.L1B.std.v02_11.G.200402104757.nc'
   cris_dir: '/peate_archive/NPPOps/jpss1/gdisc/2/2020/04/01/crisl1b'
-  chirp_dir: '/home/motteler/data/chirp_J1_test8/2020/04/01/crisl1b'
+  chirp_dir: '/home/motteler/data/chirp_J1_test9/2020/04/01/crisl1b'
 
   # chirp_cris_main runtime parameters
   # commented out-values are defaults, uncomment and edit to change
   verbose: 1                  # 0=quiet, 1=talky, 2=plots
   bcorr: 1                    # do a bias correction
   bfile: bias_j1_v01a.mat     # bias correction data
-  nc_init: 'chirp_1000.nc'    # initial empty netcdf file
+  nc_init: 'chirp_1330.nc'    # initial empty netcdf file
 
 #--------------------
 # product attributes
@@ -40,9 +40,9 @@ prod_attr:
   # with all of these parts in the global attributes of the CHIRP
   # product netCDF file.  Values set by cris2chirp are commented
   # out, below.
-  # SNDR.SS1000.CHIRP.20190302T0011.m06.g002.L1_AIR.std.v01_07.U.2004132227.nc
+  # SNDR.SS1330.CHIRP.20190302T0011.m06.g002.L1_AIR.std.v01_07.U.2004132227.nc
   product_name_project: SNDR
-  product_name_platform: SS1000
+  product_name_platform: SS1330
   product_name_instr: CHIRP
 # gran_id: 20190302T0011
   product_name_duration: m06
@@ -83,9 +83,9 @@ prod_attr:
   # Uncomment the second of the following shortname/title/summary blocks for CHIRP-CAL
   
   # Official CHIRP derived from any instrument
-  shortname: SSYN1000CHIRPv2_placeholder
-  title: 10:00 orbit L1 CHIRP
-  summary: The CHIRP Level 1 product for the 10:00 sun-synchronous orbit consists of calibrated radiance spectra at a common resolution derived from hyperspectral instruments on EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms adjusted to form a continuous climate-quality record.
+  shortname: SSYN1330CHIRPv2_placeholder
+  title: 13:30 orbit L1 CHIRP
+  summary: The CHIRP Level 1 product for the 13:30 sun-synchronous orbit consists of calibrated radiance spectra at a common resolution derived from hyperspectral instruments on EOS-Aqua, S-NPP, and JPSS-1/NOAA-20 platforms adjusted to form a continuous climate-quality record.
   
   # CHIRP-CAL derived from any instrument
   # shortname: SSYN1330CHIRPCALv2_placeholder

@@ -22,7 +22,8 @@ cris_all: clean_cris version chirp_cris_main
 airs_all: clean_airs version chirp_airs_main
 
 chirp_cris_main:
-	mcc -m -I $(REPOS)/ccast/source \
+	mcc -m -R -nodesktop -R nojvm -R singleCompThread \
+	-I $(REPOS)/ccast/source \
 	-I $(REPOS)/airs_decon/source \
 	-I ./time \
 	-I ./yaml \
@@ -30,10 +31,12 @@ chirp_cris_main:
 	-a ./yaml/external/snakeyaml-1.9.jar \
 	-a ./time/leap-seconds.list \
 	-a ./bias_j1_v01a.mat \
+	-a ./chirp_1330.nc \
 	chirp_cris_main.m
 
 chirp_airs_main:
-	mcc -m -I $(REPOS)/ccast/source \
+	mcc -m -R -nodesktop -R nojvm -R singleCompThread \
+	-I $(REPOS)/ccast/source \
 	-I $(REPOS)/airs_decon/source \
 	-I ./time \
 	-I ./yaml \
@@ -41,7 +44,9 @@ chirp_airs_main:
 	-a ./time/leap-seconds.list \
 	-a ./yaml/external/snakeyaml-1.9.jar \
 	-a ./airs_demo_srf.hdf \
+	-a ./chirp_wnum.mat \
 	-a ./bias_aq_v01c.mat \
+	-a ./chirp_1330.nc \
 	-a $(REPOS)/airs_decon/source/corr_midres.mat \
 	chirp_airs_main.m
 
