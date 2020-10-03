@@ -4,25 +4,22 @@
 % path.  
 %
 
-function [suc, msg, mid] = copy_arch(src, dst)
+function copy_arch(src, dst)
 
-if ~isdeployed
-  [suc, msg, mid] = copyfile(src, dst);
-else
 % fprintf(1, 'ctfroot = %s\n', ctfroot)
 % fprintf(1, 'src = %s\n', src)
-% fprintf(1, 'dst = %s\n', dst)
 
-  % path to src in the deployable archive
+if isdeployed && src(1) ~= '/'
+  % we have a deployable archive and a name or relative path.
+  % check for a path to src in the deployable archive; if we
+  % find exactly 1 instance of src, add the archive path.
   t1 = dir(fullfile(ctfroot, '*', src));
-
-  % if we find exactly 1 instance of src, use it
   if numel(t1) == 1 && exist(fullfile(t1.folder, t1.name)) == 2
-    t2 = fullfile(t1.folder, t1.name);
-%   fprintf(1, 't2 = %s\n', t2)
-    [suc, msg, mid] = copyfile(t2, dst);
-  else
-    error(sprintf('can''t find %s in deployable archive %s\n', src, ctfroot))
+    src = fullfile(t1.folder, t1.name);
+%   fprintf(1, 'updated src = %s\n', src)
   end
 end
+
+% call copyfile
+copyfile(src, dst);
 

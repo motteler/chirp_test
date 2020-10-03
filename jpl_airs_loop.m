@@ -21,7 +21,7 @@ addpath ./time
 
 % AIRS and CHIRP local homes
 airs_home =  '/archive/AIRSOps/airs/gdaac/v6.7';
-chirp_home = '/home/motteler/data/chirp_AQ_testX';
+chirp_home = '/home/motteler/data/chirp_AQ_test10';
 
 % Airs and CHIRP path with year and month
 airs_month = fullfile(airs_home, sprintf('%d/%02d', year, month));
