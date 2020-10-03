@@ -35,7 +35,7 @@ proc_opts:
   bfile: 'bias_aq_v01c.mat'    # AIRS bias file
 # tchunk: 400                  # translation chunk size
   synlim: 0.25                 # syn channel warn threshold
-# nc_init: 'chirp_1330.nc'     # initial empty netcdf file
+  nc_init: 'chirp_1330.nc'     # initial empty netcdf file
 
 #--------------------
 # product attributes

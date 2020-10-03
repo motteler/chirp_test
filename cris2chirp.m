@@ -290,7 +290,7 @@ if exist(nc_init) ~= 2
 end
 
 nc_data = fullfile(chirp_dir, chirp_name);
-copyfile(nc_init, nc_data);
+copy_arch(nc_init, nc_data);
 
 h5write(nc_data, '/rad', single(rad));
 h5write(nc_data, '/rad_qc', int8(rad_qc));
