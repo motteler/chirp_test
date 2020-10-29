@@ -1,14 +1,18 @@
 %
 % quick look at chirp granules
 %
+% the AIRS and CrIS granules don't have to match, but AIRS 
+% should match with AIRS-parent CHIRP, and similarly for CrIS, 
+% for comparing NEdN
+%
 
 addpath /home/motteler/cris/ccast/source
 
-p1 = '/asl/isilon/chirp/chirp_AQ_test4/2019/058';
-g1 = 'SNDR.SS1330.CHIRP.20190227T0059.m06.g010.L1_AQ.std.v02_20.U.2008221524.nc';
+p1 = '/asl/isilon/chirp/chirp_AQ_test2/2018/231';
+g1 = 'SNDR.SS1330.CHIRP.20180819T0229.m06.g025.L1_AQ.std.v02_20.U.2009281401.nc';
 
-p2 = '/asl/isilon/chirp/chirp_SN_test4/2019/058';
-g2 = 'SNDR.SS1330.CHIRP.20190227T0053.m06.g010.L1_SN.std.v02_20.U.2008221650.nc';
+p2 = '/asl/isilon/chirp/chirp_SN_test1/2018/231';
+g2 = 'SNDR.SS1330.CHIRP.20180819T0159.m06.g021.L1_SN.std.v02_20.U.2009171805.nc';
 
 [d1, a1] = read_netcdf_h5(fullfile(p1, g1));  % AIRS parent 
 [d2, a2] = read_netcdf_h5(fullfile(p2, g2));  % CrIS parent
@@ -30,8 +34,6 @@ xlabel('wavenumber (cm-1)')
 ylabel('BT (K)')
 grid on
 
-return
-
 figure(2); clf
 subplot(2,1,1)
 [x1, y1] = pen_lift(d1.wnum, d1.nedn);
@@ -50,16 +52,16 @@ xlabel('wavenumber (cm-1)')
 ylabel('mw sr-1 m-2')
 grid on
 
-return
+% return
 
-% load random AIRS and CrIS granules for an NEdN comparison
-apath = '/asl/hpcnfs1/airs/L1C/2019/061';
-agran = 'AIRS.2019.03.02.005.L1C.AIRS_Rad.v6.1.2.0.G19061124436.hdf';
+% load corresponding AIRS and CrIS granules for an NEdN comparison
+apath = '/asl/airs/l1c_v672/2018/231';
+agran = 'AIRS.2018.08.19.025.L1C.AIRS_Rad.v6.7.2.0.G20008184914.hdf';
 d3 = read_airs_h4(fullfile(apath, agran));
 
-cpath = '/home/motteler/shome/daac_test/SNPPCrISL1B.2/2019/061'
-cgran = 'SNDR.SNPP.CRIS.20190302T0054.m06.g010.L1B.std.v02_05.G.190302083725.nc';
-d4 = read_cris_h5(fullfile(cpath, cgran));
+cpath = '/asl/cris/nasa_l1b/npp/2018/231';
+cgran = 'SNDR.SNPP.CRIS.20180819T0200.m06.g021.L1B.std.v02_05.G.180819153434.nc';
+d4 = read_netcdf_h5(fullfile(cpath, cgran));
 
 % AIRS L1c NEdN
 nchan_airs = 2645;
@@ -85,7 +87,6 @@ y1 = ntmp1;
 semilogy(x1, y1)
 ylim([0.001, 1.0])
 title('AIRS L1c NEdN')
-xlabel('wavenumber (cm-1)')
 ylabel('mw sr-1 m-2')
 grid on
 
@@ -96,6 +97,7 @@ y1 = [d4.nedn_lw; d4.nedn_mw; d4.nedn_sw];
 semilogy(x1, y1)
 ylim([0.001, 1.0])
 title('CrIS NEdN')
+xlabel('wavenumber (cm-1)')
 ylabel('mw sr-1 m-2')
 grid on
 

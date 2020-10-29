@@ -5,12 +5,12 @@
 addpath /home/motteler/cris/ccast/source
 
 ahome = '/asl/airs/l1c_v672';               % AIRS source home
-chome = '/asl/isilon/chirp/chirp_AQ_test5'; % CHIRP output home
+chome = '/asl/isilon/chirp/chirp_AQ_test1'; % CHIRP output home
 
-year = 2020;
-dstr = '092';  % doy as a string
-% gi = 24;       % granule index (no sw bias)
-  gi = 13;       % granule index (prev significant SW bias)
+year = 2018;
+dstr = '231';  % doy as a string
+  gi = 24;       % granule index (no sw bias)
+% gi = 13;       % granule index (prev significant SW bias)
 
 % paths to AIRS and CHIRP data (home/yyyy)
 apath = fullfile(ahome, sprintf('%d', year), dstr);

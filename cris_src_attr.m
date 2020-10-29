@@ -30,7 +30,8 @@ prod_attr.product_name_granule_number = gran_num_str;
 run_time = now;
 run_vec = datevec(run_time);
 run_vec(1) = mod(run_vec(1), 100);  % 2-digit year
-timestamp = sprintf('%02d%02d%02d%02d%02d%02d', run_vec(1:5));
+run_vec(6) = round(run_vec(6));     % integer seconds
+timestamp = sprintf('%02d%02d%02d%02d%02d%02d', run_vec);
 prod_attr.product_name_timestamp = timestamp;
 
 % date created (as a char array)

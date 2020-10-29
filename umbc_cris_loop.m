@@ -26,9 +26,9 @@ addpath /home/motteler/matlab/yaml
 
 % CrIS and CHIRP local data homes
 % cris_home  = '/asl/isilon/cris/nasa_l1b/npp';
-% chirp_home = '/asl/isilon/chirp/chirp_SN_test2';
+% chirp_home = '/asl/isilon/chirp/chirp_SN_test3';
   cris_home  = '/asl/isilon/cris/nasa_l1b/j01';
-  chirp_home = '/asl/isilon/chirp/chirp_J1_test2';
+  chirp_home = '/asl/isilon/chirp/chirp_J1_test3';
 
 % CrIS and CHIRP annual data (home/yyyy)
 cris_year = fullfile(cris_home, sprintf('%d', year));
