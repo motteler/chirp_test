@@ -59,7 +59,7 @@ gcorn = [d1.Latitude(1,1),    d1.Longitude(1,1), ...
 %          d1.Longitude(1,135),  d1.Latitude(1,135), ...
 %          d1.Longitude(1,1),    d1.Latitude(1,1)];
 
-sfmt = 'POLYGON ((%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f))';
+sfmt = 'POLYGON ((%.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f, %.2f %.2f))';
 
 prod_attr.geospatial_bounds = sprintf(sfmt, gcorn);
 
