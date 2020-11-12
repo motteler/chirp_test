@@ -47,7 +47,7 @@ chirp_airs_main:
 	-a ./chirp_1330.nc \
 	-a ./chirp_wnum.mat \
 	-a $(REPOS)/airs_decon/data/airs_l1c_srf_tables_lls_20181205.hdf \
-	-a $(REPOS)/airs_decon/source/corr_midres_v2.mat \
+	-a $(REPOS)/airs_decon/data/corr_midres_v2.mat \
 	chirp_airs_main.m
 
 run_SN: chirp_cris_main run_chirp_cris_main.sh

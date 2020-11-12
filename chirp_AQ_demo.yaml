@@ -22,7 +22,7 @@ proc_opts:
   # chirp_airs_main L1 input values
   airs_l1c: 'AIRS.2020.04.01.240.L1C.AIRS_Rad.v6.7.2.0.G20094033937.hdf'
   airs_dir: '/archive/AIRSOps/airs/gdaac/v6.7/2020/04/01/airicrad'
-  chirp_dir: '/home/motteler/data/chirp_AQ_test8/2020/04/01/airicrad'
+  chirp_dir: '/home/motteler/data/chirp_AQ_test11/2020/04/01/airicrad'
 
   # chirp_airs_main runtime parameters
   # commented out-values are defaults, uncomment and edit to change
