@@ -22,7 +22,7 @@ g3 = 'AIRS.2019.03.02.005.L1C.AIRS_Rad.v6.7.2.0.G19364174212.hdf';
 
 % CrIS L1b data
 p4 = '.';
-g4 = 'uw_sdr_test.nc';
+g4 = 'data/uw_test_sdr.nc';
 
 [d1, a1] = read_netcdf_h5(fullfile(p1, g1));  % AIRS parent CHIRP
 [d2, a2] = read_netcdf_h5(fullfile(p2, g2));  % CrIS parent CHIRP

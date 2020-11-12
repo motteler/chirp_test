@@ -29,10 +29,10 @@ proc_opts:
   verbose: 1                   # 0=quiet, 1=talky, 2=plots
 # hapod: 1                     # apply Hamming apodization
 # scorr: 1                     # do a statistical correction
-# cfile: 'corr_midres.mat'     # statistical correction weights
-# sfile: 'airs_demo_srf.hdf'   # AIRS SRF tabulation file
+  cfile: 'corr_midres_v2.mat'  # statistical correction weights
+  sfile: 'airs_l1c_srf_tables_lls_20181205.hdf' # AIRS SRF file
   bcorr: 1                     # do a bias correction
-  bfile: 'bias_aq_v01c.mat'    # AIRS bias file
+  bfile: 'bias_aq_v01d.mat'    # AIRS bias file
 # tchunk: 400                  # translation chunk size
   synlim: 0.25                 # syn channel warn threshold
   nc_init: 'chirp_1330.nc'     # initial empty netcdf file

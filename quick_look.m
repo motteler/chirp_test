@@ -8,8 +8,8 @@
 
 addpath /home/motteler/cris/ccast/source
 
-p1 = '/asl/isilon/chirp/chirp_AQ_test2/2018/231';
-g1 = 'SNDR.SS1330.CHIRP.20180819T0229.m06.g025.L1_AQ.std.v02_20.U.2009281401.nc';
+p1 = '/asl/isilon/chirp/chirp_AQ_test3/2018/231';
+g1 = 'SNDR.SS1330.CHIRP.20180819T0229.m06.g025.L1_AQ.std.v02_20.U.201029143145.nc';
 
 p2 = '/asl/isilon/chirp/chirp_SN_test1/2018/231';
 g2 = 'SNDR.SS1330.CHIRP.20180819T0159.m06.g021.L1_SN.std.v02_20.U.2009171805.nc';
@@ -52,7 +52,7 @@ xlabel('wavenumber (cm-1)')
 ylabel('mw sr-1 m-2')
 grid on
 
-% return
+return
 
 % load corresponding AIRS and CrIS granules for an NEdN comparison
 apath = '/asl/airs/l1c_v672/2018/231';

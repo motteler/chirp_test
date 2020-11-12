@@ -4,7 +4,7 @@
 addpath /home/motteler/cris/ccast/motmsc/time
 addpath /home/motteler/cris/ccast/motmsc/utils
 
-d1 = read_netcdf_h5('uw_sdr_test.nc');
+d1 = read_netcdf_h5('data/uw_test_sdr.nc');
 
 % show the utc discretization
 u1 = d1.obs_time_utc(:, :);

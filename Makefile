@@ -28,8 +28,8 @@ chirp_cris_main:
 	-I ./time \
 	-I ./yaml \
 	-a ./ALGVERS \
-	-a ./yaml/external/snakeyaml-1.9.jar \
 	-a ./time/leap-seconds.list \
+	-a ./yaml/external/snakeyaml-1.9.jar \
 	-a ./bias_j1_v01a.mat \
 	-a ./chirp_1330.nc \
 	chirp_cris_main.m
@@ -43,11 +43,11 @@ chirp_airs_main:
 	-a ./ALGVERS \
 	-a ./time/leap-seconds.list \
 	-a ./yaml/external/snakeyaml-1.9.jar \
-	-a ./airs_demo_srf.hdf \
-	-a ./chirp_wnum.mat \
 	-a ./bias_aq_v01c.mat \
 	-a ./chirp_1330.nc \
-	-a $(REPOS)/airs_decon/source/corr_midres.mat \
+	-a ./chirp_wnum.mat \
+	-a $(REPOS)/airs_decon/data/airs_l1c_srf_tables_lls_20181205.hdf \
+	-a $(REPOS)/airs_decon/source/corr_midres_v2.mat \
 	chirp_airs_main.m
 
 run_SN: chirp_cris_main run_chirp_cris_main.sh

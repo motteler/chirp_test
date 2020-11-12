@@ -22,11 +22,12 @@ function umbc_airs_loop(year, dlist)
 addpath /home/motteler/cris/ccast/source
 addpath /home/motteler/cris/ccast/motmsc/time
 addpath /home/motteler/shome/airs_decon/source
+addpath /home/motteler/shome/airs_decon/data
 addpath /home/motteler/matlab/yaml
 
 % AIRS and CHIRP local homes
 airs_home = '/asl/airs/l1c_v672';
-chirp_home = '/asl/isilon/chirp/chirp_AQ_test3';
+chirp_home = '/asl/isilon/chirp/chirp_AQ_test4';
 
 % AIRS and CHIRP annual data (home/yyyy)
 airs_year = fullfile(airs_home, sprintf('%d', year));
@@ -38,23 +39,6 @@ yaml_gran = 'chirp_AQ_gtmp.yaml';  % current granule
 
 % read the initial yaml specs
 [proc_opts, prod_attr] = read_yaml_cfg(yaml_init);
-
-% airs2chirp options (now set in yaml_init)
-% proc_opts = struct;
-% proc_opts.verbose = 1;   % 0=quiet, 1=talky, 2=plots
-% proc_opts.tchunk = 400;  % translation chunk size
-
-% run-specific CHIRP product attributes
-% prod_attr = struct;
-% prod_attr.product_name_project    = 'SNDR';
-% prod_attr.product_name_platform   = 'SS1330';
-% prod_attr.product_name_instr      = 'CHIRP';
-% prod_attr.product_name_duration   = 'm06';
-% prod_attr.product_name_type_id    = 'L1_AQ';
-% prod_attr.product_name_variant    = 'std';
-% prod_attr.product_name_version    = 'v01_07';
-% prod_attr.product_name_producer   = 'U';
-% prod_attr.product_name_extension  = 'nc';
 
 % this function name
 fstr = mfilename;

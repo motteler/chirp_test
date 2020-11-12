@@ -16,9 +16,10 @@
 addpath /asl/packages/ccast/source
 addpath /asl/packages/ccast/motmsc/utils
 addpath /asl/packages/airs_decon/source
+addpath /asl/packages/airs_decon/data
 
 % AIRS SRFs
-sfile = '/asl/matlab2012/srftest/srftables_m140f_withfake_mar08.hdf';
+sfile = 'airs_l1c_srf_tables_lls_20181205.hdf';
 
 % AIRS 49 fitting profiles
 load airs_fit_prof
@@ -32,7 +33,6 @@ opt1 = struct;
 opt1.user_res = 'midres';  % target resolution
 opt1.hapod = 1;  % Hamming apodization
 opt1.scorr = 0;  % statistical correction
-opt1.cfile = 'corr_midres.mat';  % correction weights
 [Tac, cfrq] = airs2cris(eye(n), afrq, sfile, opt1);
 Tac = real(Tac);
 

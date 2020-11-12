@@ -22,6 +22,7 @@ function umbc_cris_loop(year, dlist)
 addpath /home/motteler/cris/ccast/source
 addpath /home/motteler/cris/ccast/motmsc/time
 addpath /home/motteler/shome/airs_decon/source
+addpath /home/motteler/shome/airs_decon/data
 addpath /home/motteler/matlab/yaml
 
 % CrIS and CHIRP local data homes
@@ -42,22 +43,6 @@ chirp_year = fullfile(chirp_home, sprintf('%d', year));
 
 % read the initial yaml specs
 [proc_opts, prod_attr] = read_yaml_cfg(yaml_init);
-
-% cris2chirp options (now set in yaml spec)
-% proc_opts = struct;
-% proc_opts.verbose = 1;   % 0=quiet, 1=talky, 2=plots
-
-% run-specific CHIRP product attributes (now set in yaml spec)
-% prod_attr = struct;
-% prod_attr.product_name_project    = 'SNDR';
-% prod_attr.product_name_platform   = 'SS1330';
-% prod_attr.product_name_instr      = 'CHIRP';
-% prod_attr.product_name_duration   = 'm06';
-% prod_attr.product_name_type_id    = 'L1_SN';
-% prod_attr.product_name_variant    = 'std';
-% prod_attr.product_name_version    = 'v01_07';
-% prod_attr.product_name_producer   = 'U';
-% prod_attr.product_name_extension  = 'nc';
 
 % this function name
 fstr = mfilename;  
