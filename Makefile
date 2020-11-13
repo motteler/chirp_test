@@ -43,7 +43,7 @@ chirp_airs_main:
 	-a ./ALGVERS \
 	-a ./time/leap-seconds.list \
 	-a ./yaml/external/snakeyaml-1.9.jar \
-	-a ./bias_aq_v01c.mat \
+	-a ./bias_aq_v01d.mat \
 	-a ./chirp_1330.nc \
 	-a ./chirp_wnum.mat \
 	-a $(REPOS)/airs_decon/data/airs_l1c_srf_tables_lls_20181205.hdf \
