@@ -141,7 +141,13 @@ scan_mid_time  = reshape(repmat(d1.nadirTAI',  90, 1), nobs, 1);
 sat_alt        = reshape(repmat(d1.satheight', 90, 1), nobs, 1) * 1000;
 sun_glint_lat  = reshape(repmat(d1.glintlat',  90, 1), nobs, 1);
 sun_glint_lon  = reshape(repmat(d1.glintlon',  90, 1), nobs, 1);
-asc_flag       = reshape(repmat(d1.scan_node_type', 90, 1), nobs, 1);
+% asc_flag     = reshape(repmat(d1.scan_node_type', 90, 1), nobs, 1);
+
+% convert AIRS asc/desc flag to CHIRP
+atmp = ones(135, 1, 'uint8') * 255;
+atmp(d1.scan_node_type == int8('A')) = 1;
+atmp(d1.scan_node_type == int8('D')) = 0;
+asc_flag = reshape(repmat(atmp', 90, 1), nobs, 1);
 
 % basic AIRS atrack and xtrack indices
 airs_atrack = reshape(repmat(1:135, 90, 1), nobs, 1);

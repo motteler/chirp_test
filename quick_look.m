@@ -38,7 +38,8 @@ figure(2); clf
 subplot(2,1,1)
 [x1, y1] = pen_lift(d1.wnum, d1.nedn);
 semilogy(x1, y1)
-ylim([0.001, 1.0])
+xlim([600, 2600])
+% ylim([0.001, 1.0])
 title('AIRS L1C to CHIRP NEdN')
 ylabel('mw sr-1 m-2')
 grid on
@@ -46,11 +47,13 @@ grid on
 subplot(2,1,2)
 [x2, y2] = pen_lift(d2.wnum, d2.nedn);
 semilogy(x2, y2)
-ylim([0.001, 1.0])
+xlim([600, 2600])
+% ylim([0.001, 1.0]); 
 title('CrIS NPP to CHIRP NEdN')
 xlabel('wavenumber (cm-1)')
 ylabel('mw sr-1 m-2')
 grid on
+saveas(gcf, 'sample_chirp_nedn', 'fig')
 
 return
 
